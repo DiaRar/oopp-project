@@ -6,8 +6,6 @@
 <module name = "Checker">
     <module name="TreeWalker">
         <module name="UnusedImports" />
+        <module name="LeftCurly" />
     </module>
-
-    <!-- TODO: decide in your team with other checkers to add! -->
-
 </module>
