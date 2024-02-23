@@ -4,8 +4,30 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name = "Checker">
+
+    <property name="fileExtensions" value="java"/>
+
     <module name="TreeWalker">
         <module name="UnusedImports" />
         <module name="LeftCurly" />
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="MagicNumber">
+            <property name="ignoreHashCodeMethod" value="true"/>
+        </module>
+        <module name="RequireThis"/>
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+<!--        <module name="NoWhitespaceAfter">-->
+<!--            <property name="tokens" value="LITERAL_FOR"/>-->
+<!--        </module>-->
+        <module name="ParenPad"/>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
     </module>
 </module>
