@@ -8,7 +8,7 @@ import java.util.Objects;
 @Entity
 public class Participant {
     @Id
-    private int uuid;
+    private String uuid;
     private String firstName;
     private String lastName;
     private String email;
@@ -17,18 +17,18 @@ public class Participant {
     protected Participant() {
 
     }
-    public Participant(int uuid, String firstName, String lastName, String email) {
+    public Participant(String uuid, String firstName, String lastName, String email) {
         this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public int getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(int uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
@@ -60,11 +60,21 @@ public class Participant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Participant that = (Participant) o;
-        return getUuid() == that.getUuid() && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail());
+        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getUuid(), getFirstName(), getLastName(), getEmail());
+    }
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "uuid='" + uuid + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
