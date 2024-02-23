@@ -27,7 +27,7 @@ public class ParticipantTest {
     @Test
     public void notEqualsHashCode() {
         Participant participant1 = new Participant("John", "Doe", "j.d@email.com");
-        Participant participant2 = new Participant("John", "Doe", "j.d@email.com");
+        Participant participant2 = new Participant("John2", "Doe", "j.d@email.com");
         assertNotEquals(participant1, participant2);
         assertNotEquals(participant1.hashCode(), participant2.hashCode());
     }
