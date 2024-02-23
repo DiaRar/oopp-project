@@ -25,16 +25,20 @@ public class Expense {
 //  Relationships
     @ManyToOne
     private Participant payer;
+    @ManyToOne
+    private Event event;
     @ManyToMany
     private ArrayList<Participant> debtors;
     @ManyToMany
     private ArrayList<Tag> tags;
     protected Expense() {}
-    public Expense(Pair<Double, Currency> value, String description, Date date, Participant payer, ArrayList<Participant> debtors, ArrayList<Tag> tags) {
+    public Expense(Pair<Double, Currency> value, String description, Date date, Participant payer, Event event,
+                   ArrayList<Participant> debtors, ArrayList<Tag> tags) {
         this.value = value;
         this.description = description;
         this.date = date;
         this.payer = payer;
+        this.event = event;
         this.debtors = debtors;
         this.tags = tags;
     }
@@ -72,6 +76,14 @@ public class Expense {
 
     public void setPayer(Participant payer) {
         this.payer = payer;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public ArrayList<Participant> getDebtors() {
