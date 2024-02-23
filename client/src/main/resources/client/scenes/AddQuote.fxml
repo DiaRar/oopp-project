@@ -12,7 +12,6 @@
       <TextField fx:id="firstName" layoutX="109.0" layoutY="24.0" prefHeight="26.0" prefWidth="79.0" />
       <TextField fx:id="lastName" layoutX="286.0" layoutY="24.0" />
       <TextField fx:id="quote" layoutX="109.0" layoutY="98.0" prefHeight="26.0" prefWidth="345.0" />
-      <TextField fx:id="uuid" layoutX="500.0" layoutY="24.0" prefHeight="26.0" prefWidth="70.0" />
       <TextField fx:id="email" layoutX="109.0" layoutY="61.0" prefHeight="26.0" prefWidth="345.0" />
       <Label layoutX="216.0" layoutY="29.0" text="Last Name" />
       <Label layoutX="470.0" layoutY="29.0" text="ID" />

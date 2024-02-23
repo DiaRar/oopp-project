@@ -31,9 +31,6 @@ public class AddQuoteCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
-
-    @FXML
-    private TextField uuid;
     @FXML
     private TextField email;
 
@@ -75,7 +72,7 @@ public class AddQuoteCtrl {
     }
 
     private Quote getQuote() {
-        var p = new Participant(uuid.getText(), firstName.getText(), lastName.getText(), email.getText());
+        var p = new Participant(firstName.getText(), lastName.getText(), email.getText());
         var q = quote.getText();
         return new Quote(p, q);
     }

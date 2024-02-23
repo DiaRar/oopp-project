@@ -66,7 +66,7 @@ public class QuoteControllerTest {
     }
 
     private static Quote getQuote(String q) {
-        return new Quote(new Participant(q, q, q, q), q);
+        return new Quote(new Participant(q, q, q), q);
     }
 
     @SuppressWarnings("serial")

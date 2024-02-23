@@ -1,34 +1,63 @@
 package commons;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 public class Participant {
     @Id
-    private String uuid;
+    @Column(name = "participant_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID uuid;
     private String firstName;
     private String lastName;
     private String email;
+
+    @OneToOne
+    private BankAccount bankAccount;
+
+    @ManyToMany
+    private List<Event> events;
 
     //for object mapper
     protected Participant() {
 
     }
-    public Participant(String uuid, String firstName, String lastName, String email) {
-        this.uuid = uuid;
+    public Participant(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public String getUuid() {
+    public Participant(String firstName, String lastName, String email,
+                       BankAccount bankAccount, ArrayList<Event> events) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.bankAccount = bankAccount;
+        this.events = events;
+    }
+
+    public Participant(String firstName, String lastName, String email, BankAccount bankAccount) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.bankAccount = bankAccount;
+    }
+
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -54,27 +83,19 @@ public class Participant {
     public void setEmail(String email) {
         this.email = email;
     }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Participant that = (Participant) o;
-        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail());
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUuid(), getFirstName(), getLastName(), getEmail());
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
     public String toString() {
-        return "Participant{" +
-                "uuid='" + uuid + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
+
 }
