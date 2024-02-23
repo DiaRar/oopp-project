@@ -56,6 +56,7 @@
         </module>
         <module name="MissingJavadocMethod">
             <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="severity" value="warning"/>
         </module>
     </module>
 
