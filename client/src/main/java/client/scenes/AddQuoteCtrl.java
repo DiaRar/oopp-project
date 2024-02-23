@@ -75,7 +75,6 @@ public class AddQuoteCtrl {
     }
 
     private Quote getQuote() {
-        //var p = new Person(firstName.getText(), lastName.getText());
         var p = new Participant(uuid.getText(), firstName.getText(), lastName.getText(), email.getText());
         var q = quote.getText();
         return new Quote(p, q);
