@@ -8,9 +8,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Currency;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +21,7 @@ public class Expense {
     private UUID id;
     private Pair<Double, Currency> value;
     private String description;
-    private Date date;
+    private LocalDateTime date;
 //  Relationships
     @ManyToOne
     private Participant payer;
@@ -31,9 +31,16 @@ public class Expense {
     private ArrayList<Participant> debtors;
     @ManyToMany
     private ArrayList<Tag> tags;
-    protected Expense() {}
-    public Expense(Pair<Double, Currency> value, String description, Date date, Participant payer, Event event,
-                   ArrayList<Participant> debtors, ArrayList<Tag> tags) {
+    protected Expense() {};
+
+    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date) {
+        this.value = value;
+        this.description = description;
+        this.date = date;
+    }
+
+    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
+                   Participant payer, Event event, ArrayList<Participant> debtors, ArrayList<Tag> tags) {
         this.value = value;
         this.description = description;
         this.date = date;
@@ -62,11 +69,11 @@ public class Expense {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
