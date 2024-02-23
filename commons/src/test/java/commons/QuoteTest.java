@@ -23,36 +23,38 @@ import org.junit.jupiter.api.Test;
 
 public class QuoteTest {
 
-	private static final Person SOME_PERSON = new Person("a", "b");
+	private static final Participant SOME_PARTICIPANT = new Participant("1", "John", "Doe", "j.d@email.com");
 
 	@Test
 	public void checkConstructor() {
-		var q = new Quote(SOME_PERSON, "q");
-		assertEquals(SOME_PERSON, q.person);
+		var q = new Quote(SOME_PARTICIPANT, "q");
+		assertEquals(SOME_PARTICIPANT, q.participant);
 		assertEquals("q", q.quote);
 	}
 
 	@Test
 	public void equalsHashCode() {
-		var a = new Quote(new Person("a", "b"), "c");
-		var b = new Quote(new Person("a", "b"), "c");
+		var a = new Quote(new Participant("1", "John", "Doe", "j.d@email.com"), "c");
+		var b = new Quote(new Participant("1", "John", "Doe", "j.d@email.com"), "c");
 		assertEquals(a, b);
 		assertEquals(a.hashCode(), b.hashCode());
 	}
 
 	@Test
 	public void notEqualsHashCode() {
-		var a = new Quote(new Person("a", "b"), "c");
-		var b = new Quote(new Person("a", "b"), "d");
+		var a = new Quote(new Participant("1", "John", "Doe", "j.d@email.com"), "c");
+		var b = new Quote(new Participant("1", "John", "Doe", "j.d@email.com"), "d");
 		assertNotEquals(a, b);
 		assertNotEquals(a.hashCode(), b.hashCode());
 	}
 
 	@Test
 	public void hasToString() {
-		var actual = new Quote(new Person("a", "b"), "c").toString();
-		assertTrue(actual.contains(Quote.class.getSimpleName()));
-		assertTrue(actual.contains("\n"));
-		assertTrue(actual.contains("person"));
+		var actual = new Quote(new Participant("1", "John", "Doe", "j.d@email.com"), "q").toString();
+		assertTrue(actual.contains("1"));
+		assertTrue(actual.contains("John"));
+		assertTrue(actual.contains("Doe"));
+		assertTrue(actual.contains("j.d@email.com"));
+		assertTrue(actual.contains("q"));
 	}
 }

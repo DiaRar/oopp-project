@@ -57,7 +57,7 @@ public class QuoteController {
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
-        if (quote.person == null || isNullOrEmpty(quote.person.firstName) || isNullOrEmpty(quote.person.lastName)
+        if (quote.participant == null || isNullOrEmpty(quote.participant.getFirstName()) || isNullOrEmpty(quote.participant.getLastName())
                 || isNullOrEmpty(quote.quote)) {
             return ResponseEntity.badRequest().build();
         }

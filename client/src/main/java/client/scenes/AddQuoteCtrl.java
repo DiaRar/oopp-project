@@ -18,7 +18,7 @@ package client.scenes;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
-import commons.Person;
+import commons.Participant;
 import commons.Quote;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
@@ -31,6 +31,11 @@ public class AddQuoteCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+
+    @FXML
+    private TextField uuid;
+    @FXML
+    private TextField email;
 
     @FXML
     private TextField firstName;
@@ -70,7 +75,8 @@ public class AddQuoteCtrl {
     }
 
     private Quote getQuote() {
-        var p = new Person(firstName.getText(), lastName.getText());
+        //var p = new Person(firstName.getText(), lastName.getText());
+        var p = new Participant(uuid.getText(), firstName.getText(), lastName.getText(), email.getText());
         var q = quote.getText();
         return new Quote(p, q);
     }

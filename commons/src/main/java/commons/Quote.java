@@ -36,7 +36,7 @@ public class Quote {
 	public long id;
 
 	@OneToOne(cascade = CascadeType.PERSIST)
-	public Person person;
+	public Participant participant;
 	public String quote;
 
 	@SuppressWarnings("unused")
@@ -44,8 +44,8 @@ public class Quote {
 		// for object mappers
 	}
 
-	public Quote(Person person, String quote) {
-		this.person = person;
+	public Quote(Participant participant, String quote) {
+		this.participant = participant;
 		this.quote = quote;
 	}
 
