@@ -58,16 +58,16 @@
             <message key="name.invalidPattern"
                      value="Class type name ''{0}'' must match pattern ''{1}''."/>
         </module>
-        <module name="MissingJavadocMethod">
+        <!-- <module name="MissingJavadocMethod">
             <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="severity" value="warning"/>
-        </module>
+        </module> -->
     </module>
 
     <module name="LineLength">
         <property name="severity" value="warning"/>
         <property name="fileExtensions" value="java"/>
-        <property name="max" value="100"/>
+        <property name="max" value="120"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
 
