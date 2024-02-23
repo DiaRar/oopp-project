@@ -81,8 +81,8 @@ public class BankAccount {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BankAccount bankAccount = (BankAccount) o;
-        return iban.equals(bankAccount.getIban())
-                && bic.equals(bankAccount.getBic());
+        if (bic != null && !bic.equals(bankAccount.getBic())) return false;
+        return iban.equals(bankAccount.getIban());
     }
 
     /**
