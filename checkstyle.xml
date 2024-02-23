@@ -4,10 +4,71 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name = "Checker">
+
+    <property name="fileExtensions" value="java"/>
+
     <module name="TreeWalker">
         <module name="UnusedImports" />
+        <module name="LeftCurly" />
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="MagicNumber">
+            <property name="ignoreHashCodeMethod" value="true"/>
+        </module>
+        <module name="RequireThis"/>
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="ParenPad"/>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
+        <module name="WhitespaceAround">
+            <property name="allowEmptyMethods" value="true"/>
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+        </module>
+        <module name="MemberName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MethodName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ParameterName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="StaticVariableName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="LambdaParameterName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="TypeName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ClassTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*$)"/>
+            <message key="name.invalidPattern"
+                     value="Class type name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="severity" value="warning"/>
+        </module>
     </module>
 
-    <!-- TODO: decide in your team with other checkers to add! -->
+    <module name="LineLength">
+        <property name="severity" value="warning"/>
+        <property name="fileExtensions" value="java"/>
+        <property name="max" value="100"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+    </module>
 
 </module>
