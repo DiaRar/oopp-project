@@ -21,7 +21,7 @@ public class Participant {
     private String lastName;
     private String email;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private BankAccount bankAccount;
 
     @ManyToMany
