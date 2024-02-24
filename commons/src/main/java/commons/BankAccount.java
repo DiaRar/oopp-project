@@ -4,8 +4,11 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Objects;
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 /**
  * Represents a bank account in the database.
@@ -73,17 +76,11 @@ public class BankAccount {
      * Indicates whether some other object is equal to this one.
      * Two bank accounts are considered equal if they have the same ID, iban, bic
      *
-     * @param o The reference object with which to compare.
+     * @param obj The reference object with which to compare.
      * @return true if this object is the same as the o argument; false otherwise.
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BankAccount bankAccount = (BankAccount) o;
-        if (bic != null && !bic.equals(bankAccount.getBic())) return false;
-        return iban.equals(bankAccount.getIban());
-    }
+    public boolean equals(Object obj) { return EqualsBuilder.reflectionEquals(this, obj); }
 
     /**
      * Return a hash code value for this object.
@@ -92,7 +89,15 @@ public class BankAccount {
      * @return A hash code value for this object.
      */
     @Override
-    public int hashCode() {
-        return Objects.hash(iban, bic);
+    public int hashCode() { return HashCodeBuilder.reflectionHashCode(this); }
+
+    /**
+     * Return a description of this object in a human-readable format
+     *
+     * @return  A description of this object
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
 }
