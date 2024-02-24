@@ -32,15 +32,6 @@ public class BankAccount {
      * Constructs a BankAccount object with the specified attributes.
      *
      * @param iban The IBAN code of the bank account.
-     */
-    public BankAccount(String iban) {
-        this.iban = iban;
-    }
-
-    /**
-     * Constructs a BankAccount object with the specified attributes.
-     *
-     * @param iban The IBAN code of the bank account.
      * @param bic  The BIC code of the bank account.
      */
     public BankAccount(String iban, String bic) {
