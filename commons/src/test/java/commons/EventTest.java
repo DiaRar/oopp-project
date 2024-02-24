@@ -14,7 +14,7 @@ public class EventTest {
 
         // Two events with the same attributes should be equal
         Event event3 = new Event(event1.getName());
-        assertEquals(event1,event3);
+        assertEquals(event1, event3);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class EventTest {
 
         // Two events with the same attributes should have the same hashcode
         Event event3 = new Event(event1.getName());
-        assertEquals(event1.hashCode(),event3.hashCode());
+        assertEquals(event1.hashCode(), event3.hashCode());
     }
 
     @Test
