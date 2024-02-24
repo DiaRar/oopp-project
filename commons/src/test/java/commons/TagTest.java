@@ -10,23 +10,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class TagTest {
 
     private Tag tag1, tag2, tag3;
+    private final int red = 0xff0000;
+    private final int magenta = 0xff00ff;
 
     @BeforeEach
     public void beforeEach() {
-        tag1 = new Tag("food", new Color(255, 0, 0));
-        tag2 = new Tag("food1", new Color(255, 0, 255));
-        tag3 = new Tag("food", new Color(255, 0, 0));
+        tag1 = new Tag("food", new Color(red));
+        tag2 = new Tag("food1", new Color(magenta));
+        tag3 = new Tag("food", new Color(red));
     }
 
     @Test
     public void checkConstructor() {
-        Tag tag = new Tag("food", new Color(255, 0, 0));
+        Tag tag = new Tag("food", new Color(red));
 
         // Tag name should be food
         assertEquals("food", tag.getName());
 
         // Tag color should be red
-        assertEquals(new Color(255, 0, 0), tag.getColor());
+        assertEquals(new Color(red), tag.getColor());
     }
 
     @Test
