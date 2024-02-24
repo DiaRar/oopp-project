@@ -1,6 +1,5 @@
 package commons;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -71,7 +70,9 @@ public class BankAccount {
      * @return true if this object is the same as the o argument; false otherwise.
      */
     @Override
-    public boolean equals(Object obj) { return EqualsBuilder.reflectionEquals(this, obj); }
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
 
     /**
      * Return a hash code value for this object.
@@ -80,7 +81,9 @@ public class BankAccount {
      * @return A hash code value for this object.
      */
     @Override
-    public int hashCode() { return HashCodeBuilder.reflectionHashCode(this); }
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
     /**
      * Return a description of this object in a human-readable format
