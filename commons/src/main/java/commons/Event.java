@@ -1,35 +1,43 @@
 package commons;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 /**
  * Represents an event in the database.
  */
 public class Event {
+    // Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
+    private String name;
+    // Relations
+    @OneToMany
     private ArrayList<Expense> expenses;
+    @OneToMany
     private ArrayList<Tag> tags;
+    @ManyToMany
+    private ArrayList<Participant> participants;
 
     /**
-     * Constructs an Event object with specified name, UUID, expenses, and tags.
+     * Constructs an Event object with specified name, expenses, and tags.
      *
      * @param name     The name of the event.
-     * @param uuid     The UUID of the event.
      * @param expenses The list of expenses associated with the event.
      * @param tags     The list of tags associated with the event.
      */
-    public Event(String name, UUID uuid, ArrayList<Expense> expenses, ArrayList<Tag> tags) {
+    public Event(String name, ArrayList<Expense> expenses, ArrayList<Tag> tags) {
         this.name = name;
-        this.uuid = uuid;
         this.expenses = expenses;
         this.tags = tags;
     }
@@ -82,6 +90,14 @@ public class Event {
         this.tags = tags;
     }
 
+    public ArrayList<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(ArrayList<Participant> participants) {
+        this.participants = participants;
+    }
+
     /**
      * Indicates whether some other object is equal to this one.
      * Two events are considered equal if they have the same ID, name, UUID, expenses, and tags.
@@ -91,10 +107,7 @@ public class Event {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return id == event.id && Objects.equals(name, event.name) && Objects.equals(uuid, event.uuid) && Objects.equals(expenses, event.expenses) && Objects.equals(tags, event.tags);
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     /**
@@ -105,6 +118,15 @@ public class Event {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, uuid, expenses, tags);
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    /**
+     * Returns a string
+     * @return
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
 }
