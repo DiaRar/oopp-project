@@ -5,9 +5,9 @@ import jakarta.persistence.Id;
 @Entity
 public class BankAccount {
     @Id
-    private String IBAN;
+    private String iban;
     protected BankAccount() {}
-    public BankAccount(String IBAN) {
-        this.IBAN = IBAN;
+    public BankAccount(String iban) {
+        this.iban = iban;
     }
 }
