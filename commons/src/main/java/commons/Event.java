@@ -117,8 +117,9 @@ public class Event {
     }
 
     /**
-     * Returns a string
-     * @return
+     * Returns a string representation of the object data.
+     *
+     * @return A string representation
      */
     @Override
     public String toString() {
