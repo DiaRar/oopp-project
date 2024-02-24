@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -19,12 +17,12 @@ public class Event {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+    private UUID id;
     private String name;
     // Relations
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private ArrayList<Expense> expenses;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private ArrayList<Tag> tags;
     @ManyToMany
     private ArrayList<Participant> participants;
@@ -35,22 +33,22 @@ public class Event {
      * @param name     The name of the event.
      * @param expenses The list of expenses associated with the event.
      * @param tags     The list of tags associated with the event.
+     * @param participants The list of participants associated with the event.
      */
-    public Event(String name, ArrayList<Expense> expenses, ArrayList<Tag> tags) {
+    public Event(String name, ArrayList<Expense> expenses, ArrayList<Tag> tags, ArrayList<Participant> participants) {
         this.name = name;
         this.expenses = expenses;
         this.tags = tags;
+        this.participants = participants;
     }
 
     /**
      * Constructs an Event object with specified name and UUID.
      *
      * @param name The name of the event.
-     * @param uuid The UUID of the event.
      */
-    public Event(String name, UUID uuid) {
+    public Event(String name) {
         this.name = name;
-        this.uuid = uuid;
     }
 
     /**
@@ -66,13 +64,10 @@ public class Event {
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     public ArrayList<Expense> getExpenses() {
         return expenses;
