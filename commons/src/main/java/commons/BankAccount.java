@@ -19,7 +19,7 @@ public class BankAccount {
     private String iban;
     private String bic;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     private Participant participant;
 
     /**
