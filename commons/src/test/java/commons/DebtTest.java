@@ -26,8 +26,8 @@ public class DebtTest {
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
-        Debt debt1 = new Debt(new ImmutablePair<>(3.1, Currency.getInstance(Locale.US)), "Hello",
-                date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
+        Debt debt1 = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
+                date, new Participant("a", "c", "c"), new Participant("a", "d", "b"));
         // Two different debts should not be equal
         assertNotEquals(debt, debt1);
 
@@ -42,8 +42,8 @@ public class DebtTest {
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
-        Debt debt1 = new Debt(new ImmutablePair<>(3.2, Currency.getInstance(Locale.US)), "Hello",
-                date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
+        Debt debt1 = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
+                date, new Participant("a", "c", "c"), new Participant("a", "d", "b"));
 
         // Two different debts should not have an equal hashcode
         assertNotEquals(debt.hashCode(), debt1.hashCode());
