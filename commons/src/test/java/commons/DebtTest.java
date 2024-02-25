@@ -10,9 +10,10 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DebtTest {
+    private static final LocalDateTime date = LocalDateTime.of(2024, 2, 23, 23, 33);
+
     @Test
     public void constructorTest() {
-        LocalDateTime date = LocalDateTime.of(2024, 2, 23, 23, 33);
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
@@ -22,8 +23,6 @@ public class DebtTest {
 
     @Test
     public void equalsTest() {
-        LocalDateTime date = LocalDateTime.of(2024, 2, 23, 23, 33);
-
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
@@ -40,8 +39,6 @@ public class DebtTest {
 
     @Test
     public void hashCodeTest() {
-        LocalDateTime date = LocalDateTime.of(2024, 2, 23, 23, 33);
-
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
@@ -59,8 +56,6 @@ public class DebtTest {
 
     @Test
     public void hasToStringTest() {
-        LocalDateTime date = LocalDateTime.of(2024, 2, 23, 23, 33);
-
         Debt debt = new Debt(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), "Hello",
                 date, new Participant("a", "b", "c"), new Participant("a", "d", "b"));
 
