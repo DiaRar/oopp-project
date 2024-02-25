@@ -39,33 +39,61 @@ public class Debt {
         settled = false;
     }
 
-    public UUID id() { return id; }
+    public UUID id() {
+        return id;
+    }
 
-    public void setId(UUID id) { this.id = id; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public Pair<Double, Currency> value() { return value; }
+    public Pair<Double, Currency> value() {
+        return value;
+    }
 
-    public void setValue(Pair<Double, Currency> value) { this.value = value; }
+    public void setValue(Pair<Double, Currency> value) {
+        this.value = value;
+    }
 
-    public String description() { return description; }
+    public String description() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public LocalDateTime date() { return date; }
+    public LocalDateTime date() {
+        return date;
+    }
 
-    public void setDate(LocalDateTime date) { this.date = date; }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
-    public Participant lender() { return lender; }
+    public Participant lender() {
+        return lender;
+    }
 
-    public void setLender(Participant lender) { this.lender = lender; }
+    public void setLender(Participant lender) {
+        this.lender = lender;
+    }
 
-    public Participant debtor() { return debtor; }
+    public Participant debtor() {
+        return debtor;
+    }
 
-    public void setDebtor(Participant debtor) { this.debtor = debtor; }
+    public void setDebtor(Participant debtor) {
+        this.debtor = debtor;
+    }
 
-    public boolean settled() { return settled; }
+    public boolean settled() {
+        return settled;
+    }
 
-    public void setSettled(boolean settled) { this.settled = settled; }
+    public void setSettled(boolean settled) {
+        this.settled = settled;
+    }
 
     @Override
     public boolean equals(Object obj) {
