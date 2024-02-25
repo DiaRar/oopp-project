@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.UUID;
 
@@ -30,7 +29,7 @@ public class Debt {
     public Debt() {};
 
     public Debt(Pair<Double, Currency> value, String description,
-                LocalDateTime date, Participant lender, Participant debtor){
+                LocalDateTime date, Participant lender, Participant debtor) {
         this.value = value;
         this.description = description;
         this.date = date;
