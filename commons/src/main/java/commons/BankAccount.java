@@ -2,7 +2,6 @@ package commons;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,9 +16,6 @@ public class BankAccount {
     @Id
     private String iban;
     private String bic;
-
-    @OneToOne
-    private Participant participant;
 
     /**
      * Constructs an empty BankAccount object.
@@ -52,14 +48,6 @@ public class BankAccount {
 
     public void setBic(String bic) {
         this.bic = bic;
-    }
-
-    public Participant getParticipant() {
-        return participant;
-    }
-
-    public void setParticipant(Participant p) {
-        this.participant = p;
     }
 
     /**

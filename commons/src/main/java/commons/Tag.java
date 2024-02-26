@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -22,8 +22,8 @@ public class Tag {
     // Relations
     @ManyToOne
     private Event event;
-    @ManyToMany
-    private ArrayList<Expense> expenses;
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    private Collection<Expense> expenses;
 
     public Tag() {
     }
@@ -33,7 +33,7 @@ public class Tag {
         this.color = color;
     }
 
-    public Tag(String name, Color color, Event event, ArrayList<Expense> expenses) {
+    public Tag(String name, Color color, Event event, Collection<Expense> expenses) {
         this.name = name;
         this.color = color;
         this.event = event;
@@ -68,11 +68,11 @@ public class Tag {
         this.event = event;
     }
 
-    public ArrayList<Expense> getExpenses() {
+    public Collection<Expense> getExpenses() {
         return expenses;
     }
 
-    public void setExpenses(ArrayList<Expense> expenses) {
+    public void setExpenses(Collection<Expense> expenses) {
         this.expenses = expenses;
     }
 

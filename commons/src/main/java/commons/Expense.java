@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Currency;
 import java.util.UUID;
 
@@ -23,12 +24,15 @@ public class Expense {
     private String description;
     private LocalDateTime date;
 //  Relationships
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Participant payer;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Event event;
-    @ManyToMany
-    private ArrayList<Participant> debtors;
+
+    @OneToMany(mappedBy = "expense_id")
+    private Collection<Debt> debtors;
+
+
     @ManyToMany
     private ArrayList<Tag> tags;
     protected Expense() {};
@@ -40,7 +44,7 @@ public class Expense {
     }
 
     public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
-                   Participant payer, Event event, ArrayList<Participant> debtors, ArrayList<Tag> tags) {
+                   Participant payer, Event event, ArrayList<Debt> debtors, ArrayList<Tag> tags) {
         this.value = value;
         this.description = description;
         this.date = date;
@@ -93,14 +97,6 @@ public class Expense {
         this.event = event;
     }
 
-    public ArrayList<Participant> getDebtors() {
-        return debtors;
-    }
-
-    public void setDebtors(ArrayList<Participant> debtors) {
-        this.debtors = debtors;
-    }
-
     public ArrayList<Tag> getTags() {
         return tags;
     }
@@ -108,6 +104,15 @@ public class Expense {
     public void setTags(ArrayList<Tag> tags) {
         this.tags = tags;
     }
+
+    public Collection<Debt> getDebtors() {
+        return debtors;
+    }
+
+    public void setDebtors(Collection<Debt> debtors) {
+        this.debtors = debtors;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

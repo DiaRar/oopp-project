@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -21,12 +21,16 @@ public class Event {
     private UUID id;
     private String name;
     // Relations
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private ArrayList<Expense> expenses;
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private ArrayList<Tag> tags;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event", fetch = FetchType.LAZY)
+    private Collection<Expense> expenses;
+
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event", fetch = FetchType.LAZY)
+    private Collection<Tag> tags;
+
+
     @ManyToMany
-    private ArrayList<Participant> participants;
+    private Collection<Participant> participants;
 
     /**
      * Constructs an Event object with specified name, expenses, and tags.
@@ -36,7 +40,7 @@ public class Event {
      * @param tags     The list of tags associated with the event.
      * @param participants The list of participants associated with the event.
      */
-    public Event(String name, ArrayList<Expense> expenses, ArrayList<Tag> tags, ArrayList<Participant> participants) {
+    public Event(String name, Collection<Expense> expenses, Collection<Tag> tags, Collection<Participant> participants) {
         this.name = name;
         this.expenses = expenses;
         this.tags = tags;
@@ -70,27 +74,27 @@ public class Event {
     }
 
 
-    public ArrayList<Expense> getExpenses() {
+    public Collection<Expense> getExpenses() {
         return expenses;
     }
 
-    public void setExpenses(ArrayList<Expense> expenses) {
+    public void setExpenses(Collection<Expense> expenses) {
         this.expenses = expenses;
     }
 
-    public ArrayList<Tag> getTags() {
+    public Collection<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<Tag> tags) {
+    public void setTags(Collection<Tag> tags) {
         this.tags = tags;
     }
 
-    public ArrayList<Participant> getParticipants() {
+    public Collection<Participant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<Participant> participants) {
+    public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
     }
 
@@ -126,5 +130,4 @@ public class Event {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
-
 }
