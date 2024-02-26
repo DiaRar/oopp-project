@@ -75,7 +75,7 @@ public class Event {
     public Collection<Tag> getTags() {
         return tags;
     }
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     public Collection<Participant> getParticipants() {
         return participants;
     }

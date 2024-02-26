@@ -68,7 +68,7 @@ public class Participant {
     public Collection<Debt> getDebts() {
         return debts;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public Event getEvent() {
         return event;
     }
