@@ -16,31 +16,23 @@ import java.util.UUID;
 
 @Entity
 public class Expense {
-//  Attributes
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private Pair<Double, Currency> value;
     private String description;
     private LocalDateTime date;
-//  Relationships
-    @ManyToOne(optional = false)
     private Participant payer;
-    @ManyToOne(optional = false)
     private Event event;
-
-    @OneToMany(mappedBy = "expense_id")
     private Collection<Debt> debtors;
-
-
-    @ManyToMany
-    private ArrayList<Tag> tags;
+    private Collection<Tag> tags;
     protected Expense() {};
 
-    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date) {
+    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
+                   Participant payer, Event event) {
         this.value = value;
         this.description = description;
         this.date = date;
+        this.payer = payer;
+        this.event = event;
     }
 
     public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
@@ -53,77 +45,79 @@ public class Expense {
         this.debtors = debtors;
         this.tags = tags;
     }
+    // Attributes
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     public UUID getId() {
         return id;
     }
-
+    @Basic
+    @Column(name = "value")
     public Pair<Double, Currency> getValue() {
         return value;
     }
-
-    public void setValue(Pair<Double, Currency> value) {
-        this.value = value;
-    }
-
+    @Basic
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    @Basic
+    @Column(name = "date")
     public LocalDateTime getDate() {
         return date;
     }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
+    // Relationships
+    @ManyToOne(optional = false)
     public Participant getPayer() {
         return payer;
     }
-
-    public void setPayer(Participant payer) {
-        this.payer = payer;
-    }
-
+    @ManyToOne(optional = false)
     public Event getEvent() {
         return event;
+    }
+    @OneToMany(mappedBy = "expense")
+    public Collection<Debt> getDebtors() {
+        return debtors;
+    }
+    @ManyToMany
+    public Collection<Tag> getTags() {
+        return tags;
+    }
+    // Setters
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    public void setValue(Pair<Double, Currency> value) {
+        this.value = value;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+    public void setPayer(Participant payer) {
+        this.payer = payer;
     }
 
     public void setEvent(Event event) {
         this.event = event;
     }
-
-    public ArrayList<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(ArrayList<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public Collection<Debt> getDebtors() {
-        return debtors;
-    }
-
     public void setDebtors(Collection<Debt> debtors) {
         this.debtors = debtors;
     }
-
-
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
+    }
+    // Equals, hashCode, and toString
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);

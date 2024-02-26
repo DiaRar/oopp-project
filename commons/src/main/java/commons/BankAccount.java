@@ -13,7 +13,6 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
  */
 @Entity
 public class BankAccount {
-    @Id
     private String iban;
     private String bic;
 
@@ -33,7 +32,7 @@ public class BankAccount {
         this.iban = iban;
         this.bic = bic;
     }
-
+    @Id
     public String getIban() {
         return iban;
     }

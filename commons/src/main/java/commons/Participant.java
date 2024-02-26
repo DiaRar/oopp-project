@@ -12,13 +12,13 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 public class Participant {
-    private UUID uuid;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
     private BankAccount bankAccount;
     private Collection<Debt> debts;
-    private Collection<Event> events;
+    private Event event;
 
     //for object mapper
     protected Participant() {
@@ -40,8 +40,8 @@ public class Participant {
     @Id
     @Column(name = "participant_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
     @Basic
     @Column(name = "firstName")
@@ -64,16 +64,17 @@ public class Participant {
     public BankAccount getBankAccount() {
         return bankAccount;
     }
-    @OneToMany(mappedBy = "participant_id")
+    @OneToMany(mappedBy = "participant")
     public Collection<Debt> getDebts() {
         return debts;
     }
-    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
-    public Collection<Event> getEvents() {
-        return events;
+    @ManyToOne(fetch = FetchType.LAZY)
+    public Event getEvent() {
+        return event;
     }
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    // Setters
+    public void setId(UUID id) {
+        this.id = id;
     }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -87,8 +88,8 @@ public class Participant {
     public void setDebts(Collection<Debt> debts) {
         this.debts = debts;
     }
-    public void setEvents(Collection<Event> events) {
-        this.events = events;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public void setEmail(String email) {

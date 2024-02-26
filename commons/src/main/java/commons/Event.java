@@ -16,20 +16,12 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Entity
 public class Event {
     // Attributes
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+
     private UUID id;
     private String name;
     // Relations
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event", fetch = FetchType.LAZY)
     private Collection<Expense> expenses;
-
-
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event", fetch = FetchType.LAZY)
     private Collection<Tag> tags;
-
-
-    @ManyToMany
     private Collection<Participant> participants;
 
     /**
@@ -60,40 +52,47 @@ public class Event {
      * Constructs an empty Event object.
      */
     public Event() {}
-
+    // Attributes
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "expense_id")
+    public UUID getId() {
+        return id;
+    }
+    @Basic
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // Relationships
 
-    public UUID getId() {
-        return id;
-    }
-
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.LAZY)
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-
-    public void setExpenses(Collection<Expense> expenses) {
-        this.expenses = expenses;
-    }
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Collection<Tag> getTags() {
         return tags;
     }
-
-    public void setTags(Collection<Tag> tags) {
-        this.tags = tags;
-    }
-
+    @ManyToMany(cascade = CascadeType.ALL)
     public Collection<Participant> getParticipants() {
         return participants;
     }
 
+    // Setters
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setExpenses(Collection<Expense> expenses) {
+        this.expenses = expenses;
+    }
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
+    }
     public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
     }
