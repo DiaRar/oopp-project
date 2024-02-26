@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collection;
 import java.util.Currency;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class Expense {
     }
 
     public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
-                   Participant payer, Event event, ArrayList<Debt> debtors, ArrayList<Tag> tags) {
+                   Participant payer, Event event, Collection<Debt> debtors, Collection<Tag> tags) {
         this.value = value;
         this.description = description;
         this.date = date;
