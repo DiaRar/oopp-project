@@ -26,8 +26,8 @@ public class Debt {
     @JoinColumn(name = "participant_id")
     private Participant participant;
     protected Debt() {}
-    public Debt(UUID expense_id, UUID participant_id) {
-        this.id = new DebtPK(expense_id, participant_id);
+    public Debt(UUID expenseId, UUID participantId) {
+        this.id = new DebtPK(expenseId, participantId);
         this.paid = false;
     }
     @Basic
