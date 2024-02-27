@@ -15,15 +15,17 @@
  */
 package server.database;
 
+import commons.Debt;
 import commons.Participant;
+import commons.primary_keys.DebtPK;
 import org.springframework.data.jpa.repository.JpaRepository;
-import commons.Expense;
 
 import java.util.Collection;
 import java.util.UUID;
 
-public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
-    Collection<Expense> findExpenseByPayerId(UUID id);
-    Collection<Expense> findExpenseByPayer(Participant payer);
-    Collection<Expense> findExpenseByDebtorsContaining(Participant debtor);
+public interface DebtRepository extends JpaRepository<Debt, DebtPK> {
+    Collection<Debt> findDebtsByPayerId(UUID id);
+    Collection<Debt> findDebtsByPayer(Participant payer);
+    Collection<Debt> findDebtsByDebtorId(UUID id);
+    Collection<Debt> findDebtsByDebtor(Participant debtor);
 }

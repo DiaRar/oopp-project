@@ -16,7 +16,7 @@ public class ExpenseTest {
     @Test
     public void checkConstructor() {
         Expense expense = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                 "Test", date);
+                 "Test", date, null, null);
         assertEquals(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), expense.getValue());
         assertEquals("Test", expense.getDescription());
         assertEquals(date, expense.getDate());
@@ -25,9 +25,9 @@ public class ExpenseTest {
     @Test
     public void equalsHashCode() {
         Expense expense = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                "Test", date);
+                "Test", date, null, null);
         Expense expense2 = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                "Test", date);
+                "Test", date, null, null);
         assertEquals(expense, expense2);
         assertEquals(expense.hashCode(), expense2.hashCode());
     }
@@ -35,9 +35,9 @@ public class ExpenseTest {
     @Test
     public void notEqualsHashCode() {
         Expense expense = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                "Test", date);
+                "Test", date, null, null);
         Expense expense2 = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                "Test2", date);
+                "Test2", date, null, null);
         assertNotEquals(expense, expense2);
         assertNotEquals(expense.hashCode(), expense2.hashCode());
     }
@@ -45,7 +45,7 @@ public class ExpenseTest {
     @Test
     public void hasToString() {
         String string = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
-                "Test", date).toString();
+                "Test", date, null, null).toString();
         assertTrue(string.contains("Test"));
         assertTrue(string.contains("2024"));
     }

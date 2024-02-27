@@ -5,27 +5,20 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 public class Participant {
-    @Id
-    @Column(name = "participant_id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
     private BankAccount bankAccount;
-
-    @ManyToMany
-    private List<Event> events;
+    private Collection<Expense> expenses;
+    private Event event;
 
     //for object mapper
     protected Participant() {
@@ -37,47 +30,66 @@ public class Participant {
         this.email = email;
     }
 
-    public Participant(String firstName, String lastName, String email,
-                       BankAccount bankAccount, ArrayList<Event> events) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.bankAccount = bankAccount;
-        this.events = events;
-    }
-
     public Participant(String firstName, String lastName, String email, BankAccount bankAccount) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.bankAccount = bankAccount;
     }
-
-    public UUID getUuid() {
-        return uuid;
+    // Attributes
+    @Id
+    @Column(name = "participant_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    public UUID getId() {
+        return id;
     }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
+    @Basic
+    @Column(name = "firstName")
     public String getFirstName() {
         return firstName;
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    @Basic
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
     }
+    @Basic
+    @Column(name = "lastName")
     public String getLastName() {
         return lastName;
     }
 
+    // Relationships
+    @OneToOne(cascade = CascadeType.ALL)
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
+    @ManyToMany
+    public Collection<Expense> getExpenses() {
+        return expenses;
+    }
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    public Event getEvent() {
+        return event;
+    }
+    // Setters
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public String getEmail() {
-        return email;
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+    public void setExpenses(Collection<Expense> expenses) {
+        this.expenses = expenses;
+    }
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public void setEmail(String email) {

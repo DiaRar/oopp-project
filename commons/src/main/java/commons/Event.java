@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -16,17 +16,13 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Entity
 public class Event {
     // Attributes
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+
     private UUID id;
     private String name;
     // Relations
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private ArrayList<Expense> expenses;
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private ArrayList<Tag> tags;
-    @ManyToMany
-    private ArrayList<Participant> participants;
+    private Collection<Expense> expenses;
+    private Collection<Tag> tags;
+    private Collection<Participant> participants;
 
     /**
      * Constructs an Event object with specified name, expenses, and tags.
@@ -36,7 +32,7 @@ public class Event {
      * @param tags     The list of tags associated with the event.
      * @param participants The list of participants associated with the event.
      */
-    public Event(String name, ArrayList<Expense> expenses, ArrayList<Tag> tags, ArrayList<Participant> participants) {
+    public Event(String name, Collection<Expense> expenses, Collection<Tag> tags, Collection<Participant> participants) {
         this.name = name;
         this.expenses = expenses;
         this.tags = tags;
@@ -56,41 +52,48 @@ public class Event {
      * Constructs an empty Event object.
      */
     public Event() {}
-
+    // Attributes
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "expense_id")
+    public UUID getId() {
+        return id;
+    }
+    @Basic
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // Relationships
 
-    public UUID getId() {
-        return id;
-    }
-
-
-    public ArrayList<Expense> getExpenses() {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.LAZY)
+    public Collection<Expense> getExpenses() {
         return expenses;
     }
-
-    public void setExpenses(ArrayList<Expense> expenses) {
-        this.expenses = expenses;
-    }
-
-    public ArrayList<Tag> getTags() {
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Collection<Tag> getTags() {
         return tags;
     }
-
-    public void setTags(ArrayList<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public ArrayList<Participant> getParticipants() {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    public Collection<Participant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<Participant> participants) {
+    // Setters
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setExpenses(Collection<Expense> expenses) {
+        this.expenses = expenses;
+    }
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
+    }
+    public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
     }
 
@@ -126,5 +129,4 @@ public class Event {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
-
 }

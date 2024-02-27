@@ -1,109 +1,68 @@
 package commons;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
-
+import commons.primary_keys.DebtPK;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
+
+
+@Entity
+@Table(name = "debt")
 public class Debt {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @EmbeddedId
+    private DebtPK id;
+    @Column(name = "`value`")
     private Pair<Double, Currency> value;
-    private String description;
-    private LocalDateTime date;
-    private boolean settled;
-
-    @ManyToOne
-    private Participant lender;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("payer_id")
+    @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
+    private Participant payer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("debtor_id")
+    @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
     private Participant debtor;
-
-    public Debt() {};
-
-    public Debt(Pair<Double, Currency> value, String description,
-                LocalDateTime date, Participant lender, Participant debtor) {
+    protected Debt() {}
+    public Debt(UUID payerId, UUID debtorId, Pair<Double, Currency> value) {
+        this.id = new DebtPK(payerId, debtorId);
         this.value = value;
-        this.description = description;
-        this.date = date;
-        this.lender = lender;
-        this.debtor = debtor;
-        settled = false;
     }
-
-    public UUID id() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Pair<Double, Currency> value() {
+    public Pair<Double, Currency> getValue() {
         return value;
     }
-
+    public Participant getPayer() {
+        return payer;
+    }
+    public Participant getDebtor() {
+        return debtor;
+    }
+    // Setters
+    public void setId(DebtPK id) {
+        this.id = id;
+    }
     public void setValue(Pair<Double, Currency> value) {
         this.value = value;
     }
-
-    public String description() {
-        return description;
+    public void setPayer(Participant payer) {
+        this.payer = payer;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime date() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public Participant lender() {
-        return lender;
-    }
-
-    public void setLender(Participant lender) {
-        this.lender = lender;
-    }
-
-    public Participant debtor() {
-        return debtor;
-    }
-
     public void setDebtor(Participant debtor) {
         this.debtor = debtor;
     }
-
-    public boolean settled() {
-        return settled;
-    }
-
-    public void setSettled(boolean settled) {
-        this.settled = settled;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
