@@ -18,6 +18,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 public class Debt {
     @EmbeddedId
     private DebtPK id;
+    @Column(name = "`value`")
     private Pair<Double, Currency> value;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("payer_id")
@@ -32,8 +33,6 @@ public class Debt {
         this.id = new DebtPK(payerId, debtorId);
         this.value = value;
     }
-    @Basic
-    @Column(name = "value")
     public Pair<Double, Currency> getValue() {
         return value;
     }

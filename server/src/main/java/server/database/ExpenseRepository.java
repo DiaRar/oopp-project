@@ -15,8 +15,15 @@
  */
 package server.database;
 
+import commons.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Expense;
+
+import java.util.Collection;
 import java.util.UUID;
 
-public interface ExpenseRepository extends JpaRepository<Expense, UUID> {}
+public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
+    Collection<Expense> findExpenseByPayerId(UUID id);
+    Collection<Expense> findExpenseByPayer(Participant payer);
+    Collection<Expense> findExpenseByDebtorsContaining(Participant debtor);
+}

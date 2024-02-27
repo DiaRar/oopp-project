@@ -16,6 +16,7 @@
 package server.database;
 
 import commons.Debt;
+import commons.Participant;
 import commons.primary_keys.DebtPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,5 +25,7 @@ import java.util.UUID;
 
 public interface DebtRepository extends JpaRepository<Debt, DebtPK> {
     Collection<Debt> findDebtsByPayerId(UUID id);
+    Collection<Debt> findDebtsByPayer(Participant payer);
     Collection<Debt> findDebtsByDebtorId(UUID id);
+    Collection<Debt> findDebtsByDebtor(Participant debtor);
 }

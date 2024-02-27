@@ -10,7 +10,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collection;
 import java.util.Currency;
 import java.util.UUID;
 
@@ -52,7 +51,7 @@ public class Expense {
         return id;
     }
     @Basic
-    @Column(name = "value")
+    @Column(name = "`value`")
     public Pair<Double, Currency> getValue() {
         return value;
     }
