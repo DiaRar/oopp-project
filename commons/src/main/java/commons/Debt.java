@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Currency;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -16,24 +18,24 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 public class Debt {
     @EmbeddedId
     private DebtPK id;
-    private boolean paid;
+    private Pair<Double, Currency> value;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("payer_id")
-    @JoinColumn(name = "payer_id")
+    @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
     private Participant payer;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("debtor_id")
-    @JoinColumn(name = "debtor_id")
+    @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
     private Participant debtor;
     protected Debt() {}
-    public Debt(UUID expenseId, UUID participantId) {
-        this.id = new DebtPK(expenseId, participantId);
-        this.paid = false;
+    public Debt(UUID payerId, UUID debtorId, Pair<Double, Currency> value) {
+        this.id = new DebtPK(payerId, debtorId);
+        this.value = value;
     }
     @Basic
-    @Column(name = "paid")
-    public boolean isPaid() {
-        return paid;
+    @Column(name = "value")
+    public Pair<Double, Currency> getValue() {
+        return value;
     }
     public Participant getPayer() {
         return payer;
@@ -45,8 +47,8 @@ public class Debt {
     public void setId(DebtPK id) {
         this.id = id;
     }
-    public void setPaid(boolean paid) {
-        this.paid = paid;
+    public void setValue(Pair<Double, Currency> value) {
+        this.value = value;
     }
     public void setPayer(Participant payer) {
         this.payer = payer;

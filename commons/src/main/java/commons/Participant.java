@@ -85,7 +85,7 @@ public class Participant {
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
-    public void setDebts(Collection<Expense> expenses) {
+    public void setExpenses(Collection<Expense> expenses) {
         this.expenses = expenses;
     }
     public void setEvent(Event event) {

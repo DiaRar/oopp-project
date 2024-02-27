@@ -15,7 +15,6 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 public class DebtPK implements Serializable {
     @Column(name = "payer_id")
     private UUID payerId;
-
     @Column(name = "debtor_id")
     private UUID debtorId;
     protected DebtPK() {}
