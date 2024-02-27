@@ -18,13 +18,13 @@ public class Debt {
     private DebtPK id;
     private boolean paid;
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("expense_id")
-    @JoinColumn(name = "expense_id")
-    private Expense expense;
+    @MapsId("payer_id")
+    @JoinColumn(name = "payer_id")
+    private Participant payer;
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("participant_id")
-    @JoinColumn(name = "participant_id")
-    private Participant participant;
+    @MapsId("debtor_id")
+    @JoinColumn(name = "debtor_id")
+    private Participant debtor;
     protected Debt() {}
     public Debt(UUID expenseId, UUID participantId) {
         this.id = new DebtPK(expenseId, participantId);
@@ -35,11 +35,11 @@ public class Debt {
     public boolean isPaid() {
         return paid;
     }
-    public Expense getExpense() {
-        return expense;
+    public Participant getPayer() {
+        return payer;
     }
-    public Participant getParticipant() {
-        return participant;
+    public Participant getDebtor() {
+        return debtor;
     }
     // Setters
     public void setId(DebtPK id) {
@@ -48,11 +48,11 @@ public class Debt {
     public void setPaid(boolean paid) {
         this.paid = paid;
     }
-    public void setExpense(Expense expense) {
-        this.expense = expense;
+    public void setPayer(Participant payer) {
+        this.payer = payer;
     }
-    public void setParticipant(Participant participant) {
-        this.participant = participant;
+    public void setDebtor(Participant debtor) {
+        this.debtor = debtor;
     }
     @Override
     public boolean equals(Object obj) {

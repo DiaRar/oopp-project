@@ -22,7 +22,7 @@ public class Expense {
     private LocalDateTime date;
     private Participant payer;
     private Event event;
-    private Collection<Debt> debtors;
+    private Collection<Participant> debtors;
     private Collection<Tag> tags;
     protected Expense() {};
 
@@ -36,7 +36,7 @@ public class Expense {
     }
 
     public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
-                   Participant payer, Event event, Collection<Debt> debtors, Collection<Tag> tags) {
+                   Participant payer, Event event, Collection<Participant> debtors, Collection<Tag> tags) {
         this.value = value;
         this.description = description;
         this.date = date;
@@ -75,8 +75,8 @@ public class Expense {
     public Event getEvent() {
         return event;
     }
-    @OneToMany(mappedBy = "expense")
-    public Collection<Debt> getDebtors() {
+    @ManyToMany(mappedBy = "expenses")
+    public Collection<Participant> getDebtors() {
         return debtors;
     }
     @ManyToMany
@@ -103,7 +103,7 @@ public class Expense {
     public void setEvent(Event event) {
         this.event = event;
     }
-    public void setDebtors(Collection<Debt> debtors) {
+    public void setDebtors(Collection<Participant> debtors) {
         this.debtors = debtors;
     }
     public void setTags(Collection<Tag> tags) {

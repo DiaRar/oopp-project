@@ -13,15 +13,15 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Embeddable
 public class DebtPK implements Serializable {
-    @Column(name = "expense_id")
-    private UUID expenseId;
+    @Column(name = "payer_id")
+    private UUID payerId;
 
-    @Column(name = "participant_id")
-    private UUID participantId;
+    @Column(name = "debtor_id")
+    private UUID debtorId;
     protected DebtPK() {}
-    public DebtPK(UUID expenseId, UUID participantId) {
-        this.expenseId = expenseId;
-        this.participantId = participantId;
+    public DebtPK(UUID payerId, UUID debtorId) {
+        this.payerId = payerId;
+        this.debtorId = debtorId;
     }
     @Override
     public boolean equals(Object obj) {

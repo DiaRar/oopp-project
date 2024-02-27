@@ -17,7 +17,7 @@ public class Participant {
     private String lastName;
     private String email;
     private BankAccount bankAccount;
-    private Collection<Debt> debts;
+    private Collection<Expense> expenses;
     private Event event;
 
     //for object mapper
@@ -64,9 +64,9 @@ public class Participant {
     public BankAccount getBankAccount() {
         return bankAccount;
     }
-    @OneToMany(mappedBy = "participant")
-    public Collection<Debt> getDebts() {
-        return debts;
+    @ManyToMany
+    public Collection<Expense> getExpenses() {
+        return expenses;
     }
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public Event getEvent() {
@@ -85,8 +85,8 @@ public class Participant {
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
-    public void setDebts(Collection<Debt> debts) {
-        this.debts = debts;
+    public void setDebts(Collection<Expense> expenses) {
+        this.expenses = expenses;
     }
     public void setEvent(Event event) {
         this.event = event;
