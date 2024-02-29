@@ -55,7 +55,7 @@ public class Event {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "expense_id")
+    @Column(name = "event_id")
     public UUID getId() {
         return id;
     }
