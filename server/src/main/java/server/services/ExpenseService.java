@@ -28,7 +28,7 @@ public class ExpenseService {
         throw new NotImplementedException();
     }
 
-    public Expense save(UUID eventId, UUID expenseId, Expense expense) {
+    public Expense save(UUID eventId, Expense expense) {
         throw new NotImplementedException();
     }
 

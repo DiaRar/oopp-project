@@ -3,7 +3,7 @@ package server.api;
 import commons.Expense;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.EventRepository;
+import server.services.ExpenseService;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -12,37 +12,60 @@ import java.util.UUID;
 @RequestMapping("/api/event/{id}/expenses")
 public class ExpensesController {
 
-    private final EventRepository eventRepo;
+    private final ExpenseService expenseService;
 
-    public ExpensesController(EventRepository eventRepo) {
-        this.eventRepo = eventRepo;
+    public ExpensesController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Collection<Expense>> getExpenses(@PathVariable("id") UUID eventId) {
-        return ResponseEntity.ok(eventRepo.findById(eventId).get().getExpenses());
+    public ResponseEntity<Collection<Expense>> getAll(@PathVariable("id") UUID eventId) {
+        try {
+            return ResponseEntity.ok(expenseService.getAll(eventId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Expense> postExpense(@PathVariable("id") UUID eventId, @RequestBody Expense expense) {
-        return null;
+    public ResponseEntity<Expense> post(@PathVariable("id") UUID eventId, @RequestBody Expense expense) {
+        try {
+            Expense saved = expenseService.save(eventId, expense);
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @GetMapping("/{expense_id}")
+    @GetMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        getExpenseById(@PathVariable("id") UUID eventId, @PathVariable("expense_id") UUID expenseId) {
-        return null;
+        getById(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId) {
+        try {
+            return ResponseEntity.ok(expenseService.getById(eventId, expenseId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @PutMapping("/{expense_id}")
+    @PutMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        putExpense(@PathVariable("id") UUID eventId, @PathVariable("expense_id") UUID expenseId) {
-        return null;
+        update(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId, @RequestBody Expense expense) {
+        try {
+            Expense updated = expenseService.update(eventId, expenseId, expense);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @DeleteMapping("/{expense_id}")
+    @DeleteMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        deleteExpense(@PathVariable("id") UUID eventId, @PathVariable("expense_id") UUID expenseId) {
-        return null;
+        delete(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId) {
+        try {
+            Expense deleted = expenseService.delete(eventId, expenseId);
+            return ResponseEntity.ok(deleted);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
