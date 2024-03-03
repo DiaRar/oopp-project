@@ -39,7 +39,7 @@ public class TestEventRepository implements EventRepository {
 
     @Override
     public Optional<Event> findById(UUID uuid) {
-        return events.stream().filter(x->x.getId().equals(uuid)).findFirst();
+        return events.stream().filter(x -> x.getId().equals(uuid)).findFirst();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TestEventRepository implements EventRepository {
     @Override
     public void deleteById(UUID id) {
         call("deleteById");
-        Event temp = events.stream().filter(x->x.getId().equals(id)).findFirst().get();
+        Event temp = events.stream().filter(x -> x.getId().equals(id)).findFirst().get();
         events.remove(temp);
     }
 

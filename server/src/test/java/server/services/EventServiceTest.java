@@ -13,12 +13,14 @@ import server.repositories.TestEventRepository;
 import java.util.UUID;
 
 public class EventServiceTest {
+    private int id;
     private TestEventRepository repo;
 
     private EventService eventService;
 
     @BeforeEach
     public void setup() {
+        id=1;
         repo = new TestEventRepository();
         eventService = new EventService(repo);
     }
@@ -30,32 +32,33 @@ public class EventServiceTest {
     }
 
     @Test
-    public void getAllTest(){
-        eventService.add(getEvent("test1", 1));
-        eventService.add(getEvent("test2", 2));
-        eventService.add(getEvent("test3", 3));
+    public void getAllTest() {
+        eventService.add(getEvent("test1", id++));
+        eventService.add(getEvent("test2", id++));
+        eventService.add(getEvent("test3", id++));
         assertEquals(3, eventService.getAll().size());
     }
 
     @Test
-    public void getByIdTest(){
-        eventService.add(getEvent("test1", 1));
-        eventService.add(getEvent("test2", 2));
-        eventService.add(getEvent("test3", 3));
-        Event temp = eventService.add(getEvent("test4", 4));
-        eventService.add(getEvent("test5", 5));
-        eventService.add(getEvent("test6", 6));
+    public void getByIdTest() {
+        eventService.add(getEvent("test1", id++));
+        eventService.add(getEvent("test2", id++));
+        eventService.add(getEvent("test3", id++));
+        Event temp = eventService.add(getEvent("test4", id++));
+        eventService.add(getEvent("test5", id++));
+        eventService.add(getEvent("test6", id++));
 
         assertEquals(temp, eventService.getById(temp.getId()));
     }
 
     @Test
-    public void updateTest(){
-        eventService.add(getEvent("test1", 1));
-        eventService.add(getEvent("test2", 2));
-        var temp = eventService.add(getEvent("test3", 3));
-        var temp2 = getEvent("test4", 4);
-        var temp3 = getEvent("test4", 3);
+    public void updateTest() {
+        eventService.add(getEvent("test1", id++));
+        eventService.add(getEvent("test2", id++));
+        var temp = eventService.add(getEvent("test3", id++));
+        var temp2 = getEvent("test4", id++);
+        var temp3 = getEvent("test4", id++);
+        temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
         assertEquals(temp3, eventService.getById(temp.getId()));
     }
