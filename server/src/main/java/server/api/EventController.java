@@ -27,7 +27,7 @@ public class EventController {
     public ResponseEntity<Event> getById(@PathVariable("id") UUID id) {
         try {
             return ResponseEntity.ok(eventService.getById(id));
-        } catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -37,7 +37,7 @@ public class EventController {
         try {
             Event saved = eventService.add(event);
             return ResponseEntity.ok(saved);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
