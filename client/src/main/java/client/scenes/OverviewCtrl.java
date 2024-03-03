@@ -124,4 +124,10 @@ public class OverviewCtrl {
                 expenses.stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
     }
+
+    public void choiceChanged() {
+        String name = choiceBox.getValue().toString();
+        from.setText("From ".concat(name));
+        including.setText("Including ".concat(name));
+    }
 }

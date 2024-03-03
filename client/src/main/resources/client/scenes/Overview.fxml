@@ -97,7 +97,7 @@
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>
             </Button>
-            <ChoiceBox fx:id="choiceBox" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
+            <ChoiceBox fx:id="choiceBox" onAction="#choiceChanged" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" right="10.0" top="5.0" />
                </GridPane.margin>
