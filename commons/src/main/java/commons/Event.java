@@ -96,10 +96,6 @@ public class Event {
     public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
     }
-    public void addParticipant(Participant participant) {
-        if(participant != null)
-            participants.add(participant);
-    }
 
     /**
      * Indicates whether some other object is equal to this one.
