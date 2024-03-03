@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.StringReader;
 import java.util.UUID;
 
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConfigUtilsTest {
     private ConfigUtils sut;
-
+    private static final int EVENTS_SIZE = 3;
     @BeforeEach
     public void setup() {
         sut = new ConfigUtils();
@@ -29,8 +28,8 @@ public class ConfigUtilsTest {
         sut.setRecentsFile(new StringReader(csvData));
         var events = sut.readRecents();
 
-        assertEquals(3, events.size());
+        assertEquals(EVENTS_SIZE, events.size());
         assertEquals(UUID.fromString("7650fe94-5b6d-4e8c-9a12-7e2e5458b211"), events.getFirst().getId());
-        assertEquals("Product Launch",events.getLast().getName());
+        assertEquals("Product Launch", events.getLast().getName());
     }
 }

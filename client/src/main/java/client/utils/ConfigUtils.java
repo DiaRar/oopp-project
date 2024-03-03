@@ -10,10 +10,10 @@ public class ConfigUtils {
     private Reader recentsFile;
 
     public ArrayList<Event> readRecents() {
-        try(BufferedReader reader = new BufferedReader(recentsFile)) {
+        try (BufferedReader reader = new BufferedReader(recentsFile)) {
             ArrayList<Event> events = new ArrayList<>();
             String line;
-            while((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 Event newEvent = new Event();
                 newEvent.setName(parts[0]);

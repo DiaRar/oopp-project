@@ -30,9 +30,9 @@ public class StartCtrl implements Initializable {
      *
      * @see ConfigUtils#readRecents()
      */
-    public void fillRecent(){
+    public void fillRecent() {
         List<Event> recentEvents = utils.readRecents();
-        if(recentEvents.isEmpty()) return;
+        if (recentEvents.isEmpty()) return;
         List<String> names = recentEvents.stream()
                 .map(Event::getName)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class StartCtrl implements Initializable {
     /**
      * Displays the create event screen.
      */
-    public void create(){
+    public void create() {
         //TODO: Implement screen switch
         System.out.println("create event screen");
     }
@@ -61,7 +61,7 @@ public class StartCtrl implements Initializable {
     /**
      * Loads event data from the database and switches to the overview screen.
      */
-    public void join(){
+    public void join() {
         //TODO: Implement screen switch
         System.out.println("load event from database");
         System.out.println("switch to overview");

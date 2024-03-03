@@ -37,7 +37,7 @@ public class InjectorModule implements Module {
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
     }
 
-    private ConfigUtils createConfigUtils(){
+    private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
         try {
             Path path = Paths.get("client/src/main/resources/config/recents.csv");

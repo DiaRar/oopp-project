@@ -32,9 +32,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        var startScreen = FXML.load(StartCtrl.class,"client", "scenes","Start.fxml");
+        var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
 
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage,startScreen);
+        mc.init(primaryStage, startScreen);
     }
 }
