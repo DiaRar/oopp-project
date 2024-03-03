@@ -240,7 +240,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @return the saved entity; will never be {@literal null}.
      * @throws IllegalArgumentException          in case the given {@literal entity} is {@literal null}.
      * @throws OptimisticLockingFailureException when the entity uses optimistic locking and has a version attribute with
-     *                                           a different value from that found in the persistence store. Also thrown if the entity is assumed to be
+     *                                           a different value from that found in the persistence store.
+     *                                           Also thrown if the entity is assumed to be
      *                                           present but does not exist in the database.
      */
     @Override
@@ -257,7 +258,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @throws IllegalArgumentException          in case the given {@link Iterable entities} or one of its entities is
      *                                           {@literal null}.
      * @throws OptimisticLockingFailureException when at least one entity uses optimistic locking and has a version
-     *                                           attribute with a different value from that found in the persistence store. Also thrown if at least one
+     *                                           attribute with a different value from that found in the persistence store.
+     *                                           Also thrown if at least one
      *                                           entity is assumed to be present but does not exist in the database.
      */
     @Override
@@ -345,7 +347,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @param entity must not be {@literal null}.
      * @throws IllegalArgumentException          in case the given entity is {@literal null}.
      * @throws OptimisticLockingFailureException when the entity uses optimistic locking and has a version attribute with
-     *                                           a different value from that found in the persistence store. Also thrown if the entity is assumed to be
+     *                                           a different value from that found in the persistence store.
+     *                                           Also thrown if the entity is assumed to be
      *                                           present but does not exist in the database.
      */
     @Override
@@ -373,7 +376,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @param entities must not be {@literal null}. Must not contain {@literal null} elements.
      * @throws IllegalArgumentException          in case the given {@literal entities} or one of its entities is {@literal null}.
      * @throws OptimisticLockingFailureException when at least one entity uses optimistic locking and has a version
-     *                                           attribute with a different value from that found in the persistence store. Also thrown if at least one
+     *                                           attribute with a different value from that found in the persistence store.
+     *                                           Also thrown if at least one
      *                                           entity is assumed to be present but does not exist in the database.
      */
     @Override
