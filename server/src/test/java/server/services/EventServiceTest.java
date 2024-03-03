@@ -36,7 +36,7 @@ public class EventServiceTest {
         eventService.add(getEvent("test1", id++));
         eventService.add(getEvent("test2", id++));
         eventService.add(getEvent("test3", id++));
-        assertEquals(id-1, eventService.getAll().size());
+        assertEquals(id - 1, eventService.getAll().size());
     }
 
     @Test
