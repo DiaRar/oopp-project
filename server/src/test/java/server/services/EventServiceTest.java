@@ -20,7 +20,7 @@ public class EventServiceTest {
 
     @BeforeEach
     public void setup() {
-        id=1;
+        id = 1;
         repo = new TestEventRepository();
         eventService = new EventService(repo);
     }
@@ -36,7 +36,7 @@ public class EventServiceTest {
         eventService.add(getEvent("test1", id++));
         eventService.add(getEvent("test2", id++));
         eventService.add(getEvent("test3", id++));
-        assertEquals(3, eventService.getAll().size());
+        assertEquals(id-1, eventService.getAll().size());
     }
 
     @Test
