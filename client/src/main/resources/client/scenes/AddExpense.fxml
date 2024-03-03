@@ -5,44 +5,40 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddQuoteCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="479.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
       <Button layoutX="360.0" layoutY="403.0" mnemonicParsing="false" onAction="#ok" text="Add" />
       <Button layoutX="283.0" layoutY="403.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-      <TextField fx:id="firstName" layoutX="129.0" layoutY="112.0" prefHeight="26.0" prefWidth="250.0" />
+      <TextField fx:id="description" layoutX="129.0" layoutY="112.0" prefHeight="26.0" prefWidth="250.0" />
       <Label layoutX="33.0" layoutY="76.0" prefHeight="18.0" prefWidth="79.0" text="Who paid?" />
       <Label layoutX="92.0" layoutY="14.0" prefHeight="35.0" prefWidth="249.0" text="Add/Edit Expense">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <ComboBox layoutX="129.0" layoutY="72.0" prefWidth="150.0" />
+      <ComboBox fx:id="payer" layoutX="129.0" layoutY="72.0" prefWidth="150.0" />
       <Label layoutX="33.0" layoutY="116.0" prefHeight="18.0" prefWidth="79.0" text="What for?" />
-      <TextField fx:id="firstName1" layoutX="129.0" layoutY="152.0" prefHeight="26.0" prefWidth="150.0" />
+      <TextField fx:id="amount" layoutX="129.0" layoutY="152.0" prefHeight="26.0" prefWidth="150.0" />
       <Label layoutX="33.0" layoutY="156.0" prefHeight="18.0" prefWidth="79.0" text="How much?" />
-      <ComboBox layoutX="291.0" layoutY="152.0" prefHeight="26.0" prefWidth="88.0" />
+      <ComboBox fx:id="currency" layoutX="291.0" layoutY="152.0" prefHeight="26.0" prefWidth="88.0" />
       <Label layoutX="33.0" layoutY="195.0" prefHeight="18.0" prefWidth="79.0" text="When?" />
-      <DatePicker layoutX="129.0" layoutY="192.0" />
+      <DatePicker fx:id="date" layoutX="129.0" layoutY="192.0" />
       <Label layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
-      <CheckBox layoutX="33.0" layoutY="258.0" mnemonicParsing="false" text="Equally (between everybody)" />
-      <CheckBox layoutX="33.0" layoutY="283.0" mnemonicParsing="false" text="Only some people" />
-      <Pane layoutX="29.0" layoutY="311.0" prefHeight="118.0" prefWidth="222.0">
-         <children>
-            <ToggleButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Alfred" />
-            <ToggleButton layoutX="119.0" layoutY="14.0" mnemonicParsing="false" text="Samantha" />
-            <ToggleButton layoutX="14.0" layoutY="47.0" mnemonicParsing="false" text="Charles" />
-            <ToggleButton layoutX="119.0" layoutY="47.0" mnemonicParsing="false" text="Theodore" />
-            <ToggleButton layoutX="14.0" layoutY="79.0" mnemonicParsing="false" text="Nadia" />
-            <ToggleButton layoutX="119.0" layoutY="79.0" mnemonicParsing="false" text="Sabrina" />
-         </children>
-      </Pane>
+      <CheckBox fx:id="equallySplit" layoutX="33.0" layoutY="258.0" mnemonicParsing="false" text="Equally (between everybody)" />
+      <CheckBox fx:id="partialSplit" layoutX="33.0" layoutY="283.0" mnemonicParsing="false" text="Only some people" />
       <Label layoutX="254.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
-      <ComboBox layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="186.0" />
+      <ComboBox fx:id="tag" layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="186.0" />
+      <TableView fx:id="debtors" layoutX="37.0" layoutY="312.0" prefHeight="139.0" prefWidth="150.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Participants" />
+          <TableColumn prefWidth="75.0" text="Select" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>
