@@ -23,11 +23,11 @@ public class ExpenseService {
     }
 
     public Collection<Expense> getAll(UUID eventId) {
-        return expenseRepo.findExpenseByEvent(getEvent(eventId));
+        return expenseRepo.findExpenseByEventId(eventId);
     }
 
     public Expense getById(UUID eventId, UUID expenseId) {
-        return expenseRepo.findExpenseByEventAndId(getEvent(eventId), expenseId);
+        return expenseRepo.findExpenseByEventIdAndId(eventId, expenseId);
     }
 
     public Expense save(UUID eventId, Expense expense) {

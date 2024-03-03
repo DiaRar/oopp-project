@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,12 +19,12 @@ import java.util.function.Function;
 
 public class TestExpenseRepository implements ExpenseRepository {
     @Override
-    public Collection<Expense> findExpenseByEvent(Event event) {
+    public Collection<Expense> findExpenseByEventId(UUID eventId) {
         return null;
     }
 
     @Override
-    public Expense findExpenseByEventAndId(Event event, UUID id) {
+    public Expense findExpenseByEventIdAndId(UUID eventId, UUID id) {
         return null;
     }
 

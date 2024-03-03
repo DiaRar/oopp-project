@@ -15,7 +15,6 @@
  */
 package server.database;
 
-import commons.Event;
 import commons.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Expense;
@@ -24,8 +23,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
-    Collection<Expense> findExpenseByEvent(Event event);
-    Expense findExpenseByEventAndId(Event event, UUID id);
+    Collection<Expense> findExpenseByEventId(UUID eventId);
+    Expense findExpenseByEventIdAndId(UUID eventId, UUID id);
     Collection<Expense> findExpenseByPayerId(UUID id);
     Collection<Expense> findExpenseByPayer(Participant payer);
     Collection<Expense> findExpenseByDebtorsContaining(Participant debtor);
