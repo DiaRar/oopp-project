@@ -18,7 +18,7 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping(path = {"","/"})
+    @GetMapping(path = {"", "/"})
     public List<Event> getAll() {
         return eventService.getAll();
     }
@@ -27,27 +27,27 @@ public class EventController {
     public ResponseEntity<Event> getById(@PathVariable("id") UUID id) {
         try {
             return ResponseEntity.ok(eventService.getById(id));
-        }catch(Exception e) {
+        } catch(Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @PostMapping(path = {"","/"})
-    public ResponseEntity<Event> add(@RequestBody Event event){
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Event> add(@RequestBody Event event) {
         try {
             Event saved = eventService.add(event);
             return ResponseEntity.ok(saved);
-        }catch(Exception e) {
+        } catch(Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event){
+    public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event) {
         try {
             Event updated = eventService.update(id, event);
             return ResponseEntity.ok(updated);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
