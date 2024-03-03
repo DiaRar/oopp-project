@@ -15,8 +15,19 @@
  */
 package server.database;
 
+import commons.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Participant;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullApi;
+
+import java.util.Collection;
 import java.util.UUID;
 
-public interface ParticipantRepository extends JpaRepository<Participant, UUID> {}
+public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
+    Participant findParticipantById(UUID id);
+    boolean existsById(UUID id);
+    Participant deleteParticipantById(UUID id);
+
+    Collection<Participant> findParticipantByEvent(Event event);
+}
