@@ -19,6 +19,8 @@ import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import client.scenes.OverviewCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -33,8 +35,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
-
+        var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen);
+        mc.init(primaryStage, startScreen, overview);
     }
 }
