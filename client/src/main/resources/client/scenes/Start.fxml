@@ -23,5 +23,6 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
+      <Pane fx:id="recentsPane" layoutX="161.0" layoutY="163.0" prefHeight="238.0" prefWidth="294.0" />
    </children>
 </Pane>

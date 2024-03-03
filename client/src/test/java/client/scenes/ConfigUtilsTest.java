@@ -26,8 +26,8 @@ public class ConfigUtilsTest {
                 Conference Talk,3af6f7db-8dcf-48c8-b083-52736c0c9a9a
                 Product Launch,19b43b62-f240-4f31-86ab-82f1217252c2
                 """;
-        StringReader stringReader = new StringReader(csvData);
-        var events = sut.readResents(stringReader);
+        sut.setRecentsFile(new StringReader(csvData));
+        var events = sut.readRecents();
 
         assertEquals(3, events.size());
         assertEquals(UUID.fromString("7650fe94-5b6d-4e8c-9a12-7e2e5458b211"), events.getFirst().getId());
