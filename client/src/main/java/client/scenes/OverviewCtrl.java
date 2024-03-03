@@ -36,8 +36,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,9 +102,9 @@ public class OverviewCtrl {
         ImageView editImage = new ImageView("../../resources/main/client/images/edit.png");
         editImage.setFitHeight(EXPENSE_EDIT_SIZE);
         editImage.setFitWidth(EXPENSE_EDIT_SIZE);
-        editImage.setOnMouseClicked(e -> {
-            title.setText(expense.getDescription());
-        });
+//        editImage.setOnMouseClicked(e -> {
+//            title.setText(expense.getDescription());
+//        }); // TO BE CHANGED WITH EDIT
         borderPane.setRight(editImage);
         borderPane.setAlignment(date, Pos.CENTER);
         borderPane.setAlignment(editImage, Pos.CENTER);

@@ -82,27 +82,8 @@ public class ServerUtils {
 				"Drinks", LocalDateTime.now(),
 				test, event, List.of(new Participant[]{test2}), null);
 		ArrayList<Expense> expenses = new ArrayList<>();
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
-		expenses.add(expense);
+		expenses.addAll(List.of(expense, expense, expense, expense, expense, expense,
+				expense, expense, expense, expense, expense, expense));
 		ArrayList<Participant> participants = new ArrayList<>();
 		participants.add(test);
 		participants.add(test2);
