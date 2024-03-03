@@ -9,7 +9,7 @@ import server.services.ParticipantsService;
 import java.util.*;
 
 @RestController
-@RequestMapping( "api/participants")
+@RequestMapping("api/participants")
 public class ParticipantsController {
     private final ParticipantsService participantsService;
 

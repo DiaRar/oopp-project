@@ -19,4 +19,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Participant;
 import java.util.UUID;
 
-public interface ParticipantRepository extends JpaRepository<Participant, UUID> {}
+public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
+    Participant findParticipantById(UUID id);
+
+    @Override
+    boolean existsById(UUID id);
+    Participant deleteParticipantById(UUID id);
+}
