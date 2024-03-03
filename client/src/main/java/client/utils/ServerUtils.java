@@ -23,10 +23,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
-import commons.Event;
-import org.checkerframework.checker.units.qual.C;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -62,34 +59,5 @@ public class ServerUtils {
 				.request(APPLICATION_JSON) //
 				.accept(APPLICATION_JSON) //
 				.post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-	}
-
-	public Event addEvent(Event event) {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER).path("api/events")
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.post(Entity.entity(event, APPLICATION_JSON), Event.class);
-	}
-
-	public Event getEvent(UUID uuid) {
-		String webtarget = "api/events/" + uuid;
-		Object o = ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER).path(webtarget)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get();
-		Event e = (Event) o;
-		return e;
-	}
-
-	public List<Event> getAllEvents() {
-		Object o = ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER).path("")
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get().getEntity();
-		List<Event> list = (List<Event>) o;
-		return list;
 	}
 }
