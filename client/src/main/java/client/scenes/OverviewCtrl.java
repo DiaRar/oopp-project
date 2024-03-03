@@ -119,6 +119,7 @@ public class OverviewCtrl {
         title.setText(event.getName());
         participantsText.setText(String.join(",", participants));
         choiceBox.getItems().addAll(participants);
+        choiceBox.setValue(choiceBox.getItems().get(0));
 //        choiceBox.setValue(participants.get(0));
         List<BorderPane> collection =
                 expenses.stream().map(this::expenseComponent).toList();
