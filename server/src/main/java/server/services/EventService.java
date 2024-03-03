@@ -12,7 +12,7 @@ public class EventService {
     private final EventRepository repo;
 
     public EventService(EventRepository repo) {
-        this.repo=repo;
+        this.repo = repo;
     }
 
     public List<Event> getAll() {
