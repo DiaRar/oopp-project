@@ -1,4 +1,4 @@
-package services;
+package server.services;
 
 import commons.Event;
 import commons.Participant;
