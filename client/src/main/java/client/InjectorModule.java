@@ -15,20 +15,37 @@
  */
 package client;
 
+import client.scenes.MainCtrl;
+import client.scenes.StartCtrl;
+import client.utils.ConfigUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
-import client.scenes.AddQuoteCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class MyModule implements Module {
+
+public class InjectorModule implements Module {
 
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(StartCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
+    }
+
+    private ConfigUtils createConfigUtils() {
+        ConfigUtils utils = new ConfigUtils();
+        try {
+            Path path = Paths.get("client/src/main/resources/config/recents.csv");
+            utils.setRecentsFile(new FileReader(path.toFile()));
+            return utils;
+        } catch (FileNotFoundException e) {
+            //TODO log and handle error
+            throw new RuntimeException(e);
+        }
     }
 }
