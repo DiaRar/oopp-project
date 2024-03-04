@@ -22,8 +22,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
+import commons.Event;
+import commons.Expense;
+import commons.Participant;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -59,5 +64,31 @@ public class ServerUtils {
 				.request(APPLICATION_JSON) //
 				.accept(APPLICATION_JSON) //
 				.post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+	}
+
+	public Event getEvent(UUID eventId) {
+//		return ClientBuilder
+//				.newClient(new ClientConfig())
+//				.target(SERVER)
+//				.path("/api/events/{id}")
+//				.resolveTemplate("id", eventId.toString())
+//				.request(APPLICATION_JSON)
+//				.accept(APPLICATION_JSON)
+//				.get(new GenericType<Event>() {});
+		Event event = new Event("Test");
+		Participant test = new Participant("Diaco", "Rares", null);
+		Participant test2 = new Participant("Andrei", "Ciprian", null);
+		Expense expense = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
+				"Drinks", LocalDateTime.now(),
+				test, event, List.of(new Participant[]{test2}), null);
+		ArrayList<Expense> expenses = new ArrayList<>();
+		expenses.addAll(List.of(expense, expense, expense, expense, expense, expense,
+				expense, expense, expense, expense, expense, expense));
+		ArrayList<Participant> participants = new ArrayList<>();
+		participants.add(test);
+		participants.add(test2);
+		event.setExpenses(expenses);
+		event.setParticipants(participants);
+		return event;
 	}
 }
