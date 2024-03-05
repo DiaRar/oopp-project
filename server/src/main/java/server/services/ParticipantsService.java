@@ -3,19 +3,20 @@ package server.services;
 import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 import server.database.EventRepository;
 import server.database.ParticipantRepository;
 
+import java.util.List;
 import java.util.UUID;
 
+@Service
 public class ParticipantsService {
 
     private final ParticipantRepository participantRepository;
-    private final EventRepository eventRepository;
 
-    public ParticipantsService(ParticipantRepository participantRepository, EventRepository eventRepository) {
+    public ParticipantsService(ParticipantRepository participantRepository) {
         this.participantRepository = participantRepository;
-        this.eventRepository = eventRepository;
     }
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
@@ -32,18 +33,6 @@ public class ParticipantsService {
             throw new EntityNotFoundException("The entity with the provided Id does not exist in the database!");
         return participantRepository.findParticipantById(id);
     }
-    public Event addParticipant(Participant participant, UUID eventID) {
-        if (participant == null)
-            throw new IllegalArgumentException("The participant parameter is null");
-        isValidParticipant(participant);
-        if (eventID == null || !eventRepository.existsById(eventID))
-            throw new IllegalArgumentException("The event you are looking for does not exist!");
-        Event event = eventRepository.findEventById(eventID);
-        participant.setEvent(event);
-        participantRepository.save(participant);
-        event.addParticipant(participant);
-        return eventRepository.save(event);
-    }
     public Participant updateParticipant(UUID id, Participant participant) {
         if (id == null || !participantRepository.existsById(id))
             throw new IllegalArgumentException("The participant you are looking for does not exist!");
@@ -58,5 +47,9 @@ public class ParticipantsService {
         if (id == null || !participantRepository.existsById(id))
             throw new IllegalArgumentException("The participant you are looking for does not exist!");
         return participantRepository.deleteParticipantById(id);
+    }
+
+    public List<Participant> getParticipants() {
+        return participantRepository.findAll();
     }
 }

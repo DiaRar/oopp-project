@@ -25,16 +25,6 @@ public class ParticipantsController {
         }
     }
 
-    @PostMapping(path = {"", "/"})
-    public ResponseEntity<Event> addParticipant(@RequestBody Participant participant, @RequestBody UUID eventID) {
-        try {
-            return ResponseEntity.ok(participantsService.addParticipant(participant, eventID));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-
     @PutMapping("/{id}")
     public ResponseEntity<Participant> updateParticipant(@PathVariable UUID id, @RequestBody Participant participant) {
         try {
@@ -48,6 +38,15 @@ public class ParticipantsController {
     public ResponseEntity<Participant> deleteParticipant(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(participantsService.deleteParticipant(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping(path = {"", "/"})
+    public ResponseEntity<List<Participant>> getParticipants() {
+        try {
+            return ResponseEntity.ok(participantsService.getParticipants());
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
