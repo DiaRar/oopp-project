@@ -43,7 +43,9 @@ public class InjectorModule implements Module {
         ConfigUtils utils = new ConfigUtils();
         try {
             Path path = Paths.get("client/src/main/resources/config/recents.csv");
+            Path otherPath = Paths.get("client/src/main/resources/config/participants.csv");
             utils.setRecentsFile(new FileReader(path.toFile()));
+            utils.setParticipantsFile(new FileReader(otherPath.toFile()));
             return utils;
         } catch (FileNotFoundException e) {
             //TODO log and handle error
