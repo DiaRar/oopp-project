@@ -17,6 +17,7 @@ public class Tag {
     private UUID id;
     private String name;
     private Color color;
+    private Event event;
     private Collection<Expense> expenses;
 
     protected Tag() {
@@ -25,10 +26,11 @@ public class Tag {
         this.name = name;
         this.color = color;
     }
-    public Tag(String name, Color color, Collection<Expense> expenses) {
+    public Tag(String name, Color color, Collection<Expense> expenses, Event event) {
         this.name = name;
         this.color = color;
         this.expenses = expenses;
+        this.event = event;
     }
     // Attributes
     @Id
@@ -47,9 +49,13 @@ public class Tag {
         return color;
     }
     // Relationships
-    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "tags")
     public Collection<Expense> getExpenses() {
         return expenses;
+    }
+    @ManyToOne
+    public Event getEvent() {
+        return event;
     }
     // Setters
     public void setId(UUID id) {
@@ -63,6 +69,10 @@ public class Tag {
     }
     public void setExpenses(Collection<Expense> expenses) {
         this.expenses = expenses;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override

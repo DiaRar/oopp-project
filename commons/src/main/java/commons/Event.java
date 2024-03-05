@@ -67,11 +67,11 @@ public class Event {
 
     // Relationships
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
     public Collection<Tag> getTags() {
         return tags;
     }
