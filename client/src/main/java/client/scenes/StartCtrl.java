@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 public class StartCtrl implements Initializable {
     @FXML
     public ListView<String> recentsList;
-    private ConfigUtils utils;
-
+    private final ConfigUtils utils;
+    private final MainCtrl mainCtrl;
     @Inject
-    public StartCtrl(ConfigUtils configUtils) {
+    public StartCtrl(ConfigUtils configUtils, MainCtrl mainCtrl) {
         this.utils = configUtils;
+        this.mainCtrl = mainCtrl;
     }
 
     /**
@@ -56,6 +57,7 @@ public class StartCtrl implements Initializable {
     public void create() {
         //TODO: Implement screen switch
         System.out.println("create event screen");
+        mainCtrl.showOverview();
     }
 
     /**
@@ -65,6 +67,7 @@ public class StartCtrl implements Initializable {
         //TODO: Implement screen switch
         System.out.println("load event from database");
         System.out.println("switch to overview");
+        mainCtrl.showOverview();
     }
 
     @Override
