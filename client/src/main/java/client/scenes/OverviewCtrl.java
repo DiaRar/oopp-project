@@ -49,13 +49,13 @@ public class OverviewCtrl {
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
     private Event event;
     private ObservableList<Expense> expenses;
-    private ObservableList<String> participants;
+    private ObservableList<Participant> participants;
     @FXML
     private Label title;
     @FXML
     private Text participantsText;
     @FXML
-    private ChoiceBox choiceBox;
+    private ChoiceBox<String> choiceBox;
     @FXML
     private Label all;
     @FXML
@@ -114,12 +114,12 @@ public class OverviewCtrl {
     public void refresh() {
         event = server.getEvent(null);
         expenses = FXCollections.observableList(event.getExpenses().stream().toList());
-        participants = FXCollections.observableList(event.getParticipants().stream()
-                .map(Participant::getFirstName).collect(Collectors.toList()));
+        participants = FXCollections.observableList(event.getParticipants().stream().toList());
         title.setText(event.getName());
-        participantsText.setText(String.join(",", participants));
-        choiceBox.getItems().addAll(participants);
-        choiceBox.setValue(choiceBox.getItems().get(0));
+        participantsText.setText(String.join(",",
+                participants.stream().map(Participant::getFirstName).toList()));
+        choiceBox.getItems().addAll(participants.stream().map(Participant::getFirstName).toList());
+        choiceBox.setValue(choiceBox.getItems().getFirst());
 //        choiceBox.setValue(participants.get(0));
         List<BorderPane> collection =
                 expenses.stream().map(this::expenseComponent).toList();
