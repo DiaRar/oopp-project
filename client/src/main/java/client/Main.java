@@ -15,6 +15,7 @@
  */
 package client;
 
+import client.scenes.AddExpenseCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
 import com.google.inject.Guice;
@@ -36,7 +37,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
         var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
+        var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview);
+        mc.init(primaryStage, startScreen, overview, addExpense);
     }
 }
