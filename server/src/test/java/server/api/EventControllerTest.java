@@ -34,30 +34,30 @@ public class EventControllerTest {
     }
     @Test
     public void getAllTest() {
-        eventController.add(getEvent("test1",id++));
-        eventController.add(getEvent("test2",id++));
-        eventController.add(getEvent("test3",id++));
-        eventController.add(getEvent("test4",id));
-        assertEquals(id,eventController.getAll().size());
+        eventController.add(getEvent("test1", id++));
+        eventController.add(getEvent("test2", id++));
+        eventController.add(getEvent("test3", id++));
+        eventController.add(getEvent("test4", id));
+        assertEquals(id, eventController.getAll().size());
     }
 
     @Test
-    public void getByIdTest(){
-        eventController.add(getEvent("test1",id++));
-        eventController.add(getEvent("test2",id++));
+    public void getByIdTest() {
+        eventController.add(getEvent("test1", id++));
+        eventController.add(getEvent("test2", id++));
         var temp = getEvent("test3", id);
-        eventController.add(getEvent("test3",id++));
-        eventController.add(getEvent("test4",id++));
+        eventController.add(getEvent("test3", id++));
+        eventController.add(getEvent("test4", id++));
         assertEquals(temp, eventController.getById(temp.getId()).getBody());
     }
 
     @Test
-    public void updateTest(){
-        eventController.add(getEvent("test1",id++));
-        eventController.add(getEvent("test2",id++));
-        eventController.add(getEvent("test3",id));
-        var temp = getEvent("test4",id);
-        var temp1 = getEvent("test4",id);
+    public void updateTest() {
+        eventController.add(getEvent("test1", id++));
+        eventController.add(getEvent("test2", id++));
+        eventController.add(getEvent("test3", id));
+        var temp = getEvent("test4", id);
+        var temp1 = getEvent("test4", id);
         eventController.update(temp.getId(), temp);
         assertEquals(temp1, eventController.getById(temp1.getId()).getBody());
     }
