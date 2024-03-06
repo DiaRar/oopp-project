@@ -91,7 +91,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Button mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>
