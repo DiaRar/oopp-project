@@ -2,12 +2,13 @@ package server.services;
 
 import commons.Debt;
 import commons.primary_keys.DebtPK;
+import org.springframework.stereotype.Service;
 import server.database.DebtRepository;
 import server.database.ParticipantRepository;
 
 import java.util.Collection;
 import java.util.UUID;
-
+@Service
 public class DebtService {
 
     private final DebtRepository debtRepo;
