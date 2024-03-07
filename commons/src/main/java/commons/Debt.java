@@ -20,11 +20,11 @@ public class Debt {
     private DebtPK id;
     @Column(name = "`value`")
     private Pair<Double, Currency> value;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("payer_id")
     @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
     private Participant payer;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("debtor_id")
     @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
     private Participant debtor;

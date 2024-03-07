@@ -67,11 +67,11 @@ public class Event {
 
     // Relationships
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
     public Collection<Tag> getTags() {
         return tags;
     }
@@ -97,6 +97,9 @@ public class Event {
         this.participants = participants;
     }
 
+    public void addParticipant(Participant participant) {
+        this.participants.add(participant);
+    }
     /**
      * Indicates whether some other object is equal to this one.
      * Two events are considered equal if they have the same ID, name, UUID, expenses, and tags.
@@ -129,4 +132,5 @@ public class Event {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
+
 }

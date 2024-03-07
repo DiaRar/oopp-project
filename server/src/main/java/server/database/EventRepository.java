@@ -17,6 +17,15 @@ package server.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Event;
+
+import java.util.Optional;
 import java.util.UUID;
 
-public interface EventRepository extends JpaRepository<Event, UUID> {}
+public interface EventRepository extends JpaRepository<Event, UUID> {
+    Event findEventById(UUID eventID);
+
+    @Override
+    Optional<Event> findById(UUID eventID);
+    @Override
+    boolean existsById(UUID eventID);
+}
