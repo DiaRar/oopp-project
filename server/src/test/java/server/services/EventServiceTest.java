@@ -42,10 +42,11 @@ public class EventServiceTest {
 
     @Test
     public void getAllTest() {
+        final int numberOfEvents = 3;
         eventService.add(new Event("test1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         eventService.add(new Event("test2", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         eventService.add(new Event("test3", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        assertEquals(3, eventService.getAll().size());
+        assertEquals(numberOfEvents, eventService.getAll().size());
     }
 
     @Test

@@ -1,13 +1,11 @@
 package server.repositories;
 
-import commons.Event;
 import commons.Participant;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
-import server.database.EventRepository;
 import server.database.ParticipantRepository;
 
 import java.util.ArrayList;

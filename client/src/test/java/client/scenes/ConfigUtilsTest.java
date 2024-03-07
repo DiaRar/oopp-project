@@ -32,6 +32,6 @@ public class ConfigUtilsTest {
 
         assertEquals(EVENTS_SIZE, events.size());
         assertEquals(UUID.fromString("7650fe94-5b6d-4e8c-9a12-7e2e5458b211"), events.get(0).getId());
-        assertEquals("Product Launch", events.get(events.size()-1).getName());
+        assertEquals("Product Launch", events.get(events.size() - 1).getName());
     }
 }

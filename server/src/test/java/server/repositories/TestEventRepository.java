@@ -45,7 +45,7 @@ public class TestEventRepository implements EventRepository {
     @Override
     public <S extends Event> S save(S entity) {
         call("save");
-        if(entity.getId() == null)
+        if (entity.getId() == null)
             entity.setId(UUID.randomUUID());
         events.add(entity);
         return entity;
