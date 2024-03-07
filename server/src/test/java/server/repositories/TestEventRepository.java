@@ -45,6 +45,8 @@ public class TestEventRepository implements EventRepository {
     @Override
     public <S extends Event> S save(S entity) {
         call("save");
+        if(entity.getId() == null)
+            entity.setId(UUID.randomUUID());
         events.add(entity);
         return entity;
     }
@@ -166,6 +168,11 @@ public class TestEventRepository implements EventRepository {
     }
 
 
+    @Override
+    public Event findEventById(UUID eventID) {
+        return find(eventID).get();
+    }
+
     /**
      * Returns whether an entity with the given id exists.
      *
@@ -175,7 +182,7 @@ public class TestEventRepository implements EventRepository {
      */
     @Override
     public boolean existsById(UUID uuid) {
-        return false;
+        return find(uuid).isPresent();
     }
 
 
