@@ -8,20 +8,22 @@ import org.junit.jupiter.api.Test;
 import commons.Event;
 
 import server.repositories.TestEventRepository;
+import server.repositories.TestParticipantRepository;
 import server.services.EventService;
 
 import java.util.UUID;
 public class EventControllerTest {
     private int id;
     private TestEventRepository repo;
-
+    private TestParticipantRepository participantRepository;
     private EventController eventController;
 
     @BeforeEach
     public void setup() {
         id = 1;
         repo = new TestEventRepository();
-        eventController = new EventController(new EventService(repo));
+        participantRepository = new TestParticipantRepository();
+        eventController = new EventController(new EventService(repo, participantRepository));
     }
 
     @Test
