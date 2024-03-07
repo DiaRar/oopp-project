@@ -27,7 +27,11 @@ public class ExpenseService {
     }
 
     public Expense getById(UUID eventId, UUID expenseId) {
-        return expenseRepo.findExpenseByEventIdAndId(eventId, expenseId);
+        Optional<Expense> oExpense = expenseRepo.findExpenseByEventIdAndId(eventId, expenseId);
+        if (oExpense.isEmpty()) {
+            throw new EntityNotFoundException("Expense not found.");
+        }
+        return oExpense.get();
     }
 
     public Expense save(UUID eventId, Expense expense) {

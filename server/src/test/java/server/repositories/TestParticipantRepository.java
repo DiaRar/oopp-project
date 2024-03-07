@@ -26,9 +26,9 @@ public class TestParticipantRepository implements ParticipantRepository {
         return participants.stream().filter(x -> x.getId().equals(id)).findFirst();
     }
     @Override
-    public Participant findParticipantById(UUID id) {
+    public Optional<Participant> findParticipantById(UUID id) {
         call("findParticipantById");
-        return find(id).get();
+        return find(id);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TestParticipantRepository implements ParticipantRepository {
     @Override
     public Participant deleteParticipantById(UUID id) {
         call("deleteParticipantById");
-        Participant participant = findParticipantById(id);
+        Participant participant = findParticipantById(id).get();
         participants.remove(participant);
         return participant;
     }
