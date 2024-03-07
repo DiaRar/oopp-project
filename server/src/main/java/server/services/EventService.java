@@ -1,5 +1,6 @@
 package server.services;
 
+import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
@@ -75,8 +76,8 @@ public class EventService {
             throw new IllegalArgumentException("The event you are looking for does not exist!");
         Event event = eventRepository.findEventById(eventID);
         participant.setEvent(event);
-        participantRepository.save(participant);
         event.addParticipant(participant);
-        return eventRepository.save(event);
+        participantRepository.save(participant);
+        return event;
     }
 }

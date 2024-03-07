@@ -39,6 +39,7 @@ public class ParticipantsController {
         try {
             return ResponseEntity.ok(participantsService.deleteParticipant(id));
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().build();
         }
     }

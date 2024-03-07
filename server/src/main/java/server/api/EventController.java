@@ -53,7 +53,7 @@ public class EventController {
         }
     }
 
-    @PostMapping(path = {"", "/{id}"})
+    @PostMapping(path = {"/{id}"})
     public ResponseEntity<Event> addParticipant(@RequestBody Participant participant, @PathVariable UUID id) {
         try {
             return ResponseEntity.ok(eventService.addParticipant(participant, id));
