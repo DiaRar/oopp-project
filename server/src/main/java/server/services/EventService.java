@@ -1,6 +1,5 @@
 package server.services;
 
-import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +24,7 @@ public class EventService {
         return s == null || s.isEmpty();
     }
     private static void isValidParticipant(Participant participant) {
-        if(participant == null)
+        if (participant == null)
             throw new NullPointerException("Participant is null");
         if (participant.getId() != null)
             throw new IllegalArgumentException("Id is auto-generated, should not be given as parameter");
@@ -35,7 +34,7 @@ public class EventService {
     }
 
     private static void isValidEvent(Event event) {
-        if(event == null)
+        if (event == null)
             throw new NullPointerException("Event is null");
         if (event.getId() != null)
             throw new IllegalArgumentException("Id is auto-generated, should not be given as parameter");
@@ -48,7 +47,7 @@ public class EventService {
     }
 
     public Event getById(UUID id) {
-        if(!eventRepository.existsById(id))
+        if (!eventRepository.existsById(id))
             throw new EntityNotFoundException("The event you are looking for does not exist!");
         return eventRepository.findEventById(id);
     }
@@ -60,7 +59,7 @@ public class EventService {
 
     public Event update(UUID id, Event event) {
         isValidEvent(event);
-        if(id == null || !eventRepository.existsById(id))
+        if (id == null || !eventRepository.existsById(id))
             throw new EntityNotFoundException("The event you are looking for does not exist!");
         Event repoEvent = eventRepository.findEventById(id);
         repoEvent.setExpenses(event.getExpenses());

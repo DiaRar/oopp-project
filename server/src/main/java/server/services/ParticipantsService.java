@@ -1,10 +1,8 @@
 package server.services;
 
-import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import server.database.EventRepository;
 import server.database.ParticipantRepository;
 
 import java.util.List;
