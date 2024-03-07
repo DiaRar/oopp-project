@@ -15,8 +15,11 @@ public class MainCtrl {
     private AddExpenseCtrl addExpenseCtrl;
     private Scene addExpenseScene;
 
+    private ContactDetailsCtrl contactDetailsCtrl;
+    private Scene contactDetailsScene;
+
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<ContactDetailsCtrl, Parent> contactDetails) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -25,6 +28,9 @@ public class MainCtrl {
 
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpenseScene = new Scene(addExpense.getValue());
+
+        this.contactDetailsCtrl = contactDetails.getKey();
+        this.contactDetailsScene = new Scene(contactDetails.getValue());
 
         showStart();
         primaryStage.show();

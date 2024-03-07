@@ -27,7 +27,7 @@ public class ContactDetailsCtrl {
 
     public void submitParticipant() {
         System.out.println("Created Participant");
-        mainCtrl.
+//        mainCtrl.
     }
 
 }
