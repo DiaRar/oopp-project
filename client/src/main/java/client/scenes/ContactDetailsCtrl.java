@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
@@ -19,6 +20,8 @@ public class ContactDetailsCtrl {
     @FXML
     private TextField bicField;
 
+    private Scene previousScene;
+
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -27,7 +30,11 @@ public class ContactDetailsCtrl {
 
     public void submitParticipant() {
         System.out.println("Created Participant");
-//        mainCtrl.
+        mainCtrl.
+    }
+
+    public void setPreviousScene(Scene previousScene) {
+        this.previousScene = previousScene;
     }
 
 }

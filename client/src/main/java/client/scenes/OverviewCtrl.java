@@ -131,4 +131,8 @@ public class OverviewCtrl {
         from.setText("From ".concat(name));
         including.setText("Including ".concat(name));
     }
+
+    public void addParticipantAction() {
+        mainCtrl.callAddParticipantDialog();
+    }
 }
