@@ -8,6 +8,7 @@ import server.database.EventRepository;
 import server.database.ParticipantRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -47,9 +48,11 @@ public class EventService {
     }
 
     public Event getById(UUID id) {
-        if (!eventRepository.existsById(id))
-            throw new EntityNotFoundException("The event you are looking for does not exist!");
-        return eventRepository.findEventById(id);
+        Optional<Event> oEv = eventRepository.findById(id);
+        if (oEv.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified event.");
+        }
+        return oEv.get();
     }
 
     public Event add(Event event) {
@@ -59,9 +62,11 @@ public class EventService {
 
     public Event update(UUID id, Event event) {
         isValidEvent(event);
-        if (id == null || !eventRepository.existsById(id))
-            throw new EntityNotFoundException("The event you are looking for does not exist!");
-        Event repoEvent = eventRepository.findEventById(id);
+        Optional<Event> oEv = eventRepository.findById(id);
+        if (oEv.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified event.");
+        }
+        Event repoEvent = oEv.get();
         repoEvent.setExpenses(event.getExpenses());
         repoEvent.setParticipants(event.getParticipants());
         repoEvent.setName(event.getName());
@@ -71,9 +76,11 @@ public class EventService {
 
     public Event addParticipant(Participant participant, UUID eventID) {
         isValidParticipant(participant);
-        if (eventID == null || !eventRepository.existsById(eventID))
-            throw new IllegalArgumentException("The event you are looking for does not exist!");
-        Event event = eventRepository.findEventById(eventID);
+        Optional<Event> oEv = eventRepository.findById(eventID);
+        if (oEv.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified event.");
+        }
+        Event event = oEv.get();
         participant.setEvent(event);
         event.addParticipant(participant);
         participantRepository.save(participant);
