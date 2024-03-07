@@ -95,7 +95,7 @@ public class OverviewCtrl {
         borderPane.getStyleClass().add("expense");
 
         Text date = new Text(expense.getDate()
-                .format(DateTimeFormatter.ofPattern("dd.mm.yyyy")).toString());
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).toString());
         date.setTextAlignment(TextAlignment.CENTER);
         borderPane.setLeft(date);
 
