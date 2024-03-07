@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.DebtService;
 
-import java.util.Collection;
 import java.util.UUID;
 
 @RestController
