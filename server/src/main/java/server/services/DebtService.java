@@ -2,11 +2,13 @@ package server.services;
 
 import commons.Debt;
 import commons.primary_keys.DebtPK;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.database.DebtRepository;
 import server.database.ParticipantRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 @Service
 public class DebtService {
@@ -23,7 +25,11 @@ public class DebtService {
     }
 
     public Debt getById(DebtPK id) {
-        return debtRepo.findDebtById(id);
+        Optional<Debt> od = debtRepo.findById(id);
+        if (od.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified debt.");
+        }
+        return od.get();
     }
 
     public Collection<Debt> getByPayerId(UUID id) {
@@ -40,14 +46,16 @@ public class DebtService {
 
     public Debt update(DebtPK id, Debt debt) {
         // TODO: check if the new Debt is a valid input
-        debtRepo.deleteById(id);
         debt.setId(id);
         return debtRepo.save(debt);
     }
 
     public Debt delete(DebtPK id) {
-        Debt deletedDebt = debtRepo.findDebtById(id);
+        Optional<Debt> deletedDebt = debtRepo.findById(id);
+        if (deletedDebt.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified debt.");
+        }
         debtRepo.deleteById(id);
-        return deletedDebt;
+        return deletedDebt.get();
     }
 }

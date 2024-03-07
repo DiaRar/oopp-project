@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface DebtRepository extends JpaRepository<Debt, DebtPK> {
-    Debt findDebtById(DebtPK id);
     Collection<Debt> findDebtsByPayerId(UUID id);
     Collection<Debt> findDebtsByPayer(Participant payer);
     Collection<Debt> findDebtsByDebtorId(UUID id);
