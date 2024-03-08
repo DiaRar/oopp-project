@@ -2,7 +2,6 @@ package server.api;
 
 import java.util.*;
 
-import commons.Participant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,15 +47,6 @@ public class EventController {
         try {
             Event updated = eventService.update(id, event);
             return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @PostMapping(path = {"/{id}"})
-    public ResponseEntity<Event> addParticipant(@RequestBody Participant participant, @PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(eventService.addParticipant(participant, id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

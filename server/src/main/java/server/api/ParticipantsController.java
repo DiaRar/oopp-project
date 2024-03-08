@@ -8,7 +8,7 @@ import server.services.ParticipantsService;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/participants")
+@RequestMapping("/api/events/{eventId}/participants")
 public class ParticipantsController {
     private final ParticipantsService participantsService;
 
@@ -44,12 +44,20 @@ public class ParticipantsController {
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<List<Participant>> getParticipants() {
+    public ResponseEntity<List<Participant>> getParticipants(@PathVariable UUID eventId) {
         try {
-            return ResponseEntity.ok(participantsService.getParticipants());
+            return ResponseEntity.ok(participantsService.getParticipants(eventId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Participant> addParticipant(@PathVariable UUID eventId,
+                                                      @RequestBody Participant participant) {
+        try {
+            return ResponseEntity.ok(participantsService.addParticipant(eventId, participant));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
