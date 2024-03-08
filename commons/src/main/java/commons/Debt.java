@@ -28,10 +28,22 @@ public class Debt {
     @MapsId("debtor_id")
     @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
     private Participant debtor;
+    @ManyToOne(optional = false)
+    private Event event;
     protected Debt() {}
-    public Debt(UUID payerId, UUID debtorId, Pair<Double, Currency> value) {
+    // Added another constructor, as I am unsure which one to use yet.
+    // TODO: choose the constructor for Debt
+    public Debt(UUID payerId, UUID debtorId, Pair<Double, Currency> value, Event event) {
         this.id = new DebtPK(payerId, debtorId);
         this.value = value;
+        this.event = event;
+    }
+    public Debt(Participant payer, Participant debtor, Pair<Double, Currency> value, Event event) {
+        this.id = new DebtPK(payer.getId(), debtor.getId());
+        this.payer = payer;
+        this.debtor = debtor;
+        this.value = value;
+        this.event = event;
     }
     public Pair<Double, Currency> getValue() {
         return value;
@@ -41,6 +53,9 @@ public class Debt {
     }
     public Participant getDebtor() {
         return debtor;
+    }
+    public Event getEvent() {
+        return event;
     }
     // Setters
     public void setId(DebtPK id) {
@@ -54,6 +69,9 @@ public class Debt {
     }
     public void setDebtor(Participant debtor) {
         this.debtor = debtor;
+    }
+    public void setEvent(Event event) {
+        this.event = event;
     }
     @Override
     public boolean equals(Object obj) {
