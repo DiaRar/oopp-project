@@ -133,6 +133,6 @@ public class OverviewCtrl {
     }
 
     public void addParticipantAction() {
-        mainCtrl.callAddParticipantDialog();
+        mainCtrl.callAddParticipantDialog(event);
     }
 }

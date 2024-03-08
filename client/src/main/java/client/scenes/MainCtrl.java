@@ -1,7 +1,9 @@
 package client.scenes;
 
+import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -17,7 +19,8 @@ public class MainCtrl {
 
     private ContactDetailsCtrl contactDetailsCtrl;
     private Scene contactDetailsScene;
-    private Stage dialogStage;
+
+    private Stage dialog;
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<ContactDetailsCtrl, Parent> contactDetails) {
@@ -30,7 +33,6 @@ public class MainCtrl {
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpenseScene = new Scene(addExpense.getValue());
 
-        this.dialogStage = new Stage();
         this.contactDetailsCtrl = contactDetails.getKey();
         this.contactDetailsScene = new Scene(contactDetails.getValue());
 
@@ -55,11 +57,21 @@ public class MainCtrl {
         addExpenseCtrl.clearFields();
     }
 
-    public void callAddParticipantDialog() {
+    public void callAddParticipantDialog(Event event) {
+        dialog = new Stage();
         contactDetailsCtrl.setPreviousScene(primaryStage.getScene());
-        dialogStage.setTitle("Add New Participant");
-        dialogStage.setScene(contactDetailsScene);
-        dialogStage.show();
+        contactDetailsCtrl.setParentEvent(event);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        dialog.setScene(contactDetailsScene);
+        dialog.setTitle("Add New Participant");
+        dialog.show();
+    }
+
+    public void closeDialog() {
+        if (dialog != null) {
+            dialog.close();
+        }
     }
 
 }

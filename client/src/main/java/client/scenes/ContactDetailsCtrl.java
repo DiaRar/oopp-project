@@ -1,11 +1,13 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class ContactDetailsCtrl {
 
@@ -21,6 +23,7 @@ public class ContactDetailsCtrl {
     private TextField bicField;
 
     private Scene previousScene;
+    private Event parentEvent;
 
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -30,11 +33,20 @@ public class ContactDetailsCtrl {
 
     public void submitParticipant() {
         System.out.println("Created Participant");
-        mainCtrl.
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String iban = ibanField.getText();
+        String bic = bicField.getText();
+        System.out.println(List.of(name, email, iban, bic));
+        mainCtrl.closeDialog();
     }
 
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
+    }
+
+    public void setParentEvent(Event event) {
+        this.parentEvent = event;
     }
 
 }
