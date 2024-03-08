@@ -41,10 +41,6 @@ public class ContactDetailsCtrl {
         mainCtrl.closeDialog();
     }
 
-    public void setPreviousScene(Scene previousScene) {
-        this.previousScene = previousScene;
-    }
-
     public void setParentEvent(Event event) {
         this.parentEvent = event;
     }
