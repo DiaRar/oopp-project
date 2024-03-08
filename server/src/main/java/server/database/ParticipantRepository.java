@@ -22,11 +22,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
-    Participant findParticipantById(UUID id);
-
-    @Override
-    Optional<Participant> findById(UUID id);
-    @Override
-    boolean existsById(UUID id);
+    Optional<Participant> findParticipantById(UUID id);
     Participant deleteParticipantById(UUID id);
 }
