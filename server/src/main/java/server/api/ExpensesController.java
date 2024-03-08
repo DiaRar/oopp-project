@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/event/{id}/expenses")
+@RequestMapping("/api/events/{eventId}/expenses")
 public class ExpensesController {
 
     private final ExpenseService expenseService;
@@ -19,7 +19,7 @@ public class ExpensesController {
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Collection<Expense>> getAll(@PathVariable("id") UUID eventId) {
+    public ResponseEntity<Collection<Expense>> getAll(@PathVariable("eventId") UUID eventId) {
         try {
             return ResponseEntity.ok(expenseService.getAll(eventId));
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class ExpensesController {
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Expense> post(@PathVariable("id") UUID eventId, @RequestBody Expense expense) {
+    public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense) {
         try {
             Expense saved = expenseService.save(eventId, expense);
             return ResponseEntity.ok(saved);
@@ -39,7 +39,7 @@ public class ExpensesController {
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        getById(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId) {
+        getById(@PathVariable UUID eventId, @PathVariable UUID expenseId) {
         try {
             return ResponseEntity.ok(expenseService.getById(eventId, expenseId));
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class ExpensesController {
 
     @PutMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        update(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId, @RequestBody Expense expense) {
+        update(@PathVariable UUID eventId, @PathVariable UUID expenseId, @RequestBody Expense expense) {
         try {
             Expense updated = expenseService.update(eventId, expenseId, expense);
             return ResponseEntity.ok(updated);
@@ -60,7 +60,7 @@ public class ExpensesController {
 
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<Expense>
-        delete(@PathVariable("id") UUID eventId, @PathVariable("expenseId") UUID expenseId) {
+        delete(@PathVariable UUID eventId, @PathVariable UUID expenseId) {
         try {
             Expense deleted = expenseService.delete(eventId, expenseId);
             return ResponseEntity.ok(deleted);

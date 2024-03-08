@@ -24,8 +24,8 @@ public class TestExpenseRepository implements ExpenseRepository {
     }
 
     @Override
-    public Expense findExpenseByEventIdAndId(UUID eventId, UUID id) {
-        return null;
+    public Optional<Expense> findExpenseByEventIdAndId(UUID eventId, UUID id) {
+        return Optional.empty();
     }
 
     @Override

@@ -168,11 +168,6 @@ public class TestEventRepository implements EventRepository {
     }
 
 
-    @Override
-    public Event findEventById(UUID eventID) {
-        return find(eventID).get();
-    }
-
     /**
      * Returns whether an entity with the given id exists.
      *
