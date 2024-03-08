@@ -1,8 +1,10 @@
 package server.services;
 
+import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import server.database.EventRepository;
 import server.database.ParticipantRepository;
 
 import java.util.List;
@@ -13,9 +15,10 @@ import java.util.UUID;
 public class ParticipantsService {
 
     private final ParticipantRepository participantRepository;
-
-    public ParticipantsService(ParticipantRepository participantRepository) {
+    private final EventRepository eventRepository;
+    public ParticipantsService(ParticipantRepository participantRepository, EventRepository eventRepository) {
         this.participantRepository = participantRepository;
+        this.eventRepository = eventRepository;
     }
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
@@ -53,7 +56,17 @@ public class ParticipantsService {
         return participantRepository.deleteParticipantById(id);
     }
 
-    public List<Participant> getParticipants() {
-        return participantRepository.findAll();
+    public List<Participant> getParticipants(UUID eventId) {
+        return participantRepository.findParticipantsByEventId(eventId);
+    }
+    public Participant addParticipant(UUID eventID, Participant participant) {
+        isValidParticipant(participant);
+        Optional<Event> oEv = eventRepository.findById(eventID);
+        if (oEv.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified event.");
+        }
+        Event event = oEv.get();
+        participant.setEvent(event);
+        return participantRepository.save(participant);
     }
 }

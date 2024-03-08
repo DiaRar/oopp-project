@@ -25,11 +25,6 @@ public class TestParticipantRepository implements ParticipantRepository {
     private Optional<Participant> find(UUID id) {
         return participants.stream().filter(x -> x.getId().equals(id)).findFirst();
     }
-    @Override
-    public Optional<Participant> findParticipantById(UUID id) {
-        call("findParticipantById");
-        return find(id);
-    }
 
     @Override
     public boolean existsById(UUID id) {
@@ -40,11 +35,14 @@ public class TestParticipantRepository implements ParticipantRepository {
     @Override
     public Participant deleteParticipantById(UUID id) {
         call("deleteParticipantById");
-        Participant participant = findParticipantById(id).get();
+        Participant participant = findById(id).get();
         participants.remove(participant);
         return participant;
     }
-
+    @Override
+    public List<Participant> findParticipantsByEventId(UUID eventId) {
+        return null;
+    }
     @Override
     public void flush() {
 
@@ -140,7 +138,8 @@ public class TestParticipantRepository implements ParticipantRepository {
 
     @Override
     public Optional<Participant> findById(UUID uuid) {
-        return Optional.empty();
+        call("findParticipantById");
+        return find(uuid);
     }
 
     @Override
