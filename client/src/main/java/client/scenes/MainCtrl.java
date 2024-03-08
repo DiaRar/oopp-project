@@ -44,7 +44,7 @@ public class MainCtrl {
     public void showAddExpense() {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
-        addExpenseCtrl.clearFields();
+        addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
     }
 
 }

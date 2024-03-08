@@ -131,4 +131,10 @@ public class OverviewCtrl {
         from.setText("From ".concat(name));
         including.setText("Including ".concat(name));
     }
+
+    public void openAddExpense() {
+        System.out.println("Add expense");
+        mainCtrl.showAddExpense();
+        // TODO pass the current event as parameter (to choose tags and participant from)
+    }
 }
