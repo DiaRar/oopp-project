@@ -18,15 +18,6 @@ public class DebtController {
         this.debtService = debtService;
     }
 
-//    @GetMapping(path = {"", "/"})
-//    public ResponseEntity<Collection<Debt>> getAll(@PathVariable("eventId") UUID eventId) {
-//        try {
-//            // TODO create a mapping between Event and Debt
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-
     @GetMapping("/{debtId}")
     public ResponseEntity<Debt> get(@PathVariable("eventId") UUID eventId,
                                     @PathVariable("debtId") DebtPK debtId) {
