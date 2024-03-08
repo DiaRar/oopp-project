@@ -62,12 +62,12 @@ public class StartCtrl implements Initializable {
      * Loads event data from the database and switches to the overview screen.
      */
     public void join() {
-        try{
+        try {
             UUID uuid = UUID.fromString(joinField.getText());
             mainCtrl.setEvent(uuid);
             mainCtrl.showOverview();
         }
-        catch (IllegalArgumentException ex){
+        catch (IllegalArgumentException ex) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Invalid UUID Format");
             alert.setHeaderText("Oops! Invalid UUID format.");
@@ -75,7 +75,7 @@ public class StartCtrl implements Initializable {
                     "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
             alert.showAndWait();
         }
-        catch (Exception ex){
+        catch (Exception ex) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Event Code Not Found");
             alert.setHeaderText("Oops! Event code not found.");
