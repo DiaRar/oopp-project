@@ -1,0 +1,11 @@
+### GET all EVENTS
+GET http://localhost:8080/api/events
+Accept: application/json
+
+### ADD an EVENT
+POST http://localhost:8080/api/events
+Content-Type: application/json
+
+{
+  "name": "New Event"
+}

@@ -1,0 +1,17 @@
+### ADD an expense to an event
+POST http://localhost:8080/api/event/e180d1ed-9172-4356-bfae-ffb5f073fe70/expenses/
+Content-Type: application/json
+
+{
+  "description": "wow",
+  "event": {
+    "id": "e180d1ed-9172-4356-bfae-ffb5f073fe70",
+    "name": "New Event",
+    "expenses": [],
+    "tags": [],
+    "participants": []
+  }
+}
+### GET all EXPENSES of an EVENT
+GET http://localhost:8080/api/event/e180d1ed-9172-4356-bfae-ffb5f073fe70/expenses/
+Accept: application/json
