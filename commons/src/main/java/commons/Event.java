@@ -1,5 +1,7 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.CommonView;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -56,11 +58,13 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "event_id")
+    @JsonView(CommonView.OverviewView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "name")
+    @JsonView(CommonView.OverviewView.class)
     public String getName() {
         return name;
     }
@@ -68,14 +72,17 @@ public class Event {
     // Relationships
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    @JsonView(CommonView.OverviewView.class)
     public Collection<Expense> getExpenses() {
         return expenses;
     }
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
+    @JsonView(CommonView.OverviewView.class)
     public Collection<Tag> getTags() {
         return tags;
     }
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    @JsonView(CommonView.OverviewView.class)
     public Collection<Participant> getParticipants() {
         return participants;
     }

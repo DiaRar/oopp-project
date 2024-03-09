@@ -2,6 +2,8 @@ package commons;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.CommonView;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -47,26 +49,31 @@ public class Expense {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(CommonView.OverviewView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "`value`")
+    @JsonView(CommonView.OverviewView.class)
     public Pair<Double, Currency> getValue() {
         return value;
     }
     @Basic
     @Column(name = "description")
+    @JsonView(CommonView.OverviewView.class)
     public String getDescription() {
         return description;
     }
     @Basic
     @Column(name = "date")
+    @JsonView(CommonView.OverviewView.class)
     public LocalDateTime getDate() {
         return date;
     }
     // Relationships
     @ManyToOne(optional = false)
+    @JsonView(CommonView.OverviewView.class)
     public Participant getPayer() {
         return payer;
     }
@@ -75,6 +82,7 @@ public class Expense {
         return event;
     }
     @ManyToMany(mappedBy = "expenses")
+    @JsonView(CommonView.OverviewView.class)
     public Collection<Participant> getDebtors() {
         return debtors;
     }

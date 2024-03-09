@@ -1,5 +1,7 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.CommonView;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -40,11 +42,13 @@ public class Participant {
     @Id
     @Column(name = "participant_id")
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(CommonView.OverviewView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "firstName")
+    @JsonView(CommonView.OverviewView.class)
     public String getFirstName() {
         return firstName;
     }
@@ -55,6 +59,7 @@ public class Participant {
     }
     @Basic
     @Column(name = "lastName")
+    @JsonView(CommonView.OverviewView.class)
     public String getLastName() {
         return lastName;
     }
