@@ -137,4 +137,9 @@ public class OverviewCtrl {
         mainCtrl.showAddExpense();
         // TODO pass the current event as parameter (to choose tags and participant from)
     }
+
+    public void openInvitation() {
+        System.out.println(("Invite people"));
+        mainCtrl.showInvitation();
+    }
 }
