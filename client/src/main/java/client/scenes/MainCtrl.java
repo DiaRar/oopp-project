@@ -46,6 +46,5 @@ public class MainCtrl {
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
     }
-
 }
 

@@ -6,15 +6,29 @@ import commons.Event;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class StartCtrl implements Initializable {
     @FXML
+    public Button create;
+    @FXML
+    public Label createNewEvent;
+    @FXML
+    public Button join;
+    @FXML
+    public Label joinEvent;
+    @FXML
+    public Label recentEvents;
+
     public ListView<String> recentsList;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
@@ -70,8 +84,28 @@ public class StartCtrl implements Initializable {
         mainCtrl.showOverview();
     }
 
+    public void switchToDutch() {
+        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
+        create.setText(textList.get("create"));
+        createNewEvent.setText(textList.get("createNewEvent"));
+        join.setText(textList.get("join"));
+        joinEvent.setText(textList.get("joinEvent"));
+        recentEvents.setText(textList.get("recentEvents"));
+    }
+
+    public void switchToEnglish() {
+        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
+        create.setText(textList.get("create"));
+        createNewEvent.setText(textList.get("createNewEvent"));
+        join.setText(textList.get("join"));
+        joinEvent.setText(textList.get("joinEvent"));
+        recentEvents.setText(textList.get("recentEvents"));
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fillRecent();
+        switchToDutch();
+        switchToEnglish();
     }
 }
