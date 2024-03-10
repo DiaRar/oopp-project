@@ -1,4 +1,4 @@
-package server.api;
+package server.repositories;
 
 import commons.Expense;
 import commons.Participant;
@@ -11,36 +11,48 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import server.database.ExpenseRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class TestExpenseRepository implements ExpenseRepository {
+
+    public final List<Expense> expenses = new ArrayList<>();
+    public final List<String> calledMethods = new ArrayList<>();
+
+
+    private void call(String name) {
+        calledMethods.add(name);
+    }
     @Override
     public Collection<Expense> findExpenseByEventId(UUID eventId) {
-        return null;
+        call("findExpenseByEventId");
+        return expenses.stream().filter(e -> e.getEvent().getId().equals(eventId)).toList();
     }
 
     @Override
     public Optional<Expense> findExpenseByEventIdAndId(UUID eventId, UUID id) {
-        return Optional.empty();
+        call("findExpenseByEventIdAndId");
+        return expenses.stream().filter(e ->
+                e.getEvent().getId().equals(eventId) &&
+                e.getId().equals(id)).findFirst();
     }
 
     @Override
     public Collection<Expense> findExpenseByPayerId(UUID id) {
-        return null;
+        call("findExpenseByPayerId");
+        return expenses.stream().filter(e -> e.getPayer().getId().equals(id)).toList();
     }
 
     @Override
     public Collection<Expense> findExpenseByPayer(Participant payer) {
-        return null;
+        call("findExpenseByPayer");
+        return expenses.stream().filter(e -> e.getPayer().equals(payer)).toList();
     }
 
     @Override
     public Collection<Expense> findExpenseByDebtorsContaining(Participant debtor) {
-        return null;
+        call("findExpenseByDebtorsContaining");
+        return expenses.stream().filter(e -> e.getDebtors().contains(debtor)).toList();
     }
 
     /**
