@@ -74,7 +74,7 @@ public class MainCtrl {
 
     public void setEvent(UUID uuid) throws NoSuchElementException {
         this.event = serverUtils.getEvent(uuid);
-        if(this.event == null)
+        if (this.event == null)
             throw new NoSuchElementException("Event not found: " + uuid);
     }
 }
