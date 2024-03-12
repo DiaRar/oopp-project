@@ -38,6 +38,7 @@ import javafx.scene.text.TextFlow;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class OverviewCtrl {
@@ -47,6 +48,7 @@ public class OverviewCtrl {
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
+    private static final UUID HARDCODED_EVENT_ID = UUID.fromString("0a17a707-b0de-4fe0-bab3-cddbf520305f");
     private Event event;
     private ObservableList<Expense> expenses;
     private ObservableList<Participant> participants;
@@ -78,8 +80,8 @@ public class OverviewCtrl {
         BorderPane.setMargin(vbox, new Insets(0, EXPENSE_MARGIN, 0, EXPENSE_MARGIN));
         Text name = new Text(expense.getPayer().getNickname());
         name.setFont(ARIAL_BOLD);
-        Text value = new Text(expense.getValue().getKey().toString()
-                .concat(expense.getValue().getValue().getSymbol()));
+        Text value = new Text(expense.getAmount().toString()
+                .concat("EUR"));
         value.setFont(ARIAL_BOLD);
         Text desc = new Text(expense.getTitle());
         desc.setFont(ARIAL_BOLD);
@@ -93,12 +95,13 @@ public class OverviewCtrl {
         vbox.getChildren().add(payers);
         borderPane.setCenter(vbox);
         borderPane.getStyleClass().add("expense");
-
-        Text date = new Text(expense.getDate()
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        date.setTextAlignment(TextAlignment.CENTER);
-        borderPane.setLeft(date);
-
+        if (expense.getDate() != null) {
+            Text date = new Text(expense.getDate()
+                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            date.setTextAlignment(TextAlignment.CENTER);
+            borderPane.setLeft(date);
+            BorderPane.setAlignment(date, Pos.CENTER);
+        }
         ImageView editImage = new ImageView("../../resources/main/client/images/edit.png");
         editImage.setFitHeight(EXPENSE_EDIT_SIZE);
         editImage.setFitWidth(EXPENSE_EDIT_SIZE);
@@ -106,13 +109,12 @@ public class OverviewCtrl {
 //            title.setText(expense.getDescription());
 //        }); // TO BE CHANGED WITH EDIT
         borderPane.setRight(editImage);
-        BorderPane.setAlignment(date, Pos.CENTER);
         BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
     }
 
     public void refresh() {
-        event = server.getEvent(null);
+        event = server.getEvent(HARDCODED_EVENT_ID);
         expenses = FXCollections.observableList(event.getExpenses().stream().toList());
         participants = FXCollections.observableList(event.getParticipants().stream().toList());
         title.setText(event.getName());
@@ -121,8 +123,9 @@ public class OverviewCtrl {
         choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
         choiceBox.setValue(choiceBox.getItems().getFirst());
 //        choiceBox.setValue(participants.get(0));
+//        System.out.println(event.getExpenses().toString());
         List<BorderPane> collection =
-                expenses.stream().map(this::expenseComponent).toList();
+                event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -52,6 +53,7 @@ public class Event {
     @Column(name = "name")
     @JsonView(View.CommonsView.class)
     @NotNull
+    @Size(max = View.MAX_STRING, message = "Event name is at most 255 characters")
     public String getName() {
         return name;
     }

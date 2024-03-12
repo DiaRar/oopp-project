@@ -33,11 +33,11 @@ public class TestParticipantRepository implements ParticipantRepository {
     }
 
     @Override
-    public Optional<Participant> deleteParticipantById(UUID id) {
+    public Integer deleteParticipantById(UUID id) {
         call("deleteParticipantById");
         Participant participant = findById(id).get();
         participants.remove(participant);
-        return Optional.of(participant);
+        return 1;
     }
     @Override
     public List<Participant> findParticipantsByEventId(UUID eventId) {
@@ -45,7 +45,7 @@ public class TestParticipantRepository implements ParticipantRepository {
     }
     @Override
     public void flush() {
-
+        call("flush");
     }
 
     @Override

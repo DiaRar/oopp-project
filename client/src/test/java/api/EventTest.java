@@ -2,7 +2,6 @@ package api;
 
 import client.utils.ServerUtils;
 import commons.Event;
-import java.util.ArrayList;
 
 import commons.Participant;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,7 @@ public class EventTest {
     private ServerUtils serverUtils;
     @BeforeEach
     public void setup() {
-        event = new Event("Test", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        event = new Event("Test");
         participant = new Participant("John", "j.d@email.com");
         serverUtils = new ServerUtils();
     }

@@ -10,17 +10,15 @@ import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Currency;
 import java.util.UUID;
 
 @Entity
 public class Expense {
     private UUID id;
-    private Pair<Double, Currency> value;
+    private Double amount;
     private String title;
     private LocalDateTime date;
     private Participant payer;
@@ -29,22 +27,21 @@ public class Expense {
     private Collection<Tag> tags;
     protected Expense() {};
 
-    public Expense(Pair<Double, Currency> value, String title, LocalDateTime date,
-                   Participant payer, Event event) {
-        this.value = value;
+    public Expense(Double amount, String title, LocalDateTime date,
+                   Participant payer, Collection<Participant> debtors) {
+        this.amount = amount;
         this.title = title;
         this.date = date;
         this.payer = payer;
-        this.event = event;
+        this.debtors = debtors;
     }
 
-    public Expense(Pair<Double, Currency> value, String title, LocalDateTime date,
-                   Participant payer, Event event, Collection<Participant> debtors, Collection<Tag> tags) {
-        this.value = value;
+    public Expense(Double amount, String title, LocalDateTime date,
+                   Participant payer, Collection<Participant> debtors, Collection<Tag> tags) {
+        this.amount = amount;
         this.title = title;
         this.date = date;
         this.payer = payer;
-        this.event = event;
         this.debtors = debtors;
         this.tags = tags;
     }
@@ -56,11 +53,11 @@ public class Expense {
         return id;
     }
     @Basic
-    @Column(name = "`value`")
+    @Column(name = "amount")
     @JsonView(View.CommonsView.class)
 //    @NotNull
-    public Pair<Double, Currency> getValue() {
-        return value;
+    public Double getAmount() {
+        return amount;
     }
     @Basic
     @Column(name = "description")
@@ -88,7 +85,6 @@ public class Expense {
         return debtors;
     }
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JsonView(View.ExpenseView.class)
     public Event getEvent() {
         return event;
     }
@@ -100,8 +96,8 @@ public class Expense {
     public void setId(UUID id) {
         this.id = id;
     }
-    public void setValue(Pair<Double, Currency> value) {
-        this.value = value;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
     public void setTitle(String description) {
         this.title = description;

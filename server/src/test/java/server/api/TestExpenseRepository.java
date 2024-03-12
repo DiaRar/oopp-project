@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 public class TestExpenseRepository implements ExpenseRepository {
     @Override
-    public Optional<Expense> deleteExpenseById(UUID id) {
+    public Integer deleteExpenseById(UUID id) {
         return null;
     }
 

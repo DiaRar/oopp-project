@@ -52,7 +52,6 @@ public class QuoteTest {
 	public void hasToString() {
 		var actual = new Quote(new Participant("John", "j.d@email.com"), "q").toString();
 		assertTrue(actual.contains("John"));
-		assertTrue(actual.contains("Doe"));
 		assertTrue(actual.contains("j.d@email.com"));
 		assertTrue(actual.contains("q"));
 	}

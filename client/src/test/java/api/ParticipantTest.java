@@ -4,8 +4,6 @@ import client.utils.ServerUtils;
 import commons.Event;
 
 import org.junit.jupiter.api.BeforeEach;
-
-import java.util.ArrayList;
 /*
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
@@ -19,7 +17,7 @@ public class ParticipantTest {
     @BeforeEach
     public void setup() {
         this.serverUtils = new ServerUtils();
-        this.event = new Event("Test", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        this.event = new Event("Test");
     }
 
     //COMMENTED INTEGRATION TESTS AS PIPELINE CONFIGURATION RUNS THEM WITHOUT SERVER RUNNING, CAUSING A FAIL

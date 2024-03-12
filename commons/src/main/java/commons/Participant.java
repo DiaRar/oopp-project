@@ -65,7 +65,6 @@ public class Participant {
         return bankAccount;
     }
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JsonView(View.ParticipantView.class)
     public Event getEvent() {
         return event;
     }

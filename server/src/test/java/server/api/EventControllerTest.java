@@ -11,7 +11,6 @@ import commons.Event;
 import server.repositories.TestEventRepository;
 import server.services.EventService;
 
-import java.util.ArrayList;
 public class EventControllerTest {
     private int id;
     private TestEventRepository repo;
@@ -62,6 +61,6 @@ public class EventControllerTest {
     }
 
     private static Event getEvent(String s) {
-        return new Event(s, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        return new Event(s);
     }
 }

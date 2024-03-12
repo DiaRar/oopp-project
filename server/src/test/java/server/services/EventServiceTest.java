@@ -8,7 +8,6 @@ import commons.Event;
 import server.database.EventRepository;
 import server.repositories.TestEventRepository;
 
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,38 +25,38 @@ public class EventServiceTest {
 
     @Test
     public void addTest() {
-        var temp = eventService.add(new Event("test1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        var temp = eventService.add(new Event("test1"));
         assertTrue(eventService.getAll().contains(temp));
     }
 
     @Test
     public void getAllTest() {
         final int numberOfEvents = 3;
-        eventService.add(new Event("test1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test2", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test3", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        eventService.add(new Event("test3"));
         assertEquals(numberOfEvents, eventService.getAll().size());
     }
 
     @Test
     public void getByIdTest() {
-        eventService.add(new Event("test1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test2", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test3", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        Event temp = eventService.add(new Event("test4", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test4", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test5", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        eventService.add(new Event("test3"));
+        Event temp = eventService.add(new Event("test4"));
+        eventService.add(new Event("test4"));
+        eventService.add(new Event("test5"));
 
         assertEquals(temp, eventService.getById(temp.getId()));
     }
 
     @Test
     public void updateTest() {
-        eventService.add(new Event("test1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        eventService.add(new Event("test2", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        var temp = eventService.add(new Event("test3", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        var temp2 = new Event("test4", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        var temp3 = new Event("test4", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        var temp = eventService.add(new Event("test3"));
+        var temp2 = new Event("test4");
+        var temp3 = new Event("test4");
         temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
         assertEquals(temp3, eventService.getById(temp.getId()));

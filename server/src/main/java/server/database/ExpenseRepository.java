@@ -20,11 +20,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Expense;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
-    Optional<Expense> deleteExpenseById(UUID id);
+    Integer deleteExpenseById(UUID id);
     Collection<Expense> findExpenseByEventId(UUID eventId);
     Collection<Expense> findExpenseByPayerId(UUID id);
     Collection<Expense> findExpenseByPayer(Participant payer);

@@ -19,10 +19,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Participant;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
-    Optional<Participant> deleteParticipantById(UUID id);
+    Integer deleteParticipantById(UUID id);
     List<Participant> findParticipantsByEventId(UUID eventId);
 }

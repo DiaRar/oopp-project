@@ -3,7 +3,7 @@ GET http://localhost:8080/api/events
 Accept: application/json
 
 ### GET EVENT by Id
-GET http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80
+GET http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca
 Accept: application/json
 ### ADD an EVENT
 POST http://localhost:8080/api/events
@@ -13,11 +13,11 @@ Content-Type: application/json
   "name": "New Event"
 }
 ### UPDATE an EVENT
-PUT http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80
+PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca
 Content-Type: application/json
 
 {
-  "id": "61ea9c20-2fe3-4a69-aa36-01ffaf03bf80",
+  "id": "0a17a707-b0de-4fe0-bab3-cddbf520305f",
   "name": "Old Event",
   "expenses": [],
   "tags": [],

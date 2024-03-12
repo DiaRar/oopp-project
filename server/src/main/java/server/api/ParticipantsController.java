@@ -36,11 +36,10 @@ public class ParticipantsController {
     }
 
     @DeleteMapping("/{id}")
-    @JsonView(View.ParticipantView.class)
     @CacheEvict(value = "events", key = "#eventId")
-    public ResponseEntity<Participant> deleteParticipant(@PathVariable UUID eventId, @PathVariable UUID id)
+    public ResponseEntity<Void> deleteParticipant(@PathVariable UUID eventId, @PathVariable UUID id)
             throws IllegalArgumentException, EntityNotFoundException {
-        return ResponseEntity.ok(participantsService.deleteParticipant(id));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = {"", "/"})

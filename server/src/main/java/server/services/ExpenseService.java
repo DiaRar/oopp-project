@@ -6,9 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.database.ExpenseRepository;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ExpenseService {
@@ -33,6 +31,7 @@ public class ExpenseService {
         if (oExpense.isEmpty()) {
             throw new EntityNotFoundException("Expense not found.");
         }
+        Expense expense = oExpense.get();
         return oExpense.get();
     }
 
@@ -43,30 +42,43 @@ public class ExpenseService {
         checkExpenseValidity(expense);
         setEvent(eventId, expense);
         // TODO: Create new debts
-        return expenseRepo.save(expense);
+        return expenseRepo.saveAndFlush(expense);
     }
 
     public Expense update(UUID eventId, UUID expenseId, Expense expense)
             throws IllegalArgumentException, EntityNotFoundException {
         // Ensure that the expense already exists; throws an exception otherwise
-        checkExpenseValidity(expense, expenseId);
-        getById(expenseId);
-        expense.setId(expenseId);
-        setEvent(eventId, expense);
-        expenseRepo.save(expense);
+        Expense repoExpense = getById(expenseId);
+        if (!repoExpense.getEvent().getId().equals(eventId)) {
+           throw new IllegalArgumentException("Event and Expense mismatch!");
+        }
+        if (expense.getTitle() != null) {
+            repoExpense.setTitle(expense.getTitle());
+        }
+        if (expense.getPayer() != null) {
+            repoExpense.setPayer(expense.getPayer());
+        }
+        if (expense.getDebtors() != null) {
+            repoExpense.setDebtors(expense.getDebtors());
+        }
+        if (expense.getAmount() != null) {
+            repoExpense.setAmount(expense.getAmount());
+        }
+        if (expense.getDate() != null) {
+            repoExpense.setDate(expense.getDate());
+        }
+        expenseRepo.flush();
         // TODO: Update existing debts
-        return expense;
+        return repoExpense;
     }
 
-    public Expense delete(UUID expenseId) {
+    public void delete(UUID expenseId) {
         if (expenseId == null)
             throw new IllegalArgumentException("Id cannot be null!");
-        Optional<Expense> oExpense = expenseRepo.deleteExpenseById(expenseId);
-        // TODO: Update existing debts
-        if (oExpense.isEmpty()) {
-            throw new EntityNotFoundException("Expense not found.");
+        Integer deletedRows = expenseRepo.deleteExpenseById(expenseId);
+        if (deletedRows != 1) {
+            throw new EntityNotFoundException("Could not find the repo");
         }
-        return oExpense.get();
     }
 
     private void checkExpenseValidity(Expense expense) throws IllegalArgumentException {
@@ -78,12 +90,6 @@ public class ExpenseService {
         }
         if (expense.getDebtors() == null || expense.getDebtors().isEmpty()) {
             throw new IllegalArgumentException("Debtors are missing!");
-        }
-    }
-    private void checkExpenseValidity(Expense expense, UUID expenseId) throws IllegalArgumentException {
-        checkExpenseValidity(expense);
-        if (expense.getId() != null && !expense.getId().equals(expenseId)) {
-            throw new IllegalArgumentException("Tried to update the ID of existing expense.");
         }
     }
 }

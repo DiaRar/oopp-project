@@ -35,7 +35,6 @@ public class ParticipantTest {
     public void hasToString() {
         String string = new Participant("John", "j.d@email.com").toString();
         assertTrue(string.contains("John"));
-        assertTrue(string.contains("Doe"));
         assertTrue(string.contains("j.d@email.com"));
     }
 }

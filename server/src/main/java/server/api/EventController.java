@@ -5,6 +5,7 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,12 @@ public class EventController {
             throws EntityNotFoundException, IllegalArgumentException, NullPointerException {
         Event updated = eventService.update(id, event);
         return ResponseEntity.ok(updated);
+    }
+    @DeleteMapping("/{id}")
+    @CacheEvict(value = "events", key = "#id")
+    public ResponseEntity<Void> update(@PathVariable("id") UUID id)
+            throws EntityNotFoundException, IllegalArgumentException {
+        eventService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

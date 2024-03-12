@@ -21,16 +21,8 @@ public class EventService {
         return s == null || s.isEmpty();
     }
     private static void isValidEvent(Event event) {
-        if (event == null)
-            throw new NullPointerException("Event is null!");
         if (isNullOrEmpty(event.getName()))
             throw new IllegalArgumentException("No name found!");
-    }
-
-    private static void isValidEvent(UUID id, Event event) {
-        isValidEvent(event);
-        if (!event.getId().equals(id))
-            throw new IllegalArgumentException("Id of Event and Id from Path are not equal!");
     }
 
     public List<Event> getAll() {
@@ -54,8 +46,18 @@ public class EventService {
 
     public Event update(UUID id, Event event) throws EntityNotFoundException,
             IllegalArgumentException, NullPointerException {
-        getById(id);
-        isValidEvent(id, event);
-        return eventRepository.save(event);
+        Event repoEvent = getById(id);
+        if (event.getName() != null)
+            repoEvent.setName(event.getName());
+        eventRepository.flush();
+        return repoEvent;
+    }
+    public void delete(UUID id) throws EntityNotFoundException, IllegalArgumentException {
+        if (id == null)
+            throw new IllegalArgumentException("Id cannot be null!");
+        Integer deletedRows = eventRepository.deleteEventById(id);
+        if (deletedRows != 1) {
+            throw new EntityNotFoundException("Could not find the repo");
+        }
     }
 }

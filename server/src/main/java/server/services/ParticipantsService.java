@@ -24,11 +24,6 @@ public class ParticipantsService {
         if (isNullOrEmpty(participant.getNickname()))
             throw new IllegalArgumentException("Participant's attributes have null or empty values!");
     }
-    private static void isValidParticipant(UUID id, Participant participant) throws IllegalArgumentException {
-        isValidParticipant(participant);
-        if (!participant.getId().equals(id))
-            throw new IllegalArgumentException("Participant's id and path id are not equal!");
-    }
     public Participant getById(UUID id) throws EntityNotFoundException {
         Optional<Participant> oPa = participantRepository.findById(id);
         if (oPa.isEmpty()) {
@@ -39,24 +34,28 @@ public class ParticipantsService {
     }
     public Participant updateParticipant(UUID eventId, UUID id, Participant participant)
             throws IllegalArgumentException, EntityNotFoundException {
-        if (participant.getId() == null)
-            participant.setId(id);
-        isValidParticipant(id, participant);
-        if (!participantRepository.existsById(id))
-            throw new EntityNotFoundException("Did not find the specified participant!");
-        Event event = new Event();
-        event.setId(eventId);
-        participant.setEvent(event);
-        return participantRepository.save(participant);
+        Participant repoParticipant = getById(id);
+        if (!repoParticipant.getEvent().getId().equals(eventId))
+            throw new IllegalArgumentException("Event and Participant mismatch!");
+        if (participant.getNickname() != null) {
+            repoParticipant.setNickname(participant.getNickname());
+        }
+        if (participant.getEmail() != null) {
+            repoParticipant.setEmail(participant.getEmail());
+        }
+        if (participant.getBankAccount() != null) {
+            repoParticipant.setBankAccount(participant.getBankAccount());
+        }
+        participantRepository.flush();
+        return repoParticipant;
     }
-    public Participant deleteParticipant(UUID id) throws IllegalArgumentException, EntityNotFoundException {
+    public void deleteParticipant(UUID id) throws IllegalArgumentException, EntityNotFoundException {
         if (id == null)
             throw new IllegalArgumentException("Id cannot be null!");
-        Optional<Participant> oParticipant = participantRepository.deleteParticipantById(id);
-        if (oParticipant.isEmpty()) {
-            throw new EntityNotFoundException("Did not find the specified participant!");
+        Integer deletedRows = participantRepository.deleteParticipantById(id);
+        if (deletedRows != 1) {
+            throw new EntityNotFoundException("Could not find the repo");
         }
-        return oParticipant.get();
     }
 
     public List<Participant> getParticipants(UUID eventId) {

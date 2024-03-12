@@ -30,6 +30,7 @@ public class ExpensesController {
     }
 
     @PostMapping(path = {"", "/"})
+    @JsonView(View.CommonsView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
@@ -38,14 +39,14 @@ public class ExpensesController {
     }
 
     @GetMapping("/{expenseId}")
-    @JsonView(View.ExpenseView.class)
+    @JsonView(View.CommonsView.class)
     // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
     public ResponseEntity<Expense> getById(@PathVariable UUID expenseId) throws EntityNotFoundException {
         return ResponseEntity.ok(expenseService.getById(expenseId));
     }
 
     @PutMapping("/{expenseId}")
-    @JsonView(View.ExpenseView.class)
+    @JsonView(View.OverviewView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> update(@PathVariable UUID eventId, @PathVariable UUID expenseId,
                                           @RequestBody Expense expense)
@@ -55,11 +56,10 @@ public class ExpensesController {
     }
 
     @DeleteMapping("/{expenseId}")
-    @JsonView(View.ExpenseView.class)
     @CacheEvict(value = "events", key = "#eventId")
-    public ResponseEntity<Expense> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
+    public ResponseEntity<Void> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
             throws EntityNotFoundException {
-        Expense deleted = expenseService.delete(expenseId);
-        return ResponseEntity.ok(deleted);
+        expenseService.delete(expenseId);
+        return ResponseEntity.ok().build();
     }
 }
