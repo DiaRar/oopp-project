@@ -1,8 +1,9 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import commons.views.CommonView;
+import commons.views.View;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,21 +26,7 @@ public class Event {
     private Collection<Expense> expenses;
     private Collection<Tag> tags;
     private Collection<Participant> participants;
-
-    /**
-     * Constructs an Event object with specified name, expenses, and tags.
-     *
-     * @param name     The name of the event.
-     * @param expenses The list of expenses associated with the event.
-     * @param tags     The list of tags associated with the event.
-     * @param participants The list of participants associated with the event.
-     */
-    public Event(String name, Collection<Expense> expenses, Collection<Tag> tags, Collection<Participant> participants) {
-        this.name = name;
-        this.expenses = expenses;
-        this.tags = tags;
-        this.participants = participants;
-    }
+    private Collection<Debt> debts;
 
     /**
      * Constructs an Event object with specified name and UUID.
@@ -49,7 +36,6 @@ public class Event {
     public Event(String name) {
         this.name = name;
     }
-
     /**
      * Constructs an empty Event object.
      */
@@ -58,33 +44,37 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "event_id")
-    @JsonView(CommonView.OverviewView.class)
+    @JsonView(View.CommonsView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "name")
-    @JsonView(CommonView.OverviewView.class)
+    @JsonView(View.CommonsView.class)
+    @NotNull
     public String getName() {
         return name;
     }
-
     // Relationships
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-    @JsonView(CommonView.OverviewView.class)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
+    @JsonView(View.OverviewView.class)
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
-    @JsonView(CommonView.OverviewView.class)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
+    @JsonView(View.OverviewView.class)
     public Collection<Tag> getTags() {
         return tags;
     }
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-    @JsonView(CommonView.OverviewView.class)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
+    @JsonView(View.OverviewView.class)
     public Collection<Participant> getParticipants() {
         return participants;
+    }
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
+    @JsonView(View.SettleView.class)
+    public Collection<Debt> getDebts() {
+        return debts;
     }
 
     // Setters
@@ -103,7 +93,9 @@ public class Event {
     public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
     }
-
+    public void setDebts(Collection<Debt> debts) {
+        this.debts = debts;
+    }
     public void addParticipant(Participant participant) {
         this.participants.add(participant);
     }

@@ -1,17 +1,45 @@
 ### ADD an expense to an event
-POST http://localhost:8080/api/event/e180d1ed-9172-4356-bfae-ffb5f073fe70/expenses/
+POST http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/expenses/
 Content-Type: application/json
 
 {
-  "description": "wow",
-  "event": {
-    "id": "e180d1ed-9172-4356-bfae-ffb5f073fe70",
-    "name": "New Event",
-    "expenses": [],
-    "tags": [],
-    "participants": []
-  }
+  "title": "wow",
+  "payer": {
+    "id": "a7079be6-4551-466b-8a7a-2f2ae9845dd7",
+    "nickname": "rares"
+  },
+  "debtors": [
+    {
+      "id": "ca19b387-17f3-47e2-be04-4b7ac7b8a380",
+      "nickname": "diaco"
+    }
+  ]
 }
 ### GET all EXPENSES of an EVENT
-GET http://localhost:8080/api/event/e180d1ed-9172-4356-bfae-ffb5f073fe70/expenses/
+GET http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/expenses/
 Accept: application/json
+
+### GET EXPENSE by ID
+GET http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+
+### ADD an expense to an event
+PUT http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+Content-Type: application/json
+
+{
+  "title": "wow",
+  "payer": {
+    "id": "a7079be6-4551-466b-8a7a-2f2ae9845dd7",
+    "nickname": "rares"
+  },
+  "debtors": [
+    {
+      "id": "ca19b387-17f3-47e2-be04-4b7ac7b8a380",
+      "nickname": "diaco"
+    },
+    {
+      "id": "a7079be6-4551-466b-8a7a-2f2ae9845dd7",
+      "nickname": "rares"
+    }
+  ]
+}

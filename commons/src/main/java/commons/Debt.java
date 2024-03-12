@@ -1,7 +1,10 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import commons.primary_keys.DebtPK;
+import commons.views.View;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,16 +22,20 @@ public class Debt {
     @EmbeddedId
     private DebtPK id;
     @Column(name = "`value`")
+    @NotNull
     private Pair<Double, Currency> value;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("payer_id")
     @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
+    @JsonView(View.SettleView.class)
     private Participant payer;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("debtor_id")
     @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
+    @JsonView(View.SettleView.class)
     private Participant debtor;
     @ManyToOne(optional = false)
+    @JsonView(View.DebtView.class)
     private Event event;
     protected Debt() {}
     // Added another constructor, as I am unsure which one to use yet.
@@ -44,6 +51,9 @@ public class Debt {
         this.debtor = debtor;
         this.value = value;
         this.event = event;
+    }
+    public Debt(Pair<Double, Currency> value) {
+        this.value = value;
     }
     public Pair<Double, Currency> getValue() {
         return value;

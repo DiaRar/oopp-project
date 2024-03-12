@@ -2,6 +2,11 @@ package server.api;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +24,31 @@ public class EventController {
     }
 
     @GetMapping(path = {"", "/"})
+    @JsonView(View.CommonsView.class)
     public List<Event> getAll() {
         return eventService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getById(@PathVariable("id") UUID id) {
-        try {
-            return ResponseEntity.ok(eventService.getById(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.OverviewView.class)
+    @Cacheable(value = "events", key = "#id")
+    public ResponseEntity<Event> getById(@PathVariable("id") UUID id) throws EntityNotFoundException {
+        return ResponseEntity.ok(eventService.getById(id));
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Event> add(@RequestBody Event event) {
-        try {
-            Event saved = eventService.add(event);
-            return ResponseEntity.ok(saved);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.CommonsView.class)
+    public ResponseEntity<Event> create(@RequestBody Event event) {
+        Event saved = eventService.add(event);
+        return ResponseEntity.ok(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event) {
-        try {
-            Event updated = eventService.update(id, event);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.CommonsView.class)
+    @CachePut(value = "events", key = "#id")
+    public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event)
+            throws EntityNotFoundException, IllegalArgumentException, NullPointerException {
+        Event updated = eventService.update(id, event);
+        return ResponseEntity.ok(updated);
     }
 }

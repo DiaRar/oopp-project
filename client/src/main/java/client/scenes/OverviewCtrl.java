@@ -75,19 +75,19 @@ public class OverviewCtrl {
         BorderPane borderPane = new BorderPane();
         TextFlow content = new TextFlow();
         VBox vbox = new VBox();
-        borderPane.setMargin(vbox, new Insets(0, EXPENSE_MARGIN, 0, EXPENSE_MARGIN));
-        Text name = new Text(expense.getPayer().getFirstName());
+        BorderPane.setMargin(vbox, new Insets(0, EXPENSE_MARGIN, 0, EXPENSE_MARGIN));
+        Text name = new Text(expense.getPayer().getNickname());
         name.setFont(ARIAL_BOLD);
         Text value = new Text(expense.getValue().getKey().toString()
                 .concat(expense.getValue().getValue().getSymbol()));
         value.setFont(ARIAL_BOLD);
-        Text desc = new Text(expense.getDescription());
+        Text desc = new Text(expense.getTitle());
         desc.setFont(ARIAL_BOLD);
         content.getChildren().addAll(name, new Text(" paid "),
                 value, new Text(" for "), desc);
         vbox.getChildren().add(content);
         Text payers = new Text("(" + String.join(",",
-                expense.getDebtors().stream().map(payee -> payee.getFirstName()).collect(Collectors.joining()))
+                expense.getDebtors().stream().map(Participant::getNickname).collect(Collectors.joining()))
                 + ")");
         payers.setStyle("-fx-font-size: 12px;");
         vbox.getChildren().add(payers);
@@ -95,7 +95,7 @@ public class OverviewCtrl {
         borderPane.getStyleClass().add("expense");
 
         Text date = new Text(expense.getDate()
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).toString());
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         date.setTextAlignment(TextAlignment.CENTER);
         borderPane.setLeft(date);
 
@@ -106,8 +106,8 @@ public class OverviewCtrl {
 //            title.setText(expense.getDescription());
 //        }); // TO BE CHANGED WITH EDIT
         borderPane.setRight(editImage);
-        borderPane.setAlignment(date, Pos.CENTER);
-        borderPane.setAlignment(editImage, Pos.CENTER);
+        BorderPane.setAlignment(date, Pos.CENTER);
+        BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
     }
 
@@ -117,8 +117,8 @@ public class OverviewCtrl {
         participants = FXCollections.observableList(event.getParticipants().stream().toList());
         title.setText(event.getName());
         participantsText.setText(String.join(",",
-                participants.stream().map(Participant::getFirstName).toList()));
-        choiceBox.getItems().addAll(participants.stream().map(Participant::getFirstName).toList());
+                participants.stream().map(Participant::getNickname).toList()));
+        choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
         choiceBox.setValue(choiceBox.getItems().getFirst());
 //        choiceBox.setValue(participants.get(0));
         List<BorderPane> collection =
@@ -127,7 +127,7 @@ public class OverviewCtrl {
     }
 
     public void choiceChanged() {
-        String name = choiceBox.getValue().toString();
+        String name = choiceBox.getValue();
         from.setText("From ".concat(name));
         including.setText("Including ".concat(name));
     }

@@ -1,0 +1,11 @@
+### GET all PARTICIPANTS of an EVENT
+GET http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/participants/
+Accept: application/json
+
+### ADD a PARTICIPANT to an EVENT
+POST http://localhost:8080/api/events/61ea9c20-2fe3-4a69-aa36-01ffaf03bf80/participants/
+Content-Type: application/json
+
+{
+  "nickname": "rares"
+}

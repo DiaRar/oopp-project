@@ -18,7 +18,7 @@ public class ExpenseTest {
         Expense expense = new Expense(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)),
                  "Test", date, null, null);
         assertEquals(new ImmutablePair<>(2.0, Currency.getInstance(Locale.US)), expense.getValue());
-        assertEquals("Test", expense.getDescription());
+        assertEquals("Test", expense.getTitle());
         assertEquals(date, expense.getDate());
     }
 

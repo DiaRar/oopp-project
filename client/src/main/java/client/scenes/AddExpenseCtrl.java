@@ -110,7 +110,7 @@ public class AddExpenseCtrl implements Initializable {
         List<Participant> participants = utils.readParticipants();
         if (participants.isEmpty()) return;
         List<String> names = participants.stream()
-                .map(Participant::getFirstName)
+                .map(Participant::getNickname)
                 .collect(Collectors.toList());
         debtorsList.setItems(FXCollections.observableList(names));
         // TODO replace mock data with the list of participants in the event

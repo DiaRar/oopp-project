@@ -73,7 +73,7 @@ public class EventServiceTest {
 //        assertSame(1, retEvent.getParticipants().size());
 //        Participant retParticipant = retEvent.getParticipants().iterator().next();
 //        assertEquals(retParticipant.getEmail(), participant.getEmail());
-//        assertEquals(retParticipant.getFirstName(), participant.getFirstName());
+//        assertEquals(retParticipant.getNickname(), participant.getNickname());
 //        assertEquals(retParticipant.getLastName(), participant.getLastName());
 //        List<Event> eventList = eventService.getAll();
 //        List<Participant> participantList = participantRepository.findAll();

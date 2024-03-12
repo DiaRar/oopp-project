@@ -25,7 +25,7 @@ public class EventTest {
     @BeforeEach
     public void setup() {
         event = new Event("Test", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        participant = new Participant("John", "Doe", "j.d@email.com");
+        participant = new Participant("John", "j.d@email.com");
         serverUtils = new ServerUtils();
     }
 

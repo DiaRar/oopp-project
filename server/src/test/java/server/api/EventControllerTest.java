@@ -27,34 +27,34 @@ public class EventControllerTest {
     @Test
     public void addTest() {
         Event temp = getEvent("test");
-        Event event  = eventController.add(temp).getBody();
+        Event event  = eventController.create(temp).getBody();
         assertEquals(event.getName(), temp.getName());
         assertNotNull(event.getId());
     }
     @Test
     public void getAllTest() {
         final int numberOfEvents = 4;
-        eventController.add(getEvent("test1"));
-        eventController.add(getEvent("test2"));
-        eventController.add(getEvent("test3"));
-        eventController.add(getEvent("test4"));
+        eventController.create(getEvent("test1"));
+        eventController.create(getEvent("test2"));
+        eventController.create(getEvent("test3"));
+        eventController.create(getEvent("test4"));
         assertEquals(numberOfEvents, eventController.getAll().size());
     }
 
     @Test
     public void getByIdTest() {
-        eventController.add(getEvent("test1"));
-        eventController.add(getEvent("test2"));
+        eventController.create(getEvent("test1"));
+        eventController.create(getEvent("test2"));
         Event temp = getEvent("test3");
-        Event test3 = eventController.add(getEvent("test3")).getBody();
+        Event test3 = eventController.create(getEvent("test3")).getBody();
         temp.setId(test3.getId());
-        eventController.add(getEvent("test4"));
+        eventController.create(getEvent("test4"));
         assertEquals(temp, eventController.getById(temp.getId()).getBody());
     }
 
     @Test
     public void updateTest() {
-        Event event = eventController.add(getEvent("test2")).getBody();
+        Event event = eventController.create(getEvent("test2")).getBody();
         Event toUpdateWith = getEvent("test1");
         Event updated = eventController.update(event.getId(), toUpdateWith).getBody();
         toUpdateWith.setId(event.getId());

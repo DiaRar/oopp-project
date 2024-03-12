@@ -35,7 +35,7 @@ public class ParticipantTest {
         Participant serverParticipant = serverUtils.getParticipant(participantID);
         assertEquals(participant.getEmail(), serverParticipant.getEmail());
         assertEquals(serverParticipant.getEvent().getId(), serverEvent.getId());
-        assertEquals(participant.getFirstName(), serverParticipant.getFirstName());
+        assertEquals(participant.getNickname(), serverParticipant.getNickname());
         assertEquals(participant.getLastName(), serverParticipant.getLastName());
     }
 
@@ -59,7 +59,7 @@ public class ParticipantTest {
                 .iterator().next().getId());
         Participant updatedParticipant = serverUtils.updateParticipant(participant2, serverParticipant.getId());
         assertEquals(updatedParticipant.getLastName(), participant2.getLastName());
-        assertEquals(updatedParticipant.getFirstName(), participant2.getFirstName());
+        assertEquals(updatedParticipant.getNickname(), participant2.getNickname());
         assertEquals(updatedParticipant.getEmail(), participant2.getEmail());
         assertEquals(updatedParticipant.getEvent().getId(), serverEvent.getId());
     }

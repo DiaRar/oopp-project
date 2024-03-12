@@ -1,6 +1,10 @@
 package server.api;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import commons.Expense;
+import commons.views.View;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.ExpenseService;
@@ -19,53 +23,43 @@ public class ExpensesController {
     }
 
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<Collection<Expense>> getAll(@PathVariable("eventId") UUID eventId) {
-        try {
-            return ResponseEntity.ok(expenseService.getAll(eventId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.CommonsView.class)
+    // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
+    public ResponseEntity<Collection<Expense>> getAll(@PathVariable("eventId") UUID eventId)  {
+        return ResponseEntity.ok(expenseService.getAll(eventId));
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense) {
-        try {
-            Expense saved = expenseService.save(eventId, expense);
-            return ResponseEntity.ok(saved);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @CacheEvict(value = "events", key = "#eventId")
+    public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
+            throws IllegalArgumentException {
+        Expense saved = expenseService.save(eventId, expense);
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/{expenseId}")
-    public ResponseEntity<Expense>
-        getById(@PathVariable UUID eventId, @PathVariable UUID expenseId) {
-        try {
-            return ResponseEntity.ok(expenseService.getById(eventId, expenseId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.ExpenseView.class)
+    // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
+    public ResponseEntity<Expense> getById(@PathVariable UUID expenseId) throws EntityNotFoundException {
+        return ResponseEntity.ok(expenseService.getById(expenseId));
     }
 
     @PutMapping("/{expenseId}")
-    public ResponseEntity<Expense>
-        update(@PathVariable UUID eventId, @PathVariable UUID expenseId, @RequestBody Expense expense) {
-        try {
-            Expense updated = expenseService.update(eventId, expenseId, expense);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.ExpenseView.class)
+    @CacheEvict(value = "events", key = "#eventId")
+    public ResponseEntity<Expense> update(@PathVariable UUID eventId, @PathVariable UUID expenseId,
+                                          @RequestBody Expense expense)
+            throws EntityNotFoundException, IllegalArgumentException {
+        Expense updated = expenseService.update(eventId, expenseId, expense);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{expenseId}")
-    public ResponseEntity<Expense>
-        delete(@PathVariable UUID eventId, @PathVariable UUID expenseId) {
-        try {
-            Expense deleted = expenseService.delete(eventId, expenseId);
-            return ResponseEntity.ok(deleted);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @JsonView(View.ExpenseView.class)
+    @CacheEvict(value = "events", key = "#eventId")
+    public ResponseEntity<Expense> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
+            throws EntityNotFoundException {
+        Expense deleted = expenseService.delete(expenseId);
+        return ResponseEntity.ok(deleted);
     }
 }
