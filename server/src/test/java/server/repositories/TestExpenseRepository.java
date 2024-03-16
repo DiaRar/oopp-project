@@ -60,7 +60,7 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void flush() {
-
+        call("flush");
     }
 
     /**
@@ -152,7 +152,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public Expense getById(UUID uuid) {
-        return null;
+        call("getById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
