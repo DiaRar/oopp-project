@@ -22,6 +22,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
-    Participant deleteParticipantById(UUID id);
+    Integer deleteParticipantById(UUID id);
     List<Participant> findParticipantsByEventId(UUID eventId);
 }

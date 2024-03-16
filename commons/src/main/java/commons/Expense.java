@@ -2,22 +2,24 @@ package commons;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Currency;
 import java.util.UUID;
 
 @Entity
 public class Expense {
     private UUID id;
-    private Pair<Double, Currency> value;
-    private String description;
+    private Double amount;
+    private String title;
     private LocalDateTime date;
     private Participant payer;
     private Event event;
@@ -25,58 +27,66 @@ public class Expense {
     private Collection<Tag> tags;
     protected Expense() {};
 
-    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
-                   Participant payer, Event event) {
-        this.value = value;
-        this.description = description;
+    public Expense(Double amount, String title, LocalDateTime date,
+                   Participant payer, Collection<Participant> debtors) {
+        this.amount = amount;
+        this.title = title;
         this.date = date;
         this.payer = payer;
-        this.event = event;
+        this.debtors = debtors;
     }
 
-    public Expense(Pair<Double, Currency> value, String description, LocalDateTime date,
-                   Participant payer, Event event, Collection<Participant> debtors, Collection<Tag> tags) {
-        this.value = value;
-        this.description = description;
+    public Expense(Double amount, String title, LocalDateTime date,
+                   Participant payer, Collection<Participant> debtors, Collection<Tag> tags) {
+        this.amount = amount;
+        this.title = title;
         this.date = date;
         this.payer = payer;
-        this.event = event;
         this.debtors = debtors;
         this.tags = tags;
     }
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(View.CommonsView.class)
     public UUID getId() {
         return id;
     }
     @Basic
-    @Column(name = "`value`")
-    public Pair<Double, Currency> getValue() {
-        return value;
+    @Column(name = "amount")
+    @JsonView(View.CommonsView.class)
+//    @NotNull
+    public Double getAmount() {
+        return amount;
     }
     @Basic
     @Column(name = "description")
-    public String getDescription() {
-        return description;
+    @JsonView(View.CommonsView.class)
+    @NotNull
+    @Size(max = View.MAX_STRING, message = "Title is at most 255 characters")
+    public String getTitle() {
+        return title;
     }
     @Basic
     @Column(name = "date")
+    @JsonView(View.CommonsView.class)
     public LocalDateTime getDate() {
         return date;
     }
     // Relationships
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JsonView(View.CommonsView.class)
     public Participant getPayer() {
         return payer;
     }
-    @ManyToOne(optional = false)
-    public Event getEvent() {
-        return event;
-    }
-    @ManyToMany(mappedBy = "expenses")
+    @ManyToMany
+    @JsonView(View.CommonsView.class)
     public Collection<Participant> getDebtors() {
         return debtors;
+    }
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    public Event getEvent() {
+        return event;
     }
     @ManyToMany
     public Collection<Tag> getTags() {
@@ -86,11 +96,11 @@ public class Expense {
     public void setId(UUID id) {
         this.id = id;
     }
-    public void setValue(Pair<Double, Currency> value) {
-        this.value = value;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String description) {
+        this.title = description;
     }
     public void setDate(LocalDateTime date) {
         this.date = date;

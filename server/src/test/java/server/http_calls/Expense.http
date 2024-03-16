@@ -1,0 +1,46 @@
+### ADD an expense to an event
+POST http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/
+Content-Type: application/json
+
+{
+  "title": "wow",
+  "amount": 2.0,
+  "payer": {
+    "id": "2d03bca6-1f9c-4ab9-9ee0-05ea621dc532",
+    "nickname": "diaco"
+  },
+  "debtors": [
+    {
+      "id": "e3ec153a-e2ec-4b7e-b970-8046f2729e4f",
+      "nickname": "diaco"
+    }
+  ]
+}
+### GET all EXPENSES of an EVENT
+GET http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/
+Accept: application/json
+
+### GET EXPENSE by ID
+GET http://localhost:8080/api/events/0a17a707-b0de-4fe0-bab3-cddbf520305f/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+
+### DELETE EXPENSE by ID
+DELETE http://localhost:8080/api/events/0a17a707-b0de-4fe0-bab3-cddbf520305f/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+
+### ADD an expense to an event
+PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/30276186-ced2-4d6b-ab22-536aff7b11cf
+Content-Type: application/json
+
+{
+  "title": "wow20",
+  "amount": 2.0,
+  "payer": {
+    "id": "2d03bca6-1f9c-4ab9-9ee0-05ea621dc532",
+    "nickname": "diaco"
+  },
+  "debtors": [
+    {
+      "id": "e3ec153a-e2ec-4b7e-b970-8046f2729e4f",
+      "nickname": "diaco"
+    }
+  ]
+}
