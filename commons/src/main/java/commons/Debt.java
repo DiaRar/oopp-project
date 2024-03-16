@@ -1,13 +1,13 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import commons.primary_keys.DebtPK;
+import commons.views.View;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Currency;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -18,35 +18,41 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 public class Debt {
     @EmbeddedId
     private DebtPK id;
-    @Column(name = "`value`")
-    private Pair<Double, Currency> value;
-    @ManyToOne
+    @Column(name = "amount")
+    @NotNull
+    private Double amount;
+    @ManyToOne(optional = false)
     @MapsId("payer_id")
     @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
+    @JsonView(View.SettleView.class)
     private Participant payer;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("debtor_id")
     @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
+    @JsonView(View.SettleView.class)
     private Participant debtor;
     @ManyToOne(optional = false)
     private Event event;
     protected Debt() {}
     // Added another constructor, as I am unsure which one to use yet.
     // TODO: choose the constructor for Debt
-    public Debt(UUID payerId, UUID debtorId, Pair<Double, Currency> value, Event event) {
+    public Debt(UUID payerId, UUID debtorId, Double amount, Event event) {
         this.id = new DebtPK(payerId, debtorId);
-        this.value = value;
+        this.amount = amount;
         this.event = event;
     }
-    public Debt(Participant payer, Participant debtor, Pair<Double, Currency> value, Event event) {
+    public Debt(Participant payer, Participant debtor, Double amount, Event event) {
         this.id = new DebtPK(payer.getId(), debtor.getId());
         this.payer = payer;
         this.debtor = debtor;
-        this.value = value;
+        this.amount = amount;
         this.event = event;
     }
-    public Pair<Double, Currency> getValue() {
-        return value;
+    public Debt(Double amount) {
+        this.amount = amount;
+    }
+    public Double getAmount() {
+        return amount;
     }
     public Participant getPayer() {
         return payer;
@@ -61,8 +67,8 @@ public class Debt {
     public void setId(DebtPK id) {
         this.id = id;
     }
-    public void setValue(Pair<Double, Currency> value) {
-        this.value = value;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
     public void setPayer(Participant payer) {
         this.payer = payer;

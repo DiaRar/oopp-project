@@ -63,8 +63,9 @@ public class TestEventRepository implements EventRepository {
     TO BE IMPLEMENTED
      */
     @Override
-    public void flush(){
+    public void flush() {
         //TO-DO
+        call("flush");
     }
 
     @Override
@@ -262,6 +263,11 @@ public class TestEventRepository implements EventRepository {
      */
     @Override
     public Page<Event> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteEventById(UUID id) {
         return null;
     }
 }
