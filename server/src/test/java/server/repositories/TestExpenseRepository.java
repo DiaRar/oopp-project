@@ -10,7 +10,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.FluentQuery;
 import server.database.ExpenseRepository;
 
@@ -33,11 +32,6 @@ public class TestExpenseRepository implements ExpenseRepository {
     }
 
     public Integer deleteExpenseById(UUID id) {
-        return null;
-    }
-
-    @Override
-    public Collection<Expense> findExpenseByEventId(UUID eventId) {
         return null;
     }
 
@@ -135,11 +129,12 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @param uuid must not be {@literal null}.
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
-     * @deprecated use {@link JpaRepository#getReferenceById(ID)} instead.
+     * @deprecated use  instead.
      */
     @Override
     public Expense getOne(UUID uuid) {
-        return null;
+        call("getOne");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
@@ -152,7 +147,7 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
      * @since 2.5
-     * @deprecated use {@link JpaRepository#getReferenceById(ID)} instead.
+     * @deprecated use  instead.
      */
     @Override
     public Expense getById(UUID uuid) {
@@ -173,7 +168,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public Expense getReferenceById(UUID uuid) {
-        return null;
+        call("getReferenceById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
@@ -262,7 +258,9 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> S save(S entity) {
-        return null;
+        call("save");
+        expenses.add(entity);
+        return entity;
     }
 
     /**
@@ -280,7 +278,11 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> List<S> saveAll(Iterable<S> entities) {
-        return null;
+        call("saveAll");
+        List<S> saved = new ArrayList<>();
+        entities.forEach(saved::add);
+        expenses.addAll(saved);
+        return saved;
     }
 
     /**
@@ -292,7 +294,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public Optional<Expense> findById(UUID uuid) {
-        return Optional.empty();
+        call("findById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst();
     }
 
     /**
@@ -304,7 +307,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public boolean existsById(UUID uuid) {
-        return false;
+        call("existsById");
+        return expenses.stream().anyMatch(e -> e.getId().equals(uuid));
     }
 
     /**
@@ -314,7 +318,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public List<Expense> findAll() {
-        return null;
+        call("findAll");
+        return expenses;
     }
 
     /**
@@ -341,7 +346,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public long count() {
-        return 0;
+        call("count");
+        return expenses.size();
     }
 
     /**
@@ -354,7 +360,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void deleteById(UUID uuid) {
-
+        call("deleteById");
+        expenses.removeIf(e -> e.getId().equals(uuid));
     }
 
     /**
@@ -369,7 +376,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void delete(Expense entity) {
-
+        call("delete");
+        expenses.remove(entity);
     }
 
     /**
@@ -406,7 +414,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void deleteAll() {
-
+        call("deleteAll");
+        expenses.clear();
     }
 
     /**
