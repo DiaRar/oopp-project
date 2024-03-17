@@ -32,7 +32,13 @@ public class TestExpenseRepository implements ExpenseRepository {
     }
 
     public Integer deleteExpenseById(UUID id) {
-        return null;
+        call("deleteExpenseById");
+        Optional<Expense> oExp = expenses.stream().filter(e -> e.getId().equals(id)).findFirst();
+        if (oExp.isPresent()) {
+            expenses.remove(oExp.get());
+            return 1;
+        }
+        return 0;
     }
 
     @Override
