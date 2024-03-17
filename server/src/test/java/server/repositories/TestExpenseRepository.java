@@ -69,7 +69,9 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> S saveAndFlush(S entity) {
-        return null;
+        call("saveAndFlush");
+        expenses.add(entity);
+        return entity;
     }
 
     /**
