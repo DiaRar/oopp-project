@@ -2,12 +2,15 @@ package server.api;
 
 import commons.Expense;
 import commons.Participant;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.FluentQuery;
 import server.database.ExpenseRepository;
 
@@ -19,13 +22,13 @@ import java.util.function.Function;
 
 public class TestExpenseRepository implements ExpenseRepository {
     @Override
-    public Collection<Expense> findExpenseByEventId(UUID eventId) {
+    public Integer deleteExpenseById(UUID id) {
         return null;
     }
 
     @Override
-    public Optional<Expense> findExpenseByEventIdAndId(UUID eventId, UUID id) {
-        return Optional.empty();
+    public Collection<Expense> findExpenseByEventId(UUID eventId) {
+        return null;
     }
 
     @Override

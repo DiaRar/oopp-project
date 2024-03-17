@@ -1,0 +1,19 @@
+### GET all PARTICIPANTS of an EVENT
+GET http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/participants/
+Accept: application/json
+
+### ADD a PARTICIPANT to an EVENT
+POST http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/participants/
+Content-Type: application/json
+
+{
+  "nickname": "diaco"
+}
+
+### UPDATES a PARTICIPANT
+PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/participants/e3ec153a-e2ec-4b7e-b970-8046f2729e4f
+Content-Type: application/json
+
+{
+  "nickname": "rar"
+}

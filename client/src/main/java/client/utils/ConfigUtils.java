@@ -35,7 +35,7 @@ public class ConfigUtils {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                Participant newParticipant = new Participant(parts[0], parts[1], parts[2]);
+                Participant newParticipant = new Participant(parts[0], parts[1]);
                 participants.add(newParticipant);
             }
             return participants;
