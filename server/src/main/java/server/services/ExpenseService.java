@@ -17,6 +17,10 @@ public class ExpenseService {
         this.expenseRepo = expenseRepo;
     }
     private static void setEvent(UUID eventId, Expense expense) {
+        // TODO: Check that this event exists
+        if (eventId == null) {
+            throw new IllegalArgumentException("Cannot have Event of Expense be null.");
+        }
         Event event = new Event();
         event.setId(eventId);
         expense.setEvent(event);
