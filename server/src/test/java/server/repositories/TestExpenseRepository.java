@@ -70,6 +70,7 @@ public class TestExpenseRepository implements ExpenseRepository {
     @Override
     public <S extends Expense> S saveAndFlush(S entity) {
         call("saveAndFlush");
+        entity.setId(UUID.randomUUID());
         expenses.add(entity);
         return entity;
     }
@@ -261,6 +262,7 @@ public class TestExpenseRepository implements ExpenseRepository {
     @Override
     public <S extends Expense> S save(S entity) {
         call("save");
+        entity.setId(UUID.randomUUID());
         expenses.add(entity);
         return entity;
     }
@@ -282,7 +284,10 @@ public class TestExpenseRepository implements ExpenseRepository {
     public <S extends Expense> List<S> saveAll(Iterable<S> entities) {
         call("saveAll");
         List<S> saved = new ArrayList<>();
-        entities.forEach(saved::add);
+        entities.forEach(e -> {
+            e.setId(UUID.randomUUID());
+            saved.add(e);
+        });
         expenses.addAll(saved);
         return saved;
     }
