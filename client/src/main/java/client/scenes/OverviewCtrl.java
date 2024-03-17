@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
@@ -26,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -36,10 +38,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 public class OverviewCtrl {
 
@@ -66,7 +70,16 @@ public class OverviewCtrl {
     private Label including;
     @FXML
     private VBox list;
-
+    @FXML
+    private Label expensesLabel;
+    @FXML
+    private Label participantsLabel;
+    @FXML
+    private Button sendInvites;
+    @FXML
+    private Button addExpense;
+    @FXML
+    private Button settleDebts;
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
@@ -127,6 +140,7 @@ public class OverviewCtrl {
         List<BorderPane> collection =
                 event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
+        switchToDutch();
     }
 
     public void choiceChanged() {
@@ -140,4 +154,28 @@ public class OverviewCtrl {
         mainCtrl.showAddExpense();
         // TODO pass the current event as parameter (to choose tags and participant from)
     }
+
+    public void switchToDutch() {
+        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewDutch.csv"));
+        title.setText(textMap.get("title"));
+        sendInvites.setText(textMap.get("sendInvites"));
+        expensesLabel.setText(textMap.get("expensesLabel"));
+        addExpense.setText(textMap.get("addExpense"));
+        settleDebts.setText(textMap.get("settleDebts"));
+        all.setText(textMap.get("all"));
+        from.setText(textMap.get("from"));
+        including.setText(textMap.get("including"));
+    }
+    public void switchToEnglish() {
+        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
+        title.setText(textMap.get("title"));
+        sendInvites.setText(textMap.get("sendInvites"));
+        expensesLabel.setText(textMap.get("expensesLabel"));
+        addExpense.setText(textMap.get("addExpense"));
+        settleDebts.setText(textMap.get("settleDebts"));
+        all.setText(textMap.get("all"));
+        from.setText(textMap.get("from"));
+        including.setText(textMap.get("including"));
+    }
+
 }

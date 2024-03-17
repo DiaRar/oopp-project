@@ -13,24 +13,24 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
-      <Button layoutX="391.0" layoutY="492.0" mnemonicParsing="false" onAction="#ok" text="Add" />
-      <Button layoutX="307.0" layoutY="492.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+      <Button fx:id="add" layoutX="391.0" layoutY="492.0" mnemonicParsing="false" onAction="#ok" text="Add" />
+      <Button fx:id="cancel" layoutX="307.0" layoutY="492.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
       <TextField fx:id="description" layoutX="129.0" layoutY="112.0" prefHeight="26.0" prefWidth="250.0" />
-      <Label layoutX="33.0" layoutY="76.0" prefHeight="18.0" prefWidth="79.0" text="Who paid?" />
-      <Label layoutX="151.0" layoutY="14.0" prefHeight="35.0" prefWidth="159.0" text="Add/Edit Expense">
+      <Label fx:id="whoPaid" layoutX="33.0" layoutY="76.0" prefHeight="18.0" prefWidth="79.0" text="Who paid?" />
+      <Label fx:id="addEditExpense" layoutX="151.0" layoutY="14.0" prefHeight="35.0" prefWidth="159.0" text="Add/Edit Expense">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <ComboBox fx:id="payer" layoutX="129.0" layoutY="72.0" prefWidth="150.0" />
-      <Label layoutX="33.0" layoutY="116.0" prefHeight="18.0" prefWidth="79.0" text="What for?" />
+      <Label fx:id="whatFor" layoutX="33.0" layoutY="116.0" prefHeight="18.0" prefWidth="79.0" text="What for?" />
       <TextField fx:id="amount" layoutX="129.0" layoutY="152.0" prefHeight="26.0" prefWidth="150.0" />
-      <Label layoutX="33.0" layoutY="156.0" prefHeight="18.0" prefWidth="79.0" text="How much?" />
+      <Label fx:id="howMuch" layoutX="33.0" layoutY="156.0" prefHeight="18.0" prefWidth="79.0" text="How much?" />
       <ComboBox fx:id="currency" layoutX="291.0" layoutY="152.0" prefHeight="26.0" prefWidth="88.0" />
-      <Label layoutX="33.0" layoutY="195.0" prefHeight="18.0" prefWidth="79.0" text="When?" />
+      <Label fx:id="when" layoutX="33.0" layoutY="195.0" prefHeight="18.0" prefWidth="79.0" text="When?" />
       <DatePicker fx:id="date" layoutX="129.0" layoutY="192.0" />
-      <Label layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
-      <Label layoutX="254.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
+      <Label fx:id="howToSplit" layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
+      <Label fx:id="expenseType" layoutX="254.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
       <ComboBox fx:id="tag" layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="186.0" />
       <RadioButton fx:id="equallySplit" layoutX="33.0" layoutY="256.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="198.0" text="Equally (between everybody)">
          <toggleGroup>

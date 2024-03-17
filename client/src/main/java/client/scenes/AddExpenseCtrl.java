@@ -9,11 +9,14 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.awt.*;
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -44,6 +47,24 @@ public class AddExpenseCtrl implements Initializable {
     private ListView<String> debtorsList;
     @FXML
     private ListView<String> selectedDebtors;
+    @FXML
+    private Button add;
+    @FXML
+    private Button cancel;
+    @FXML
+    private Label whoPaid;
+    @FXML
+    private Label addEditExpense;
+    @FXML
+    private Label whatFor;
+    @FXML
+    private Label howMuch;
+    @FXML
+    private Label when;
+    @FXML
+    private Label howToSplit;
+    @FXML
+    private Label expenseType;
 
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
@@ -102,7 +123,7 @@ public class AddExpenseCtrl implements Initializable {
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         setTags();
         fillDebtors();
-
+        switchToDutch();
     }
 
     public void fillDebtors() {
@@ -143,6 +164,25 @@ public class AddExpenseCtrl implements Initializable {
                 .collect(Collectors.toList())));
         // TODO replace mock tags with tags from the current event
         // TODO use the tag's color in the UI
+    }
+
+    public void switchToDutch() {
+        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseDutch.csv"));
+    }
+
+    public void switchToEnglish() {
+        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseEnglish.csv"));
+        add.setText(stringMap.get("add"));
+        cancel.setText(stringMap.get("cancel"));
+        whoPaid.setText(stringMap.get("whoPaid"));
+        addEditExpense.setText(stringMap.get("addEditExpense"));
+        whatFor.setText(stringMap.get("whatFor"));
+        howMuch.setText(stringMap.get("howMuch"));
+        when.setText(stringMap.get("when"));
+        howToSplit.setText(stringMap.get("howToSplit"));
+        expenseType.setText(stringMap.get("expenseType"));
+        equallySplit.setText(stringMap.get("equally"));
+        partialSplit.setText(stringMap.get("partialSplit"));
     }
 
 }
