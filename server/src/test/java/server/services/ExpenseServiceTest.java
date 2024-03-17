@@ -12,6 +12,9 @@ import server.services.ExpenseService;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExpenseServiceTest {
 
@@ -27,8 +30,11 @@ public class ExpenseServiceTest {
     @Test
     public void saveTestSuccessful() {
         Event e1 = getEvent("Event 1");
-        Expense expense = new Expense(1.0, "Expense Food", LocalDateTime.of(2024, Month.MARCH, 17, 12, 0),
-                getParticipant(e1, "Josh", "j@email.com"), new ArrayList<>());
+        Expense expense = new Expense(20.0, "Expense Food", LocalDateTime.of(2024, Month.MARCH, 17, 12, 0),
+                getParticipant(e1, "Josh", "j@email.com"), List.of(getParticipant(e1, "Owe", "owemoney@email.com")));
+        expense = sut.save(e1.getId(), expense);
+        // Retrieve the object to check for equality
+        assertEquals(expense, sut.getById(expense.getId()));
     }
 
     @Test
