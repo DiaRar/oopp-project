@@ -2,12 +2,12 @@
 
 | Key          | Value                                                                            |
 | ------------ |----------------------------------------------------------------------------------|
-| Date:        | 05.03.2024                                                                       |
+| Date:        | 19.03.2024                                                                       |
 | Time:        | 16:45                                                                            |
 | Location:    | DW PC1 Cubicle 3                                                                 |
 | Chair        | Cristian Turcan                                                                  |
 | Minute Taker | Jerzy Karremans                                                                  |
-| Attendees:   | Diaconescu Rares, Blago Gunev, Alessandro Neri, Cristian Turcan, Jerzy Karremans |
+| Attendees:   | Diaconescu Rares, Blago Gunev, Alessandro Neri, Cristian Turcan, Jerzy Karremans, Stefan Lupsan |
 
 ## Opening (_5 min_)
 
