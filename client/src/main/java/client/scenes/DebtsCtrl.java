@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Debt;
@@ -12,7 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DebtsCtrl {
@@ -69,6 +72,18 @@ public class DebtsCtrl {
         mainCtrl.showOverview();
     }
 
+    public void switchToEnglish() {
+        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsEnglish.csv"));
+        title.setText(textMap.get("openDebts"));
+        returnButton.setText(textMap.get("returnToOverview"));
+    }
 
+    public void switchToDutch() {
+        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsDutch.csv"));
+        title.setText(textMap.get("openDebts"));
+        returnButton.setText(textMap.get("returnToOverview"));
+    }
+
+    // TODO add event name to title of the page
 
 }
