@@ -3,33 +3,20 @@ package client.scenes;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 
-import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class StartCtrl implements Initializable {
     @FXML
-    public Button create;
+    private TextField joinField;
     @FXML
-    public Label createNewEvent;
-    @FXML
-    public Button join;
-    @FXML
-    public Label joinEvent;
-    @FXML
-    public Label recentEvents;
-
-    public ListView<String> recentsList;
+    private TextField createField;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
     @Inject
@@ -46,12 +33,6 @@ public class StartCtrl implements Initializable {
      * @see ConfigUtils#readRecents()
      */
     public void fillRecent() {
-        List<Event> recentEvents = utils.readRecents();
-        if (recentEvents.isEmpty()) return;
-        List<String> names = recentEvents.stream()
-                .map(Event::getName)
-                .collect(Collectors.toList());
-        recentsList.setItems(FXCollections.observableList(names));
         //TODO add button's for element removal/ opening event
     }
 
@@ -66,11 +47,14 @@ public class StartCtrl implements Initializable {
     }
 
     /**
-     * Displays the create event screen.
+     * opens overview with new event
      */
     public void create() {
-        //TODO: Implement screen switch
-        System.out.println("create event screen");
+        Event event = new Event();
+        event.setId(UUID.randomUUID());
+        event.setName(createField.getText());
+
+        mainCtrl.setEvent(event.getId());
         mainCtrl.showOverview();
     }
 
@@ -78,34 +62,30 @@ public class StartCtrl implements Initializable {
      * Loads event data from the database and switches to the overview screen.
      */
     public void join() {
-        //TODO: Implement screen switch
-        System.out.println("load event from database");
-        System.out.println("switch to overview");
-        mainCtrl.showOverview();
-    }
-
-    public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
-        create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
-    }
-
-    public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
-        create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
+        try{
+            UUID uuid = UUID.fromString(joinField.getText());
+            mainCtrl.setEvent(uuid);
+            mainCtrl.showOverview();
+        }
+        catch (IllegalArgumentException ex){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid UUID Format");
+            alert.setHeaderText("Oops! Invalid UUID format.");
+            alert.setContentText("Please ensure your UUID follows the correct format:\n" +
+                    "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+            alert.showAndWait();
+        }
+        catch (Exception ex){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Event Code Not Found");
+            alert.setHeaderText("Oops! Event code not found.");
+            alert.setContentText("Please double-check your entry and ensure it is correct.");
+            alert.showAndWait();
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fillRecent();
-        switchToDutch();
-        switchToEnglish();
     }
 }
