@@ -42,7 +42,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#openInvitation" prefHeight="1000.0" prefWidth="1000.0" text="Send Invites" GridPane.columnIndex="1">
+            <Button fx:id="sendInvites" mnemonicParsing="false" onAction="#openInvitation" prefHeight="1000.0" prefWidth="1000.0" text="Send Invites" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>
@@ -51,7 +51,7 @@
                <children>
                   <HBox spacing="3.0">
                      <children>
-                        <Label text="Participants">
+                        <Label fx:id="participantsLabel" text="Participants">
                            <font>
                               <Font name="Arial Bold" size="14.0" />
                            </font>
@@ -83,7 +83,7 @@
                   <Text fx:id="participantsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Placeholder" />
                </children>
             </VBox>
-            <Label text="Expenses" GridPane.rowIndex="2">
+            <Label fx:id="expensesLabel" text="Expenses" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -91,7 +91,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>
@@ -110,7 +110,7 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Settle Debts" />
+            <Button fx:id="settleDebts" mnemonicParsing="false" text="Settle Debts" />
          </children>
          <BorderPane.margin>
             <Insets top="10.0" />

@@ -58,6 +58,5 @@ public class MainCtrl {
         primaryStage.setScene(invitationScene);
         invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
     }
-
 }
 
