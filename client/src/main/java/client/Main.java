@@ -15,13 +15,10 @@
  */
 package client;
 
-import client.scenes.AddExpenseCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.StartCtrl;
+import client.scenes.*;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import client.scenes.OverviewCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -38,7 +35,8 @@ public class Main extends Application {
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
         var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
+        var invitation = FXML.load(InvitationCtrl.class, "client", "scenes", "Invitation.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview, addExpense);
+        mc.init(primaryStage, startScreen, overview, addExpense, invitation);
     }
 }

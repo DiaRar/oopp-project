@@ -15,8 +15,11 @@ public class MainCtrl {
     private AddExpenseCtrl addExpenseCtrl;
     private Scene addExpenseScene;
 
+    private InvitationCtrl invitationCtrl;
+    private Scene invitationScene;
+
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<InvitationCtrl, Parent> invitation) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -25,6 +28,9 @@ public class MainCtrl {
 
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpenseScene = new Scene(addExpense.getValue());
+
+        this.invitationCtrl = invitation.getKey();
+        this.invitationScene = new Scene(invitation.getValue());
 
         showStart();
         primaryStage.show();
@@ -45,6 +51,12 @@ public class MainCtrl {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+    }
+
+    public void showInvitation() {
+        primaryStage.setTitle("Invite People");
+        primaryStage.setScene(invitationScene);
+        invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
     }
 }
 

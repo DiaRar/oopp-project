@@ -42,7 +42,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Button fx:id="sendInvites" mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Send Invites" GridPane.columnIndex="1">
+            <Button fx:id="sendInvites" mnemonicParsing="false" onAction="#openInvitation" prefHeight="1000.0" prefWidth="1000.0" text="Send Invites" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>

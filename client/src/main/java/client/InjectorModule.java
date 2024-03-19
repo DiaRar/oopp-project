@@ -15,6 +15,7 @@
  */
 package client;
 
+import client.scenes.InvitationCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
 import client.utils.ConfigUtils;
@@ -36,6 +37,7 @@ public class InjectorModule implements Module {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StartCtrl.class).in(Scopes.SINGLETON);
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
     }
 
