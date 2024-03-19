@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -12,15 +13,28 @@
    <children>
       <ScrollPane layoutX="14.0" layoutY="136.0" prefHeight="454.0" prefWidth="374.0">
          <content>
-            <VBox fx:id="debtsList" prefHeight="434.0" prefWidth="356.0" />
+            <VBox fx:id="debtsList" prefHeight="434.0" prefWidth="356.0">
+               <children>
+                  <BorderPane prefHeight="50.0" prefWidth="356.0">
+                     <right>
+                        <Button mnemonicParsing="false" text="Settled" BorderPane.alignment="CENTER" />
+                     </right>
+                     <left>
+                        <Label text="Albert owes 100$ to Charles" BorderPane.alignment="CENTER" />
+                     </left>
+                     <center>
+                        <Button mnemonicParsing="false" text="Send Reminder" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+               </children>
+            </VBox>
          </content>
       </ScrollPane>
-      <VBox layoutX="14.0" layoutY="46.0" prefHeight="74.0" prefWidth="374.0" />
-      <Label layoutX="14.0" layoutY="29.0" prefHeight="18.0" prefWidth="326.0" text="Open debts">
+      <Label layoutX="14.0" layoutY="41.0" prefHeight="22.0" prefWidth="234.0" text="Open debts" textAlignment="CENTER">
          <font>
             <Font name="Arial Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="returnButton" layoutX="256.0" layoutY="27.0" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" />
+      <Button fx:id="returnButton" layoutX="256.0" layoutY="39.0" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" />
    </children>
 </AnchorPane>

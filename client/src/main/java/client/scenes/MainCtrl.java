@@ -65,6 +65,7 @@ public class MainCtrl {
     public void showDebts() {
         primaryStage.setTitle("Open Debts");
         primaryStage.setScene(debtsScene);
+        debtsCtrl.refresh();
         // TODO pass the current event as parameter
     }
 
