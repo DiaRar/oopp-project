@@ -120,7 +120,7 @@ public class OverviewCtrl {
         editImage.setFitWidth(EXPENSE_EDIT_SIZE);
 //        editImage.setOnMouseClicked(e -> {
 //            title.setText(expense.getDescription());
-//        }); // TO BE CHANGED WITH EDIT
+//        }); // TODO BE CHANGED WITH EDIT
         borderPane.setRight(editImage);
         BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
