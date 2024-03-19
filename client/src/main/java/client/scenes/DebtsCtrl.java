@@ -3,12 +3,17 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 public class DebtsCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    @FXML
+    private Button returnButton;
+    @FXML
+    private Label title;
     @FXML
     private VBox debtsList;
 
@@ -20,6 +25,10 @@ public class DebtsCtrl {
 
     public void refresh() {
 
+    }
+
+    public void openOverview() {
+        mainCtrl.showOverview();
     }
 
 

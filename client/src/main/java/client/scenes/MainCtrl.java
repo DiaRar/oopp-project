@@ -15,8 +15,11 @@ public class MainCtrl {
     private AddExpenseCtrl addExpenseCtrl;
     private Scene addExpenseScene;
 
+    private DebtsCtrl debtsCtrl;
+    private Scene debtsScene;
+
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<DebtsCtrl, Parent> debts) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -25,6 +28,9 @@ public class MainCtrl {
 
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpenseScene = new Scene(addExpense.getValue());
+
+        this.debtsCtrl = debts.getKey();
+        this.debtsScene = new Scene(addExpense.getValue());
 
         showStart();
         primaryStage.show();
@@ -45,6 +51,12 @@ public class MainCtrl {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+    }
+
+    public void showDebts() {
+        primaryStage.setTitle("Open Debts");
+        primaryStage.setScene(debtsScene);
+        // TODO pass the current event as parameter
     }
 }
 
