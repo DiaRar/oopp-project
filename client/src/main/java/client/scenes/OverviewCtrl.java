@@ -155,10 +155,16 @@ public class OverviewCtrl {
         // TODO pass the current event as parameter (to choose tags and participant from)
     }
 
+
     public void openDebts() {
         System.out.println("Open debts");
         mainCtrl.showDebts();
         // TODO pass the current event as parameter
+    }
+
+    public void openInvitation() {
+        System.out.println(("Invite people"));
+        mainCtrl.showInvitation();
     }
 
     public void switchToDutch() {
@@ -172,6 +178,7 @@ public class OverviewCtrl {
         from.setText(textMap.get("from"));
         including.setText(textMap.get("including"));
     }
+
     public void switchToEnglish() {
         Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
         title.setText(textMap.get("title"));

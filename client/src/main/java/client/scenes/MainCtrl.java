@@ -15,11 +15,17 @@ public class MainCtrl {
     private AddExpenseCtrl addExpenseCtrl;
     private Scene addExpenseScene;
 
+    private InvitationCtrl invitationCtrl;
+    private Scene invitationScene;
+
     private DebtsCtrl debtsCtrl;
     private Scene debtsScene;
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<DebtsCtrl, Parent> debts) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<InvitationCtrl, Parent> invitation,
+                     Pair<DebtsCtrl, Parent> debts
+                     ) {
+
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -32,7 +38,10 @@ public class MainCtrl {
         this.debtsCtrl = debts.getKey();
         this.debtsScene = new Scene(debts.getValue());
 
-        showDebts();
+        this.invitationCtrl = invitation.getKey();
+        this.invitationScene = new Scene(invitation.getValue());
+
+        showStart();
         primaryStage.show();
     }
 
@@ -57,6 +66,12 @@ public class MainCtrl {
         primaryStage.setTitle("Open Debts");
         primaryStage.setScene(debtsScene);
         // TODO pass the current event as parameter
+    }
+
+    public void showInvitation() {
+        primaryStage.setTitle("Invite People");
+        primaryStage.setScene(invitationScene);
+        invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
     }
 }
 
