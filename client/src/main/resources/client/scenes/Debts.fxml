@@ -21,6 +21,6 @@
             <Font name="Arial Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="returnButton" layoutX="256.0" layoutY="27.0" mnemonicParsing="false" text="Return to Overview" />
+      <Button fx:id="returnButton" layoutX="256.0" layoutY="27.0" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" />
    </children>
 </AnchorPane>

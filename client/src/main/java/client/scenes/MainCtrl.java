@@ -30,9 +30,9 @@ public class MainCtrl {
         this.addExpenseScene = new Scene(addExpense.getValue());
 
         this.debtsCtrl = debts.getKey();
-        this.debtsScene = new Scene(addExpense.getValue());
+        this.debtsScene = new Scene(debts.getValue());
 
-        showStart();
+        showDebts();
         primaryStage.show();
     }
 
