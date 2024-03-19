@@ -110,7 +110,7 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="settleDebts" mnemonicParsing="false" text="Settle Debts" />
+            <Button fx:id="settleDebts" mnemonicParsing="false" onAction="#openDebts" text="Settle Debts" />
          </children>
          <BorderPane.margin>
             <Insets top="10.0" />
