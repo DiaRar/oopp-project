@@ -41,7 +41,6 @@ import javafx.scene.text.TextFlow;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Map;
 
