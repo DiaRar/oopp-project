@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
+    Integer deleteExpenseById(UUID id);
     Collection<Expense> findExpenseByEventId(UUID eventId);
-    Expense findExpenseByEventIdAndId(UUID eventId, UUID id);
     Collection<Expense> findExpenseByPayerId(UUID id);
     Collection<Expense> findExpenseByPayer(Participant payer);
     Collection<Expense> findExpenseByDebtorsContaining(Participant debtor);

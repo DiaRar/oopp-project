@@ -1,21 +1,19 @@
 package server.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import commons.Event;
 
+import server.database.EventRepository;
 import server.repositories.TestEventRepository;
 
-import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EventServiceTest {
     private int id;
-    private TestEventRepository repo;
-
+    private EventRepository repo;
     private EventService eventService;
 
     @BeforeEach
@@ -27,47 +25,57 @@ public class EventServiceTest {
 
     @Test
     public void addTest() {
-        var temp = eventService.add(getEvent("test", 1));
+        var temp = eventService.add(new Event("test1"));
         assertTrue(eventService.getAll().contains(temp));
     }
 
     @Test
     public void getAllTest() {
-        eventService.add(getEvent("test1", id++));
-        eventService.add(getEvent("test2", id++));
-        eventService.add(getEvent("test3", id++));
-        assertEquals(id - 1, eventService.getAll().size());
+        final int numberOfEvents = 3;
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        eventService.add(new Event("test3"));
+        assertEquals(numberOfEvents, eventService.getAll().size());
     }
 
     @Test
     public void getByIdTest() {
-        eventService.add(getEvent("test1", id++));
-        eventService.add(getEvent("test2", id++));
-        eventService.add(getEvent("test3", id++));
-        Event temp = eventService.add(getEvent("test4", id++));
-        eventService.add(getEvent("test5", id++));
-        eventService.add(getEvent("test6", id++));
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        eventService.add(new Event("test3"));
+        Event temp = eventService.add(new Event("test4"));
+        eventService.add(new Event("test4"));
+        eventService.add(new Event("test5"));
 
         assertEquals(temp, eventService.getById(temp.getId()));
     }
 
     @Test
     public void updateTest() {
-        eventService.add(getEvent("test1", id++));
-        eventService.add(getEvent("test2", id++));
-        var temp = eventService.add(getEvent("test3", id++));
-        var temp2 = getEvent("test4", id++);
-        var temp3 = getEvent("test4", id++);
+        eventService.add(new Event("test1"));
+        eventService.add(new Event("test2"));
+        var temp = eventService.add(new Event("test3"));
+        var temp2 = new Event("test4");
+        var temp3 = new Event("test4");
         temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
         assertEquals(temp3, eventService.getById(temp.getId()));
     }
-
-
-
-    private static Event getEvent(String s, int a) {
-        Event temp = new Event("s");
-        temp.setId(new UUID(0, a));
-        return temp;
-    }
+//
+//    @Test
+//    public void addParticipantTest() {
+//        Participant participant = new Participant("John", "Doe", "j.d@email.com");
+//        Event event = new Event("Test", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+//        Event event1 = eventService.add(event);
+//        UUID id = event1.getId();
+//        Event retEvent = eventService.addParticipant(participant, id);
+//        assertSame(1, retEvent.getParticipants().size());
+//        Participant retParticipant = retEvent.getParticipants().iterator().next();
+//        assertEquals(retParticipant.getEmail(), participant.getEmail());
+//        assertEquals(retParticipant.getNickname(), participant.getNickname());
+//        assertEquals(retParticipant.getLastName(), participant.getLastName());
+//        List<Event> eventList = eventService.getAll();
+//        List<Participant> participantList = participantRepository.findAll();
+//    }
+// TODO: Add to Participant Service Test
 }

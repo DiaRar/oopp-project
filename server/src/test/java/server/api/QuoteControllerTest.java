@@ -16,7 +16,6 @@
 package server.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.util.Random;
@@ -40,7 +39,7 @@ public class QuoteControllerTest {
     public void setup() {
         random = new MyRandom();
         repo = new TestQuoteRepository();
-        sut = new QuoteController(random, repo);
+        sut = new QuoteController(repo);
     }
 
     @Test
@@ -50,24 +49,13 @@ public class QuoteControllerTest {
     }
 
     @Test
-    public void randomSelection() {
-        sut.add(getQuote("q1"));
-        sut.add(getQuote("q2"));
-        nextInt = 1;
-        var actual = sut.getRandom();
-
-        assertTrue(random.wasCalled);
-        assertEquals("q2", actual.getBody().quote);
-    }
-
-    @Test
     public void databaseIsUsed() {
         sut.add(getQuote("q1"));
         repo.calledMethods.contains("save");
     }
 
     private static Quote getQuote(String q) {
-        return new Quote(new Participant(q, q, q), q);
+        return new Quote(new Participant(q, q), q);
     }
 
     @SuppressWarnings("serial")

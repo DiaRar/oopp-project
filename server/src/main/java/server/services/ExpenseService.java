@@ -4,76 +4,96 @@ import commons.Event;
 import commons.Expense;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import server.database.EventRepository;
 import server.database.ExpenseRepository;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ExpenseService {
 
-    private final EventRepository eventRepo;
     private final ExpenseRepository expenseRepo;
 
-    public ExpenseService(EventRepository eventRepo, ExpenseRepository expenseRepo) {
-        this.eventRepo = eventRepo;
+    public ExpenseService(ExpenseRepository expenseRepo) {
         this.expenseRepo = expenseRepo;
+    }
+    private static void setEvent(UUID eventId, Expense expense) {
+        // TODO: Check that this event exists
+        if (eventId == null) {
+            throw new IllegalArgumentException("Cannot have Event of Expense be null.");
+        }
+        Event event = new Event();
+        event.setId(eventId);
+        expense.setEvent(event);
     }
 
     public Collection<Expense> getAll(UUID eventId) {
         return expenseRepo.findExpenseByEventId(eventId);
     }
 
-    public Expense getById(UUID eventId, UUID expenseId) {
-        return expenseRepo.findExpenseByEventIdAndId(eventId, expenseId);
-    }
-
-    public Expense save(UUID eventId, Expense expense) {
-        Event existingEvent = getEvent(eventId);
-        checkExpenseValidity(expense, existingEvent);
-        // TODO: Create new debts
-        return expenseRepo.save(expense);
-    }
-
-    public Expense update(UUID eventId, UUID expenseId, Expense expense) {
-        // Ensure that the expense already exists; throws an exception otherwise
-        Expense existingExpense = getById(eventId, expenseId);
-        if (expense.getId() != null && !expense.getId().equals(expenseId)) {
-            throw new IllegalArgumentException("Tried to update the ID of existing expense.");
+    public Expense getById(UUID expenseId) throws EntityNotFoundException {
+        Optional<Expense> oExpense = expenseRepo.findById(expenseId);
+        if (oExpense.isEmpty()) {
+            throw new EntityNotFoundException("Expense not found.");
         }
-        expense.setId(expenseId);
-        expenseRepo.save(expense);
-        // TODO: Update existing debts
-        return expense;
+        Expense expense = oExpense.get();
+        return oExpense.get();
     }
 
-    public Expense delete(UUID eventId, UUID expenseId) {
-        Expense deletedExpense = getById(eventId, expenseId);
-        expenseRepo.deleteById(expenseId);
-        // TODO: Update existing debts
-        return deletedExpense;
-    }
-
-    private Event getEvent(UUID eventId) {
-        Optional<Event> oEv = eventRepo.findById(eventId);
-        if (oEv.isEmpty()) {
-            throw new EntityNotFoundException("Did not find the specified event.");
-        }
-        return oEv.get();
-    }
-
-    private void checkExpenseValidity(Expense expense, Event event) {
+    public Expense save(UUID eventId, Expense expense) throws IllegalArgumentException {
         if (expense.getId() != null) {
             throw new IllegalArgumentException("ID is auto generated. POST should not have ID.");
         }
-        if (expense.getValue() == null || expense.getValue().getRight() == null ||
-                expense.getDescription() == null || expense.getDescription().isEmpty() ||
-                expense.getDate() == null || expense.getPayer() == null ||
-                expense.getEvent() == null || !expense.getEvent().equals(event) ||
-                expense.getDebtors() == null) {
-            throw new IllegalArgumentException("Data is missing.");
+        checkExpenseValidity(expense);
+        setEvent(eventId, expense);
+        // TODO: Create new debts
+        return expenseRepo.saveAndFlush(expense);
+    }
+
+    public Expense update(UUID eventId, UUID expenseId, Expense expense)
+            throws IllegalArgumentException, EntityNotFoundException {
+        // Ensure that the expense already exists; throws an exception otherwise
+        Expense repoExpense = getById(expenseId);
+        if (!repoExpense.getEvent().getId().equals(eventId)) {
+           throw new IllegalArgumentException("Event and Expense mismatch!");
+        }
+        if (expense.getTitle() != null) {
+            repoExpense.setTitle(expense.getTitle());
+        }
+        if (expense.getPayer() != null) {
+            repoExpense.setPayer(expense.getPayer());
+        }
+        if (expense.getDebtors() != null) {
+            repoExpense.setDebtors(expense.getDebtors());
+        }
+        if (expense.getAmount() != null) {
+            repoExpense.setAmount(expense.getAmount());
+        }
+        if (expense.getDate() != null) {
+            repoExpense.setDate(expense.getDate());
+        }
+        expenseRepo.flush();
+        // TODO: Update existing debts
+        return repoExpense;
+    }
+
+    public void delete(UUID expenseId) {
+        if (expenseId == null)
+            throw new IllegalArgumentException("Id cannot be null!");
+        Integer deletedRows = expenseRepo.deleteExpenseById(expenseId);
+        if (deletedRows != 1) {
+            throw new EntityNotFoundException("Could not find the repo");
+        }
+    }
+
+    private void checkExpenseValidity(Expense expense) throws IllegalArgumentException {
+        if (expense.getTitle() == null || expense.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title is missing!");
+        }
+        if (expense.getPayer() == null) {
+            throw new IllegalArgumentException("Payer is missing!");
+        }
+        if (expense.getDebtors() == null || expense.getDebtors().isEmpty()) {
+            throw new IllegalArgumentException("Debtors are missing!");
         }
     }
 }

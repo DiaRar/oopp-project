@@ -1,11 +1,15 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class MainCtrl {
     private Stage primaryStage;
@@ -22,8 +26,18 @@ public class MainCtrl {
 
     private Stage dialog;
 
+    private ServerUtils serverUtils;
+
+    private Event event;
+
+    private InvitationCtrl invitationCtrl;
+    private Scene invitationScene;
+
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<ContactDetailsCtrl, Parent> contactDetails) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<ContactDetailsCtrl, Parent> contactDetails, 
+                     Pair<InvitationCtrl, Parent> invitation, ServerUtils serverUtils) {
+        this.serverUtils = serverUtils;
+
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -35,6 +49,8 @@ public class MainCtrl {
 
         this.contactDetailsCtrl = contactDetails.getKey();
         this.contactDetailsScene = new Scene(contactDetails.getValue());
+        this.invitationCtrl = invitation.getKey();
+        this.invitationScene = new Scene(invitation.getValue());
 
         showStart();
         primaryStage.show();
@@ -54,7 +70,7 @@ public class MainCtrl {
     public void showAddExpense() {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
-        addExpenseCtrl.clearFields();
+        addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
     }
 
     public void callAddParticipantDialog(Event event) {
@@ -73,5 +89,19 @@ public class MainCtrl {
         }
     }
 
+    public void showInvitation() {
+        primaryStage.setTitle("Invite People");
+        primaryStage.setScene(invitationScene);
+        invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
+    }
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(UUID uuid) throws NoSuchElementException {
+        this.event = serverUtils.getEvent(uuid);
+        if (this.event == null)
+            throw new NoSuchElementException("Event not found: " + uuid);
+    }
 }
 

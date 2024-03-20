@@ -45,6 +45,8 @@ public class TestEventRepository implements EventRepository {
     @Override
     public <S extends Event> S save(S entity) {
         call("save");
+        if (entity.getId() == null)
+            entity.setId(UUID.randomUUID());
         events.add(entity);
         return entity;
     }
@@ -61,8 +63,9 @@ public class TestEventRepository implements EventRepository {
     TO BE IMPLEMENTED
      */
     @Override
-    public void flush(){
+    public void flush() {
         //TO-DO
+        call("flush");
     }
 
     @Override
@@ -175,7 +178,7 @@ public class TestEventRepository implements EventRepository {
      */
     @Override
     public boolean existsById(UUID uuid) {
-        return false;
+        return find(uuid).isPresent();
     }
 
 
@@ -260,6 +263,11 @@ public class TestEventRepository implements EventRepository {
      */
     @Override
     public Page<Event> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteEventById(UUID id) {
         return null;
     }
 }

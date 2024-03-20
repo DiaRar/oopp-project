@@ -1,11 +1,14 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -13,26 +16,22 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Entity
 public class Participant {
     private UUID id;
-    private String firstName;
-    private String lastName;
+    private String nickname;
     private String email;
     private BankAccount bankAccount;
-    private Collection<Expense> expenses;
     private Event event;
 
     //for object mapper
     protected Participant() {
 
     }
-    public Participant(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Participant(String nickname, String email) {
+        this.nickname = nickname;
         this.email = email;
     }
 
-    public Participant(String firstName, String lastName, String email, BankAccount bankAccount) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Participant(String nickname, String email, BankAccount bankAccount) {
+        this.nickname = nickname;
         this.email = email;
         this.bankAccount = bankAccount;
     }
@@ -40,33 +39,30 @@ public class Participant {
     @Id
     @Column(name = "participant_id")
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(View.CommonsView.class)
     public UUID getId() {
         return id;
     }
     @Basic
-    @Column(name = "firstName")
-    public String getFirstName() {
-        return firstName;
+    @Column(name = "nickname")
+    @JsonView(View.CommonsView.class)
+    @NotNull
+    @Size(max = View.MAX_STRING, message = "Nickname is at most 255 characters")
+    public String getNickname() {
+        return nickname;
     }
     @Basic
     @Column(name = "email")
+    @JsonView(View.ParticipantView.class)
+    @Size(max = View.MAX_STRING, message = "Nickname is at most 255 characters")
     public String getEmail() {
         return email;
     }
-    @Basic
-    @Column(name = "lastName")
-    public String getLastName() {
-        return lastName;
-    }
-
     // Relationships
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonView(View.ParticipantView.class)
     public BankAccount getBankAccount() {
         return bankAccount;
-    }
-    @ManyToMany
-    public Collection<Expense> getExpenses() {
-        return expenses;
     }
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public Event getEvent() {
@@ -76,17 +72,11 @@ public class Participant {
     public void setId(UUID id) {
         this.id = id;
     }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setNickname(String firstName) {
+        this.nickname = firstName;
     }
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
-    }
-    public void setExpenses(Collection<Expense> expenses) {
-        this.expenses = expenses;
     }
     public void setEvent(Event event) {
         this.event = event;

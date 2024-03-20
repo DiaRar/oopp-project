@@ -1,9 +1,11 @@
-package server.api;
+package server.repositories;
 
 import commons.Expense;
 import commons.Participant;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,36 +13,50 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import server.database.ExpenseRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class TestExpenseRepository implements ExpenseRepository {
+
+    public final List<Expense> expenses = new ArrayList<>();
+    public final List<String> calledMethods = new ArrayList<>();
+
+
+    private void call(String name) {
+        calledMethods.add(name);
+    }
     @Override
     public Collection<Expense> findExpenseByEventId(UUID eventId) {
-        return null;
+        call("findExpenseByEventId");
+        return expenses.stream().filter(e -> e.getEvent().getId().equals(eventId)).toList();
     }
 
-    @Override
-    public Expense findExpenseByEventIdAndId(UUID eventId, UUID id) {
-        return null;
+    public Integer deleteExpenseById(UUID id) {
+        call("deleteExpenseById");
+        Optional<Expense> oExp = expenses.stream().filter(e -> e.getId().equals(id)).findFirst();
+        if (oExp.isPresent()) {
+            expenses.remove(oExp.get());
+            return 1;
+        }
+        return 0;
     }
 
     @Override
     public Collection<Expense> findExpenseByPayerId(UUID id) {
-        return null;
+        call("findExpenseByPayerId");
+        return expenses.stream().filter(e -> e.getPayer().getId().equals(id)).toList();
     }
 
     @Override
     public Collection<Expense> findExpenseByPayer(Participant payer) {
-        return null;
+        call("findExpenseByPayer");
+        return expenses.stream().filter(e -> e.getPayer().equals(payer)).toList();
     }
 
     @Override
     public Collection<Expense> findExpenseByDebtorsContaining(Participant debtor) {
-        return null;
+        call("findExpenseByDebtorsContaining");
+        return expenses.stream().filter(e -> e.getDebtors().contains(debtor)).toList();
     }
 
     /**
@@ -48,7 +64,7 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void flush() {
-
+        call("flush");
     }
 
     /**
@@ -59,7 +75,10 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> S saveAndFlush(S entity) {
-        return null;
+        call("saveAndFlush");
+        entity.setId(UUID.randomUUID());
+        expenses.add(entity);
+        return entity;
     }
 
     /**
@@ -119,11 +138,12 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @param uuid must not be {@literal null}.
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
-     * @deprecated use {@link JpaRepository#getReferenceById(ID)} instead.
+     * @deprecated use  instead.
      */
     @Override
     public Expense getOne(UUID uuid) {
-        return null;
+        call("getOne");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
@@ -136,11 +156,12 @@ public class TestExpenseRepository implements ExpenseRepository {
      * @return a reference to the entity with the given identifier.
      * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
      * @since 2.5
-     * @deprecated use {@link JpaRepository#getReferenceById(ID)} instead.
+     * @deprecated use  instead.
      */
     @Override
     public Expense getById(UUID uuid) {
-        return null;
+        call("getById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
@@ -156,7 +177,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public Expense getReferenceById(UUID uuid) {
-        return null;
+        call("getReferenceById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst().get();
     }
 
     /**
@@ -245,7 +267,10 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> S save(S entity) {
-        return null;
+        call("save");
+        entity.setId(UUID.randomUUID());
+        expenses.add(entity);
+        return entity;
     }
 
     /**
@@ -263,7 +288,14 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public <S extends Expense> List<S> saveAll(Iterable<S> entities) {
-        return null;
+        call("saveAll");
+        List<S> saved = new ArrayList<>();
+        entities.forEach(e -> {
+            e.setId(UUID.randomUUID());
+            saved.add(e);
+        });
+        expenses.addAll(saved);
+        return saved;
     }
 
     /**
@@ -275,7 +307,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public Optional<Expense> findById(UUID uuid) {
-        return Optional.empty();
+        call("findById");
+        return expenses.stream().filter(e -> e.getId().equals(uuid)).findFirst();
     }
 
     /**
@@ -287,7 +320,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public boolean existsById(UUID uuid) {
-        return false;
+        call("existsById");
+        return expenses.stream().anyMatch(e -> e.getId().equals(uuid));
     }
 
     /**
@@ -297,7 +331,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public List<Expense> findAll() {
-        return null;
+        call("findAll");
+        return expenses;
     }
 
     /**
@@ -324,7 +359,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public long count() {
-        return 0;
+        call("count");
+        return expenses.size();
     }
 
     /**
@@ -337,7 +373,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void deleteById(UUID uuid) {
-
+        call("deleteById");
+        expenses.removeIf(e -> e.getId().equals(uuid));
     }
 
     /**
@@ -352,7 +389,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void delete(Expense entity) {
-
+        call("delete");
+        expenses.remove(entity);
     }
 
     /**
@@ -389,7 +427,8 @@ public class TestExpenseRepository implements ExpenseRepository {
      */
     @Override
     public void deleteAll() {
-
+        call("deleteAll");
+        expenses.clear();
     }
 
     /**

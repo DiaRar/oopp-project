@@ -17,6 +17,11 @@ package server.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import commons.Participant;
+
+import java.util.List;
 import java.util.UUID;
 
-public interface ParticipantRepository extends JpaRepository<Participant, UUID> {}
+public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
+    Integer deleteParticipantById(UUID id);
+    List<Participant> findParticipantsByEventId(UUID eventId);
+}
