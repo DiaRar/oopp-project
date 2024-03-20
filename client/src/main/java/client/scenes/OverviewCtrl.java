@@ -140,7 +140,7 @@ public class OverviewCtrl {
         List<BorderPane> collection =
                 event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
-        switchToDutch();
+//        switchToDutch();
     }
 
     public void choiceChanged() {
