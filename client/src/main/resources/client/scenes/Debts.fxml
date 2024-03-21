@@ -1,24 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DebtsCtrl">
-   <children>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="14.0" layoutY="136.0" prefHeight="454.0" prefWidth="374.0">
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DebtsCtrl">
+   <center>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="454.0" prefWidth="374.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="debtsList" prefHeight="434.0" prefWidth="356.0" />
+            <VBox fx:id="debtsList" prefHeight="434.0" prefWidth="356.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
          </content>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </ScrollPane>
-      <Label layoutX="14.0" layoutY="41.0" prefHeight="22.0" prefWidth="234.0" text="Open debts" textAlignment="CENTER">
+   </center>
+   <bottom>
+      <Button fx:id="returnButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" BorderPane.alignment="CENTER_RIGHT">
+         <BorderPane.margin>
+            <Insets right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </Button>
+   </bottom>
+   <top>
+      <Label fx:id="title" contentDisplay="CENTER" prefHeight="22.0" prefWidth="374.0" text="Open debts" BorderPane.alignment="CENTER">
          <font>
             <Font name="Arial Bold" size="18.0" />
          </font>
+         <padding>
+            <Insets bottom="20.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets left="5.0" top="5.0" />
+         </BorderPane.margin>
       </Label>
-      <Button fx:id="returnButton" layoutX="256.0" layoutY="39.0" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" />
-   </children>
-</AnchorPane>
+   </top>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</BorderPane>

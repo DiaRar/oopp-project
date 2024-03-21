@@ -49,8 +49,12 @@ public class DebtsCtrl {
         // TODO instead of the hardcoded data we should use the debts of the current event with server.getDebts(event)
         List<Debt> debts = mockData();
         List<BorderPane> collection = debts.stream().map(this::debtComponent).toList();
-        // debtsList.getChildren().clear();
+        debtsList.getChildren().clear();
         debtsList.getChildren().addAll(collection);
+
+        // TODO add event name to title of the page
+        title.setText("Open Debts - " + debts.getFirst().getEvent().getName());
+
     }
 
     public BorderPane debtComponent(Debt debt) {
@@ -84,6 +88,8 @@ public class DebtsCtrl {
         buttons.getChildren().addAll(reminder, settled);
         HBox.setMargin(settled, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         HBox.setMargin(reminder, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+        // TODO add onClick event for buttons (settle should be connected to DELETE at /api/events/{eventId}/debts/{debtId})
 
         borderPane.setLeft(bankIcon);
         borderPane.setCenter(description);
@@ -115,7 +121,7 @@ public class DebtsCtrl {
     public List<Debt> mockData() {
         Event event = new Event("New Year Party");
         Participant p1 = new Participant("Ale", "email1");
-        Participant p2 = new Participant("Very Long Name to see what happens", "email2");
+        Participant p2 = new Participant("Becky", "email2");
         Participant p3 = new Participant("Cactus", "email3");
         Participant p4 = new Participant("Lazarus", "email4");
         List<Debt> list = new ArrayList<>();
@@ -125,7 +131,5 @@ public class DebtsCtrl {
         list.add(new Debt(p3, p4, DEBT_AMOUNT, event));
         return list;
     }
-
-    // TODO add event name to title of the page
 
 }
