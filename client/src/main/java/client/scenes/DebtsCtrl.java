@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.BankAccount;
 import commons.Debt;
 import commons.Event;
 import commons.Participant;
@@ -50,8 +51,10 @@ public class DebtsCtrl {
     }
 
     public void refresh() {
-        // TODO instead of the hardcoded data we should use the debts of the current event with server.getDebts(event)
+        // TODO instead of the hardcoded data we should use:
+        // List<Debt> debts = server.getDebts(event);
         List<Debt> debts = mockData();
+
         List<BorderPane> collection = debts.stream().map(this::debtComponent).toList();
         debtsList.getChildren().clear();
         debtsList.getChildren().addAll(collection);
@@ -93,7 +96,6 @@ public class DebtsCtrl {
         HBox.setMargin(settled, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         HBox.setMargin(reminder, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
-        // TODO add onClick event for buttons (settle should be connected to DELETE at /api/events/{eventId}/debts/{debtId})
         settled.setOnAction(e ->
                 settleDebt(event.getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
         reminder.setOnAction(e ->
@@ -106,6 +108,20 @@ public class DebtsCtrl {
         BorderPane.setAlignment(bankIcon, Pos.CENTER_LEFT);
         BorderPane.setAlignment(description, Pos.CENTER_LEFT);
         BorderPane.setAlignment(buttons, Pos.CENTER_RIGHT);
+
+        // Bank details at the bottom
+        TextFlow tf = new TextFlow();
+        if (debt.getPayer().getBankAccount() == null) {
+            tf.getChildren().add(new Text("Bank information NOT available"));
+        } else {
+            // TODO change nickname with bankAccount.getAccountHolder();
+            Text accountHolder = new Text("Account Holder: " + debt.getPayer().getNickname() + "\n");
+            Text iban = new Text("IBAN: " + debt.getPayer().getBankAccount().getIban() + "\n");
+            Text bic = new Text("BIC: " + debt.getPayer().getBankAccount().getBic());
+            tf.getChildren().addAll(new Text("Bank information available, transfer the money to:\n"),
+                    accountHolder, iban, bic);
+        }
+        bankIcon.setOnMouseClicked(e -> showBankDetails(tf, borderPane));
 
         return borderPane;
     }
@@ -128,9 +144,12 @@ public class DebtsCtrl {
 
     public List<Debt> mockData() {
         Event event = new Event("New Year Party");
+        BankAccount b1 = new BankAccount("myIBAN1", "myBIC1");
+        BankAccount b2 = new BankAccount("myIBAN2", "myBIC2");
+        BankAccount b3 = new BankAccount("myIBAN3", "myBIC3");
         Participant p1 = new Participant("Ale", "email1");
-        Participant p2 = new Participant("Becky", "email2");
-        Participant p3 = new Participant("Cactus", "email3");
+        Participant p2 = new Participant("Becky", "email2", b2);
+        Participant p3 = new Participant("Cactus", "email3", b3);
         Participant p4 = new Participant("Lazarus", "email4");
         List<Debt> list = new ArrayList<>();
         list.add(new Debt(p1, p2, DEBT_AMOUNT, event));
@@ -147,7 +166,16 @@ public class DebtsCtrl {
 
     public void remind(Participant participant, Debt debt) {
         if (participant.getEmail() == null || participant.getEmail().isEmpty()) return;
-        // TODO send email to the participant with the details of the debt
+        // TODO send email to the participant with the details of the debt (first ask confirmation)
+    }
+
+    public void showBankDetails(TextFlow details, BorderPane borderPane) {
+        if (borderPane.getBottom() == null) {
+            borderPane.setBottom(details);
+            BorderPane.setAlignment(details, Pos.CENTER_LEFT);
+        } else {
+            borderPane.setBottom(null);
+        }
     }
 
 }
