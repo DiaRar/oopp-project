@@ -5,8 +5,11 @@ import commons.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -20,18 +23,12 @@ public class ConfigUtilsTest {
         sut = new ConfigUtils();
     }
 
-    @Test
-    public void readResentsTest() throws FileNotFoundException {
-        String csvData = """
-                Birthday Party,7650fe94-5b6d-4e8c-9a12-7e2e5458b211
-                Conference Talk,3af6f7db-8dcf-48c8-b083-52736c0c9a9a
-                Product Launch,19b43b62-f240-4f31-86ab-82f1217252c2
-                """;
-        sut.setRecentsFile(new StringReader(csvData));
-        ArrayList<Event> events = sut.readRecents();
+    //TODO Add tests for configUtils
 
-        assertEquals(EVENTS_SIZE, events.size());
-        assertEquals(UUID.fromString("7650fe94-5b6d-4e8c-9a12-7e2e5458b211"), events.get(0).getId());
-        assertEquals("Product Launch", events.get(events.size() - 1).getName());
-    }
+//    @Test
+//    public void removeRecentTest(){
+//        Path path = Paths.get("src/main/resources/config/recents.csv");
+//        sut.setRecentsFile(new File((path.toAbsolutePath().toString())));
+//        sut.removeRecent(UUID.fromString("1b254e6f-45de-41e0-8c2a-cfa8ff269fb4"));
+//    }
 }

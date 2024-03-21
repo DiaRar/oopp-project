@@ -41,7 +41,6 @@ import javafx.scene.text.TextFlow;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Map;
 
@@ -52,7 +51,6 @@ public class OverviewCtrl {
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
-    private static final UUID HARDCODED_EVENT_ID = UUID.fromString("0a17a707-b0de-4fe0-bab3-cddbf520305f");
     private Event event;
     private ObservableList<Expense> expenses;
     private ObservableList<Participant> participants;
@@ -120,14 +118,14 @@ public class OverviewCtrl {
         editImage.setFitWidth(EXPENSE_EDIT_SIZE);
 //        editImage.setOnMouseClicked(e -> {
 //            title.setText(expense.getDescription());
-//        }); // TO BE CHANGED WITH EDIT
+//        }); // TODO BE CHANGED WITH EDIT
         borderPane.setRight(editImage);
         BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
     }
 
     public void refresh() {
-        event = server.getEvent(HARDCODED_EVENT_ID);
+        event = mainCtrl.getEvent();
         expenses = FXCollections.observableList(event.getExpenses().stream().toList());
         participants = FXCollections.observableList(event.getParticipants().stream().toList());
         title.setText(event.getName());
@@ -140,7 +138,7 @@ public class OverviewCtrl {
         List<BorderPane> collection =
                 event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
-        switchToDutch();
+//        switchToDutch();
     }
 
     public void choiceChanged() {
