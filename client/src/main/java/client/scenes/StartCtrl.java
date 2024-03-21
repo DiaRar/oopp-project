@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.uicomponents.RecentlyVisitedCell;
 import client.utils.ConfigUtils;
+import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import javafx.collections.FXCollections;
@@ -37,12 +38,14 @@ public class StartCtrl implements Initializable {
     public Label recentEvents;
 
     public ListView<String> recentsList;
+    private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl) {
         this.utils = configUtils;
+        this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
     }
 
@@ -55,10 +58,9 @@ public class StartCtrl implements Initializable {
      */
     public void create() {
         Event event = new Event();
-        event.setId(UUID.randomUUID());
         event.setName(createField.getText());
-
-        mainCtrl.setEvent(event.getId());
+        Event retEvent = serverUtils.addEvent(event);
+        mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverview();
     }
 
