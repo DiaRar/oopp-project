@@ -19,10 +19,12 @@ import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -41,8 +43,9 @@ import javafx.scene.text.TextFlow;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class OverviewCtrl {
 
@@ -69,10 +72,6 @@ public class OverviewCtrl {
     @FXML
     private VBox list;
     @FXML
-    private Label expensesLabel;
-    @FXML
-    private Label participantsLabel;
-    @FXML
     private Button sendInvites;
     @FXML
     private Button addExpense;
@@ -83,6 +82,67 @@ public class OverviewCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
     }
+
+    public void startup() {
+        event = mainCtrl.getEvent();
+        expenses = FXCollections.observableArrayList(event.getExpenses().stream().toList());
+        participants = FXCollections.observableArrayList(event.getParticipants().stream().toList());
+        title.setText(event.getName());
+        participantsText.setText(participants.stream().map(Participant::getNickname).collect(Collectors.joining(", ")));
+        choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
+        List<BorderPane> collection =
+                event.getExpenses().stream().map(this::expenseComponent).toList();
+        list.getChildren().addAll(collection);
+
+        // LISTENERS
+        participants.addListener((ListChangeListener<Participant>) change -> {
+            while (change.next()) {
+                StringJoiner stringJoiner = new StringJoiner(", ");
+                participants.forEach(participant -> stringJoiner.add(participant.getNickname()));
+                participantsText.setText(stringJoiner.toString());
+                if (change.wasAdded()) {
+                    choiceBox.getItems().addAll(change.getFrom(), change.getAddedSubList().stream().map(Participant::getNickname).toList());
+                    choiceBox.setValue(choiceBox.getItems().get(change.getFrom()));
+                } else if (change.wasRemoved()) {
+                    choiceBox.getItems().remove(change.getTo(), change.getTo() + change.getRemovedSize());
+                }
+            }
+        });
+        expenses.addListener((ListChangeListener<? super Expense>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    list.getChildren().addAll(change.getFrom(), change.getAddedSubList().stream().map(expense -> expenseComponent(expense)).toList());
+                } else if (change.wasRemoved()) {
+                    list.getChildren().remove(change.getTo(), change.getTo() + change.getRemovedSize());
+                }
+            }
+        });
+    }
+    public void clear() {
+        expenses = null;
+        participants = null;
+        choiceBox.getItems().clear();
+        list.getChildren().clear();
+    }
+    public void addExpense(Expense expense) {
+        expenses.add(expense);
+    }
+    public void addExpense(int index, Expense expense) {
+        expenses.add(index, expense);
+    }
+    public Expense removeExpense(int index) {
+        return expenses.remove(index);
+    }
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
+    }
+    public void addParticipant(int index, Participant participant) {
+        participants.add(index, participant);
+    }
+    public Participant removeParticipant(int index) {
+        return participants.remove(index);
+    }
+
 
     public BorderPane expenseComponent(Expense expense) {
         BorderPane borderPane = new BorderPane();
@@ -123,24 +183,6 @@ public class OverviewCtrl {
         BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
     }
-
-    public void refresh() {
-        event = mainCtrl.getEvent();
-        expenses = FXCollections.observableList(event.getExpenses().stream().toList());
-        participants = FXCollections.observableList(event.getParticipants().stream().toList());
-        title.setText(event.getName());
-        participantsText.setText(String.join(",",
-                participants.stream().map(Participant::getNickname).toList()));
-        choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
-        choiceBox.setValue(choiceBox.getItems().getFirst());
-//        choiceBox.setValue(participants.get(0));
-//        System.out.println(event.getExpenses().toString());
-        List<BorderPane> collection =
-                event.getExpenses().stream().map(this::expenseComponent).toList();
-        list.getChildren().addAll(collection);
-//        switchToDutch();
-    }
-
     public void choiceChanged() {
         String name = choiceBox.getValue();
         from.setText("From ".concat(name));

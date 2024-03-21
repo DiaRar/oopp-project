@@ -51,7 +51,7 @@
                <children>
                   <HBox spacing="3.0">
                      <children>
-                        <Label fx:id="participantsLabel" text="Participants">
+                        <Label text="Participants">
                            <font>
                               <Font name="Arial Bold" size="14.0" />
                            </font>
@@ -83,7 +83,7 @@
                   <Text fx:id="participantsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Placeholder" />
                </children>
             </VBox>
-            <Label fx:id="expensesLabel" text="Expenses" GridPane.rowIndex="2">
+            <Label text="Expenses" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
