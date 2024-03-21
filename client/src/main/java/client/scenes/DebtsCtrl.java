@@ -22,7 +22,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +120,7 @@ public class DebtsCtrl {
             tf.getChildren().addAll(new Text("Bank information available, transfer the money to:\n"),
                     accountHolder, iban, bic);
         }
-        bankIcon.setOnMouseClicked(e -> showBankDetails(tf, borderPane));
+        bankIcon.setOnMouseClicked(e -> showHideBankDetails(tf, borderPane));
 
         return borderPane;
     }
@@ -169,7 +168,7 @@ public class DebtsCtrl {
         // TODO send email to the participant with the details of the debt (first ask confirmation)
     }
 
-    public void showBankDetails(TextFlow details, BorderPane borderPane) {
+    public void showHideBankDetails(TextFlow details, BorderPane borderPane) {
         if (borderPane.getBottom() == null) {
             borderPane.setBottom(details);
             BorderPane.setAlignment(details, Pos.CENTER_LEFT);
