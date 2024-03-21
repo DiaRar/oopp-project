@@ -156,4 +156,14 @@ public class ServerUtils {
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
 	}
+
+	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
+		return ClientBuilder
+				.newClient(new ClientConfig())
+				.target(SERVER)
+				.path("/api/events/" + eventId + "/debts/" + debtId)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.delete(Debt.class);
+	}
 }

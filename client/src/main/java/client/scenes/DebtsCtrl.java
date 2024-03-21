@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import commons.Debt;
 import commons.Event;
 import commons.Participant;
+import commons.primary_keys.DebtPK;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,9 +21,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class DebtsCtrl {
     private final ServerUtils server;
@@ -38,6 +41,7 @@ public class DebtsCtrl {
     private Label title;
     @FXML
     private VBox debtsList;
+    private Event event;
 
     @Inject
     public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -90,6 +94,10 @@ public class DebtsCtrl {
         HBox.setMargin(reminder, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
         // TODO add onClick event for buttons (settle should be connected to DELETE at /api/events/{eventId}/debts/{debtId})
+        settled.setOnAction(e ->
+                settleDebt(event.getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
+        reminder.setOnAction(e ->
+                remind(debt.getDebtor(), debt));
 
         borderPane.setLeft(bankIcon);
         borderPane.setCenter(description);
@@ -130,6 +138,16 @@ public class DebtsCtrl {
         list.add(new Debt(p1, p4, DEBT_AMOUNT, event));
         list.add(new Debt(p3, p4, DEBT_AMOUNT, event));
         return list;
+    }
+
+    public void settleDebt(UUID eventId, DebtPK debtId) {
+        server.deleteDebt(eventId, debtId);
+        refresh();
+    }
+
+    public void remind(Participant participant, Debt debt) {
+        if (participant.getEmail() == null || participant.getEmail().isEmpty()) return;
+        // TODO send email to the participant with the details of the debt
     }
 
 }
