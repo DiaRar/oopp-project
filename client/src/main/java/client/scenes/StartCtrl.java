@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.*;
 
 public class StartCtrl implements Initializable {
+    private static final double FLOW_PANE_MARGIN = 5;
     @FXML
     private TextField joinField;
     @FXML
@@ -98,11 +99,12 @@ public class StartCtrl implements Initializable {
         Text eventTitle = new Text(event.getName());
         TextFlow content = new TextFlow(eventTitle);
         HBox description = new HBox(content);
+        HBox.setMargin(description, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
 
         // Remove button
         Button removeButton = new Button("Remove");
         HBox buttons = new HBox(removeButton);
-        HBox.setMargin(removeButton, new Insets(5, 5, 5, 0));
+        HBox.setMargin(removeButton, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
 
         borderPane.setCenter(description);
