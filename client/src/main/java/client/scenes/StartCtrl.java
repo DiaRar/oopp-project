@@ -65,6 +65,7 @@ public class StartCtrl implements Initializable {
         Event event = new Event();
         event.setName(createField.getText());
         Event retEvent = serverUtils.addEvent(event);
+        utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverview();
     }
@@ -76,6 +77,7 @@ public class StartCtrl implements Initializable {
         try {
             UUID uuid = UUID.fromString(joinField.getText());
             mainCtrl.setEvent(uuid);
+            utils.addRecent(mainCtrl.getEvent());
             mainCtrl.showOverview();
         } catch (IllegalArgumentException ex) {
             alertUser("Invalid UUID Format", "Oops! Invalid UUID format.",
