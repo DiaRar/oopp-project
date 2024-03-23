@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class MainCtrl {
@@ -72,10 +71,8 @@ public class MainCtrl {
         return event;
     }
 
-    public void setEvent(UUID uuid) throws NoSuchElementException {
+    public void setEvent(UUID uuid) {
         this.event = serverUtils.getEvent(uuid);
-        if (this.event == null)
-            throw new NoSuchElementException("Event not found: " + uuid);
     }
 }
 

@@ -2,7 +2,9 @@ package server.services;
 
 import commons.Event;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.EventRepository;
 
 import java.util.List;
@@ -32,7 +34,7 @@ public class EventService {
     public Event getById(UUID id) throws EntityNotFoundException {
         Optional<Event> oEv = eventRepository.findById(id);
         if (oEv.isEmpty()) {
-            throw new EntityNotFoundException("Did not find the specified event.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
         }
         return oEv.get();
     }

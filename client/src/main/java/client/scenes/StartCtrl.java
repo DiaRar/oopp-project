@@ -1,24 +1,28 @@
 package client.scenes;
 
-import client.uicomponents.RecentlyVisitedCell;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import javafx.collections.FXCollections;
+import jakarta.ws.rs.NotFoundException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
 public class StartCtrl implements Initializable {
     @FXML
@@ -36,8 +40,8 @@ public class StartCtrl implements Initializable {
     public Label joinEvent;
     @FXML
     public Label recentEvents;
-
-    public ListView<String> recentsList;
+    @FXML
+    public VBox recentsList;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
@@ -49,8 +53,9 @@ public class StartCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    private void openRecent(){
-        //TODO add opening logic
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        refreshRecents();
     }
 
     /**
@@ -73,19 +78,62 @@ public class StartCtrl implements Initializable {
             mainCtrl.setEvent(uuid);
             mainCtrl.showOverview();
         } catch (IllegalArgumentException ex) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Invalid UUID Format");
-            alert.setHeaderText("Oops! Invalid UUID format.");
-            alert.setContentText("Please ensure your UUID follows the correct format:\n" +
-                    "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-            alert.showAndWait();
-        } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Event Code Not Found");
-            alert.setHeaderText("Oops! Event code not found.");
-            alert.setContentText("Please double-check your entry and ensure it is correct.");
-            alert.showAndWait();
+            alertUser("Invalid UUID Format", "Oops! Invalid UUID format.",
+                    "Please ensure your UUID follows the correct format:\n" +
+                            "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
         }
+    }
+
+    public void refreshRecents() {
+        var recentEvents = utils.readRecents();
+        recentsList.getChildren().setAll(recentEvents.stream().map(this::generateRecentEvent).toList());
+    }
+
+    public BorderPane generateRecentEvent(Event event) {
+        BorderPane borderPane = new BorderPane();
+
+        // Event Title
+        Text eventTitle = new Text(event.getName());
+        TextFlow content = new TextFlow(eventTitle);
+        HBox description = new HBox(content);
+
+        // Remove button
+        Button removeButton = new Button("Remove");
+        HBox buttons = new HBox(removeButton);
+        HBox.setMargin(removeButton, new Insets(5, 5, 5, 0));
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+
+        borderPane.setCenter(description);
+        borderPane.setRight(buttons);
+
+        // On click
+        removeButton.setOnAction(e -> {
+            utils.removeRecent(event.getId());
+            refreshRecents();
+        });
+
+        borderPane.setOnMouseClicked(e -> {
+            try {
+                mainCtrl.setEvent(event.getId());
+            } catch (NotFoundException ex) {
+                alertUser("Event Status", "Attention! Event might have been deleted.",
+                        "The event you are trying to access might have been deleted or is no longer available.");
+                utils.removeRecent(event.getId());
+                refreshRecents();
+                return;
+            }
+            mainCtrl.showOverview();
+        });
+
+        return borderPane;
+    }
+
+    public static void alertUser(String title, String header, String context) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(context);
+        alert.showAndWait();
     }
 
     public void switchToDutch() {
@@ -104,16 +152,5 @@ public class StartCtrl implements Initializable {
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
         recentEvents.setText(textList.get("recentEvents"));
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        var recentEvents = utils.readRecents();
-        var list = FXCollections.observableArrayList(recentEvents.stream().map(Event::getName).toList());
-        listView.setItems(list);
-        listView.setCellFactory(param -> new RecentlyVisitedCell());
-        openRecent();
-        //switchToDutch();
-        //switchToEnglish();
     }
 }
