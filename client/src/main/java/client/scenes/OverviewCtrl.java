@@ -153,6 +153,13 @@ public class OverviewCtrl {
         // TODO pass the current event as parameter (to choose tags and participant from)
     }
 
+
+    public void openDebts() {
+        System.out.println("Open debts");
+        mainCtrl.showDebts();
+        // TODO pass the current event as parameter
+    }
+
     public void openInvitation() {
         System.out.println(("Invite people"));
         mainCtrl.showInvitation();
