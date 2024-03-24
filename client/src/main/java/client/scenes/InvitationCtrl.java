@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.Config;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.util.*;
 
 public class InvitationCtrl implements Initializable {
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
@@ -24,10 +26,11 @@ public class InvitationCtrl implements Initializable {
     @FXML
     private TextArea emails;
     @Inject
-    public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
+    public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.utils = utils;
+        this.config = config;
     }
 
     @Override

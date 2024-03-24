@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DebtsCtrl {
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static final double DEBT_AMOUNT = 100;
@@ -44,9 +46,10 @@ public class DebtsCtrl {
     private Event event;
 
     @Inject
-    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.config = config;
     }
 
     public void refresh() {
@@ -59,7 +62,7 @@ public class DebtsCtrl {
         debtsList.getChildren().addAll(collection);
 
         // TODO add event name to title of the page
-        title.setText("Open Debts - " + debts.getFirst().getEvent().getName());
+        title.setText("Open Debts - " + debts.get(0).getEvent().getName());
 
     }
 
@@ -130,13 +133,13 @@ public class DebtsCtrl {
     }
 
     public void switchToEnglish() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsEnglish.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsEnglish.csv"), "@");
         title.setText(textMap.get("openDebts"));
         returnButton.setText(textMap.get("returnToOverview"));
     }
 
     public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsDutch.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsDutch.csv"), "@");
         title.setText(textMap.get("openDebts"));
         returnButton.setText(textMap.get("returnToOverview"));
     }

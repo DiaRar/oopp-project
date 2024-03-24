@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.uicomponents.RecentlyVisitedCell;
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
@@ -27,6 +28,7 @@ public class StartCtrl implements Initializable {
     private TextField createField;
     @FXML
     private ListView<String> listView;
+    @FXML
     public Button create;
     @FXML
     public Label createNewEvent;
@@ -41,12 +43,14 @@ public class StartCtrl implements Initializable {
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
+    private Config config;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl, Config config) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.config = config;
     }
 
     private void openRecent(){
@@ -89,21 +93,19 @@ public class StartCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
         create.setText(textList.get("create"));
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
     }
 
     public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
         create.setText(textList.get("create"));
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
     }
 
     @Override
@@ -113,6 +115,17 @@ public class StartCtrl implements Initializable {
         listView.setItems(list);
         listView.setCellFactory(param -> new RecentlyVisitedCell());
         openRecent();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                switchToDutch();
+                break;
+            case "en":
+                switchToEnglish();
+                break;
+            default:
+                switchToEnglish();
+                break;
+        }
         //switchToDutch();
         //switchToEnglish();
     }
