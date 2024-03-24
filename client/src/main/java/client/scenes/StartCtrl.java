@@ -61,7 +61,7 @@ public class StartCtrl implements Initializable {
         event.setName(createField.getText());
         Event retEvent = serverUtils.addEvent(event);
         mainCtrl.setEvent(retEvent.getId());
-        mainCtrl.showOverview();
+        mainCtrl.showOverviewStart();
     }
 
     /**

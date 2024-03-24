@@ -68,7 +68,12 @@ public class MainCtrl {
     public void showOverview() {
         primaryStage.setTitle("Event Overview");
         primaryStage.setScene(overviewScene);
-        overviewCtrl.refresh();
+    }
+
+    public void showOverviewStart() {
+        showOverview();
+        overviewCtrl.clear();
+        overviewCtrl.startup();
     }
 
     public void showAddExpense() {
