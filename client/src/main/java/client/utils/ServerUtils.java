@@ -24,11 +24,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import commons.Debt;
 import commons.Event;
 import commons.Participant;
+import commons.primary_keys.DebtPK;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -45,22 +46,6 @@ public class ServerUtils {
 		while ((line = br.readLine()) != null) {
 			System.out.println(line);
 		}
-	}
-
-	public List<Quote> getQuotes() {
-		return ClientBuilder.newClient(new ClientConfig()) //
-				.target(SERVER).path("api/quotes") //
-				.request(APPLICATION_JSON) //
-				.accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
-	}
-
-	public Quote addQuote(Quote quote) {
-		return ClientBuilder.newClient(new ClientConfig()) //
-				.target(SERVER).path("api/quotes") //
-				.request(APPLICATION_JSON) //
-				.accept(APPLICATION_JSON) //
-				.post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
 	}
 
 	public Event getEvent(UUID eventId) {
@@ -135,5 +120,33 @@ public class ServerUtils {
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+	}
+
+	public List<Debt> getDebts(Event event) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(SERVER)
+				.path("/api/events/" + event.getId() + "/debts")
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.get(new GenericType<List<Debt>>() {});
+	}
+
+	public Debt updateDebt(Event event, DebtPK debtPK, Debt newDebt) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(SERVER)
+				.path("/api/events/" + event.getId() + "/debts/" + debtPK)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
+	}
+
+	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
+		return ClientBuilder
+				.newClient(new ClientConfig())
+				.target(SERVER)
+				.path("/api/events/" + eventId + "/debts/" + debtId)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.delete(Debt.class);
 	}
 }

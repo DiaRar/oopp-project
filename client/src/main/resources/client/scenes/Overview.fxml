@@ -110,7 +110,9 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="settleDebts" mnemonicParsing="false" text="Settle Debts" />
+            <Button mnemonicParsing="false" onAction="#openStatistics" prefHeight="26.0" prefWidth="77.0" text="Statistics" />
+            <Label prefHeight="18.0" prefWidth="222.0" />
+            <Button fx:id="settleDebts" mnemonicParsing="false" onAction="#openDebts" text="Settle Debts" />
          </children>
          <BorderPane.margin>
             <Insets top="10.0" />
@@ -137,7 +139,7 @@
             </ScrollPane>
             <HBox alignment="TOP_CENTER" maxHeight="1.0">
                <children>
-                  <Label fx:id="all" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">
+                  <Label fx:id="all" onMouseClicked="#selectAll" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -147,7 +149,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <Label fx:id="from" stylesheets="@../stylesheets/overview.css" text="From">
+                  <Label fx:id="from" onMouseClicked="#selectFrom" stylesheets="@../stylesheets/overview.css" text="From">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -157,7 +159,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <Label fx:id="including" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css" text="Including">
+                  <Label fx:id="including" onMouseClicked="#selectIncluding" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css" text="Including">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
