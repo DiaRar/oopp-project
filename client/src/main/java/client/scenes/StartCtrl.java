@@ -28,6 +28,7 @@ public class StartCtrl implements Initializable {
     private TextField createField;
     @FXML
     private ListView<String> listView;
+    @FXML
     public Button create;
     @FXML
     public Label createNewEvent;
@@ -42,8 +43,7 @@ public class StartCtrl implements Initializable {
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
-
-    private final Config config;
+    private Config config;
 
     @Inject
     public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl, Config config) {
@@ -98,7 +98,6 @@ public class StartCtrl implements Initializable {
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
     }
 
     public void switchToEnglish() {
@@ -107,7 +106,6 @@ public class StartCtrl implements Initializable {
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
     }
 
     @Override
@@ -120,10 +118,15 @@ public class StartCtrl implements Initializable {
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 switchToDutch();
+                break;
             case "en":
                 switchToEnglish();
+                break;
             default:
                 switchToEnglish();
+                break;
         }
+        //switchToDutch();
+        //switchToEnglish();
     }
 }

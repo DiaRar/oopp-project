@@ -36,11 +36,8 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
 
-	private String server = "http://localhost:8080/";
+	private static final String server = "http://localhost:8080/";
 
-	public ServerUtils(String server) {
-		this.server = server;
-	}
 	public void getQuotesTheHardWay() throws IOException, URISyntaxException {
 		var url = new URI("http://localhost:8080/api/quotes").toURL();
 		var is = url.openConnection().getInputStream();

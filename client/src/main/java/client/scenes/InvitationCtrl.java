@@ -15,11 +15,11 @@ import java.net.URL;
 import java.util.*;
 
 public class InvitationCtrl implements Initializable {
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
 
-    private final Config config;
     @FXML
     private Label name;
     @FXML

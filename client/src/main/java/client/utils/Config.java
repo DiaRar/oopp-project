@@ -9,17 +9,17 @@ public class Config {
     private String server;
     private Currency prefferedCurrency;
 
-    public Config(Locale locale, String server, Currency prefferedCurrency) {
+    private Config(Locale locale, String server, Currency prefferedCurrency) {
         this.locale = locale;
         this.server = server;
         this.prefferedCurrency = prefferedCurrency;
     }
-//    public Config() throws FileNotFoundException {
-//        Config config = read(new File("client/src/main/resources/config/config.properties"));
-//        this.locale = config.getLocale();
-//        this.server = config.getServer();
-//        this.prefferedCurrency = config.getPrefferedCurrency();
-//    }
+    public Config() throws FileNotFoundException {
+        Config config = read(new File("client/src/main/resources/config/config.properties"));
+        this.locale = config.getLocale();
+        this.server = config.getServer();
+        this.prefferedCurrency = config.getPrefferedCurrency();
+    }
 
     public Locale getLocale() {
         return locale;
@@ -71,7 +71,7 @@ public class Config {
         }
         String server = stringMap.get("server");
         try {
-            prefferedCurrency = Currency.getInstance(stringMap.get("country"));
+            prefferedCurrency = Currency.getInstance(stringMap.get("currency"));
         } catch (Exception e) {
             throw new IllegalArgumentException("That currency does not exist!");
         }

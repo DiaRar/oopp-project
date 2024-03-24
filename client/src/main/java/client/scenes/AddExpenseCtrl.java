@@ -25,10 +25,11 @@ import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
     private final ServerUtils server;
-    private final Config config;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
+
+    private Config config;
     @FXML
     private ComboBox<String> payer;
     @FXML
@@ -129,10 +130,13 @@ public class AddExpenseCtrl implements Initializable {
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 switchToDutch();
+                break;
             case "en":
                 switchToEnglish();
+                break;
             default:
                 switchToEnglish();
+                break;
         }
     }
 

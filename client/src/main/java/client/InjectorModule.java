@@ -41,8 +41,7 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
-        //binder.bind(Config.class).in(Scopes.SINGLETON);
-        //binder.bind(Config.class).toInstance(createConfig());
+        binder.bind(Config.class).toInstance(createConfig());
     }
 
     private ConfigUtils createConfigUtils() {
@@ -62,10 +61,10 @@ public class InjectorModule implements Module {
 
     private Config createConfig() {
         try {
-            File file = new File("client/src/main/resources/config/config.properties");
-            return Config.read(file);
+            return new Config();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DebtsCtrl {
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static final double DEBT_AMOUNT = 100;
@@ -44,9 +46,10 @@ public class DebtsCtrl {
     private Event event;
 
     @Inject
-    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.config = config;
     }
 
     public void refresh() {

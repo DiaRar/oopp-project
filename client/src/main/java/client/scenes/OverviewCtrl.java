@@ -47,7 +47,7 @@ import java.util.Map;
 
 public class OverviewCtrl {
 
-    private final Config config;
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static final double EXPENSE_EDIT_SIZE = 17;
@@ -141,13 +141,17 @@ public class OverviewCtrl {
         List<BorderPane> collection =
                 event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
+//        switchToDutch();
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 switchToDutch();
+                break;
             case "en":
                 switchToEnglish();
+                break;
             default:
                 switchToEnglish();
+                break;
         }
     }
 
