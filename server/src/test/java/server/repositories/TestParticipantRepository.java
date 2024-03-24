@@ -41,7 +41,7 @@ public class TestParticipantRepository implements ParticipantRepository {
     }
     @Override
     public List<Participant> findParticipantsByEventId(UUID eventId) {
-        return null;
+        return participants;
     }
     @Override
     public void flush() {
