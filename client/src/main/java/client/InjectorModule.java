@@ -15,11 +15,8 @@
  */
 package client;
 
-import client.scenes.InvitationCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.StartCtrl;
+import client.scenes.*;
 import client.utils.ConfigUtils;
-import client.scenes.OverviewCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -39,6 +36,7 @@ public class InjectorModule implements Module {
         binder.bind(StartCtrl.class).in(Scopes.SINGLETON);
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(StatisticsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
     }
 

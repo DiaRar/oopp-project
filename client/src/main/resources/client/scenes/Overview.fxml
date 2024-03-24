@@ -110,6 +110,8 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
          <children>
+            <Button mnemonicParsing="false" onAction="#openStatistics" prefHeight="26.0" prefWidth="77.0" text="Statistics" />
+            <Label prefHeight="18.0" prefWidth="222.0" />
             <Button fx:id="settleDebts" mnemonicParsing="false" onAction="#openDebts" text="Settle Debts" />
          </children>
          <BorderPane.margin>
