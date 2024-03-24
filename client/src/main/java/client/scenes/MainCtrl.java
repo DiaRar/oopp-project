@@ -34,7 +34,8 @@ public class MainCtrl {
     private Scene statisticsScene;
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics, Pair<InvitationCtrl, Parent> invitation,
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
+                     Pair<InvitationCtrl, Parent> invitation,
                      Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils) {
         this.serverUtils = serverUtils;
         this.primaryStage = primaryStage;

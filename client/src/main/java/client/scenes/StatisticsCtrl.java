@@ -8,9 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
@@ -20,6 +18,11 @@ public class StatisticsCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
+
+
+    //TO REMOVE TEST
+    private final double test = 10;
+    //^^^^^^^^^^^^^^^^^^^
 
     @FXML
     private Label amount;
@@ -36,12 +39,12 @@ public class StatisticsCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        amount.setText("42$");
+        amount.setText("40$");
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList(
-                new PieChart.Data("DATA1",10),
-                new PieChart.Data("DATA2",10),
-                new PieChart.Data("DATA3",10),
-                new PieChart.Data("DATA4",12)
+                new PieChart.Data("DATA1", test),
+                new PieChart.Data("DATA2", test),
+                new PieChart.Data("DATA3", test),
+                new PieChart.Data("DATA4", test)
         );
         chart.setData(data);
     }
