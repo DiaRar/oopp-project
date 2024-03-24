@@ -1,7 +1,9 @@
 package client.scenes;
 
+import client.uicomponents.LanguageComboBox;
 import client.uicomponents.RecentlyVisitedCell;
 import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
@@ -13,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.HBox;
 
 import java.io.File;
 import java.net.URL;
@@ -27,6 +30,7 @@ public class StartCtrl implements Initializable {
     private TextField createField;
     @FXML
     private ListView<String> listView;
+    @FXML
     public Button create;
     @FXML
     public Label createNewEvent;
@@ -36,17 +40,23 @@ public class StartCtrl implements Initializable {
     public Label joinEvent;
     @FXML
     public Label recentEvents;
+    @FXML
+    private HBox bottomHBox;
+    private LanguageComboBox languageComboBox;
 
     public ListView<String> recentsList;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
+    private final LanguageUtils languageUtils;
     private final MainCtrl mainCtrl;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
+        this.languageUtils = languageUtils;
         this.mainCtrl = mainCtrl;
+        this.languageComboBox = new LanguageComboBox(languageUtils);
     }
 
     private void openRecent(){
@@ -57,11 +67,12 @@ public class StartCtrl implements Initializable {
      * opens overview with new event
      */
     public void create() {
-        Event event = new Event();
-        event.setName(createField.getText());
-        Event retEvent = serverUtils.addEvent(event);
-        mainCtrl.setEvent(retEvent.getId());
-        mainCtrl.showOverview();
+//        Event event = new Event();
+//        event.setName(createField.getText());
+//        Event retEvent = serverUtils.addEvent(event);
+//        mainCtrl.setEvent(retEvent.getId());
+//        mainCtrl.showOverview();
+//        switchToDutch();
     }
 
     /**
@@ -91,10 +102,10 @@ public class StartCtrl implements Initializable {
     public void switchToDutch() {
         Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
         create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
+//        createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
+//        joinEvent.setText(textList.get("joinEvent"));
+//        recentEvents.setText(textList.get("recentEvents"));
     }
 
     public void switchToEnglish() {
@@ -113,7 +124,11 @@ public class StartCtrl implements Initializable {
         listView.setItems(list);
         listView.setCellFactory(param -> new RecentlyVisitedCell());
         openRecent();
-        //switchToDutch();
+//        languageComboBox = new LanguageComboBox(mainCtrl.getLanguageUtils());
+        bottomHBox.getChildren().add(languageComboBox);
+        create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
+        join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
+//        switchToDutch();
         //switchToEnglish();
     }
 }

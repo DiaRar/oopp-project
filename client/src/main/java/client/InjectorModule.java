@@ -20,6 +20,7 @@ import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
 import client.utils.ConfigUtils;
 import client.scenes.OverviewCtrl;
+import client.utils.LanguageUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -40,6 +41,7 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
+        binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {

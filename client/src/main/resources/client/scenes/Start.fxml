@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -25,11 +26,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#join" prefWidth="100.0" text="Join" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Button fx:id="join" minWidth="100.0" mnemonicParsing="false" onAction="#join" prefWidth="100.0" text="Join" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Button>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#create" prefWidth="100.0" text="Create" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="create" minWidth="100.0" mnemonicParsing="false" onAction="#create" prefWidth="100.0" text="Create" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Button>
@@ -57,4 +58,7 @@
    <center>
       <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
+   <bottom>
+      <HBox fx:id="bottomHBox" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>
