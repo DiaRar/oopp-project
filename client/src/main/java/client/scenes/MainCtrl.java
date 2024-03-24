@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.Parent;
@@ -21,6 +22,7 @@ public class MainCtrl {
     private Scene addExpenseScene;
 
     private ServerUtils serverUtils;
+    private LanguageUtils languageUtils;
 
     private Event event;
 
@@ -31,9 +33,10 @@ public class MainCtrl {
     private Scene debtsScene;
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
-                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<InvitationCtrl, Parent> invitation,
-                     Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils) {
+                     Pair<AddExpenseCtrl, Parent> addExpense, Pair<InvitationCtrl, Parent> invitation, Pair<DebtsCtrl, Parent> debts, 
+                     ServerUtils serverUtils, LanguageUtils languageUtils) {
         this.serverUtils = serverUtils;
+        this.languageUtils = languageUtils;
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -90,6 +93,10 @@ public class MainCtrl {
         this.event = serverUtils.getEvent(uuid);
         if (this.event == null)
             throw new NoSuchElementException("Event not found: " + uuid);
+    }
+
+    public LanguageUtils getLanguageUtils() {
+        return this.languageUtils;
     }
 }
 
