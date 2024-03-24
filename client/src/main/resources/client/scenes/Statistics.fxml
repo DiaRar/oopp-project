@@ -6,16 +6,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.Statistics">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.StatisticsCtrl">
    <children>
-      <PieChart layoutX="28.0" layoutY="118.0" prefHeight="194.0" prefWidth="526.0" />
+      <PieChart fx:id="chart" layoutX="28.0" layoutY="118.0" prefHeight="194.0" prefWidth="526.0" />
       <Label layoutX="21.0" layoutY="80.0" prefHeight="18.0" prefWidth="131.0" text="Total cost of event:">
          <font>
             <Font name="Arial" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="152.0" layoutY="80.0" prefHeight="18.0" prefWidth="131.0">
+      <Label fx:id="amount" layoutX="152.0" layoutY="80.0" prefHeight="18.0" prefWidth="131.0">
          <font>
             <Font name="Arial" size="15.0" />
          </font>
@@ -25,7 +24,7 @@
             <Font name="Arial Bold" size="31.0" />
          </font>
       </Label>
-      <Button layoutX="458.0" layoutY="338.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="103.0" text="Back">
+      <Button layoutX="458.0" layoutY="338.0" mnemonicParsing="false" onAction="#back" prefHeight="38.0" prefWidth="103.0" text="Back">
          <font>
             <Font name="Arial" size="23.0" />
          </font>
