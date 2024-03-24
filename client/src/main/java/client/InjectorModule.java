@@ -42,7 +42,7 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
-        binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
+        binder.bind(LanguageUtils.class).toInstance(new LanguageUtils());
         binder.bind(Config.class).toInstance(createConfig());
     }
 
