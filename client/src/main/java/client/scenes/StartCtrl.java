@@ -5,18 +5,15 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import jakarta.ws.rs.NotFoundException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -42,7 +39,7 @@ public class StartCtrl implements Initializable {
     @FXML
     public Label recentEvents;
     @FXML
-    public VBox recentsList;
+    public ListView<Event> recentsList;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
@@ -88,8 +85,23 @@ public class StartCtrl implements Initializable {
     }
 
     public void refreshRecents() {
-        var recentEvents = utils.readRecents();
-        recentsList.getChildren().setAll(recentEvents.stream().map(this::generateRecentEvent).toList());
+        List<Event> recentEventsList = utils.readRecents();
+        ObservableList<Event> events = FXCollections.observableArrayList(recentEventsList);
+        recentsList.setItems(events);
+
+        recentsList.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Event item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    BorderPane borderPane = generateRecentEvent(item);
+                    setGraphic(borderPane);
+                }
+            }
+        });
     }
 
     public BorderPane generateRecentEvent(Event event) {
@@ -113,7 +125,7 @@ public class StartCtrl implements Initializable {
         // On click
         removeButton.setOnAction(e -> {
             utils.removeRecent(event.getId());
-            refreshRecents();
+            recentsList.getItems().remove(event);
         });
 
         borderPane.setOnMouseClicked(e -> {
@@ -123,7 +135,7 @@ public class StartCtrl implements Initializable {
                 alertUser("Event Status", "Attention! Event might have been deleted.",
                         "The event you are trying to access might have been deleted or is no longer available.");
                 utils.removeRecent(event.getId());
-                refreshRecents();
+                recentsList.getItems().remove(event);
                 return;
             }
             mainCtrl.showOverview();
