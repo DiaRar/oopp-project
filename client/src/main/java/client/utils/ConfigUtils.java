@@ -2,6 +2,7 @@ package client.utils;
 
 import commons.Event;
 import commons.Participant;
+import org.checkerframework.checker.regex.qual.Regex;
 
 import java.io.*;
 import java.util.*;
@@ -83,12 +84,12 @@ public class ConfigUtils {
             throw new RuntimeException(e);
         }
     }
-    public static Map<String, String> readLanguage(File file) {
+    public static Map<String, String> readFile(File file, @Regex String separator) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             Map<String, String> labelList = new HashMap<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] mapElements = line.split("@");
+                String[] mapElements = line.split(separator);
                 labelList.put(mapElements[0], mapElements[1]);
             }
             return labelList;

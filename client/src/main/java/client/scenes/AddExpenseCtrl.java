@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.Config;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
     private final ServerUtils server;
+    private final Config config;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
@@ -67,10 +69,11 @@ public class AddExpenseCtrl implements Initializable {
     private Label expenseType;
 
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.utils = utils;
+        this.config = config;
     }
 
     public void cancel() {
@@ -123,7 +126,14 @@ public class AddExpenseCtrl implements Initializable {
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         setTags();
         fillDebtors();
-        switchToDutch();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                switchToDutch();
+            case "en":
+                switchToEnglish();
+            default:
+                switchToEnglish();
+        }
     }
 
     public void fillDebtors() {
@@ -167,11 +177,22 @@ public class AddExpenseCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseDutch.csv"));
+        Map<String, String> stringMap = ConfigUtils.readFile(new File("client/src/main/resources/config/addExpenseDutch.csv"), "@");
+        add.setText(stringMap.get("add"));
+        cancel.setText(stringMap.get("cancel"));
+        whoPaid.setText(stringMap.get("whoPaid"));
+        addEditExpense.setText(stringMap.get("addEditExpense"));
+        whatFor.setText(stringMap.get("whatFor"));
+        howMuch.setText(stringMap.get("howMuch"));
+        when.setText(stringMap.get("when"));
+        howToSplit.setText(stringMap.get("howToSplit"));
+        expenseType.setText(stringMap.get("expenseType"));
+        equallySplit.setText(stringMap.get("equally"));
+        partialSplit.setText(stringMap.get("partialSplit"));
     }
 
     public void switchToEnglish() {
-        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseEnglish.csv"));
+        Map<String, String> stringMap = ConfigUtils.readFile(new File("client/src/main/resources/config/addExpenseEnglish.csv"), "@");
         add.setText(stringMap.get("add"));
         cancel.setText(stringMap.get("cancel"));
         whoPaid.setText(stringMap.get("whoPaid"));

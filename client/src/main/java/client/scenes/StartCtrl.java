@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.uicomponents.RecentlyVisitedCell;
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
@@ -42,11 +43,14 @@ public class StartCtrl implements Initializable {
     private final ConfigUtils utils;
     private final MainCtrl mainCtrl;
 
+    private final Config config;
+
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl, Config config) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.config = config;
     }
 
     private void openRecent(){
@@ -89,7 +93,7 @@ public class StartCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
         create.setText(textList.get("create"));
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
@@ -98,7 +102,7 @@ public class StartCtrl implements Initializable {
     }
 
     public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
         create.setText(textList.get("create"));
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
@@ -113,7 +117,13 @@ public class StartCtrl implements Initializable {
         listView.setItems(list);
         listView.setCellFactory(param -> new RecentlyVisitedCell());
         openRecent();
-        //switchToDutch();
-        //switchToEnglish();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                switchToDutch();
+            case "en":
+                switchToEnglish();
+            default:
+                switchToEnglish();
+        }
     }
 }

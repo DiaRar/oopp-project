@@ -59,7 +59,7 @@ public class DebtsCtrl {
         debtsList.getChildren().addAll(collection);
 
         // TODO add event name to title of the page
-        title.setText("Open Debts - " + debts.getFirst().getEvent().getName());
+        title.setText("Open Debts - " + debts.get(0).getEvent().getName());
 
     }
 
@@ -130,13 +130,13 @@ public class DebtsCtrl {
     }
 
     public void switchToEnglish() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsEnglish.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsEnglish.csv"), "@");
         title.setText(textMap.get("openDebts"));
         returnButton.setText(textMap.get("returnToOverview"));
     }
 
     public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/debtsDutch.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsDutch.csv"), "@");
         title.setText(textMap.get("openDebts"));
         returnButton.setText(textMap.get("returnToOverview"));
     }

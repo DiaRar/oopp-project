@@ -18,6 +18,7 @@ package client;
 import client.scenes.InvitationCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.scenes.OverviewCtrl;
 import com.google.inject.Binder;
@@ -40,6 +41,8 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
+        //binder.bind(Config.class).in(Scopes.SINGLETON);
+        //binder.bind(Config.class).toInstance(createConfig());
     }
 
     private ConfigUtils createConfigUtils() {
@@ -53,6 +56,15 @@ public class InjectorModule implements Module {
             return utils;
         } catch (FileNotFoundException e) {
             //TODO log and handle error
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Config createConfig() {
+        try {
+            File file = new File("client/src/main/resources/config/config.properties");
+            return Config.read(file);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

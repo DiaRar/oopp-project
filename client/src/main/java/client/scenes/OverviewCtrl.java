@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 
@@ -46,6 +47,7 @@ import java.util.Map;
 
 public class OverviewCtrl {
 
+    private final Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static final double EXPENSE_EDIT_SIZE = 17;
@@ -79,9 +81,10 @@ public class OverviewCtrl {
     @FXML
     private Button settleDebts;
     @Inject
-    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.config = config;
     }
 
     public BorderPane expenseComponent(Expense expense) {
@@ -132,13 +135,20 @@ public class OverviewCtrl {
         participantsText.setText(String.join(",",
                 participants.stream().map(Participant::getNickname).toList()));
         choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
-        choiceBox.setValue(choiceBox.getItems().getFirst());
+        choiceBox.setValue(choiceBox.getItems().get(0));
 //        choiceBox.setValue(participants.get(0));
 //        System.out.println(event.getExpenses().toString());
         List<BorderPane> collection =
                 event.getExpenses().stream().map(this::expenseComponent).toList();
         list.getChildren().addAll(collection);
-//        switchToDutch();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                switchToDutch();
+            case "en":
+                switchToEnglish();
+            default:
+                switchToEnglish();
+        }
     }
 
     public void choiceChanged() {
@@ -166,7 +176,7 @@ public class OverviewCtrl {
     }
 
     public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewDutch.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewDutch.csv"), "@");
         title.setText(textMap.get("title"));
         sendInvites.setText(textMap.get("sendInvites"));
         expensesLabel.setText(textMap.get("expensesLabel"));
@@ -178,7 +188,7 @@ public class OverviewCtrl {
     }
 
     public void switchToEnglish() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
+        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewEnglish.csv"), "@");
         title.setText(textMap.get("title"));
         sendInvites.setText(textMap.get("sendInvites"));
         expensesLabel.setText(textMap.get("expensesLabel"));
