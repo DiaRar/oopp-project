@@ -51,7 +51,7 @@
                <children>
                   <HBox spacing="3.0">
                      <children>
-                        <Label text="Participants">
+                        <Label fx:id="participantsLabel" text="Participants">
                            <font>
                               <Font name="Arial Bold" size="14.0" />
                            </font>
@@ -83,7 +83,7 @@
                   <Text fx:id="participantsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Placeholder" />
                </children>
             </VBox>
-            <Label text="Expenses" GridPane.rowIndex="2">
+            <Label fx:id="expensesLabel" text="Expenses" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -139,7 +139,7 @@
             </ScrollPane>
             <HBox alignment="TOP_CENTER" maxHeight="1.0">
                <children>
-                  <Label fx:id="all" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">
+                  <Label fx:id="all" onMouseClicked="#selectAll" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -149,7 +149,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <Label fx:id="from" stylesheets="@../stylesheets/overview.css" text="From">
+                  <Label fx:id="from" onMouseClicked="#selectFrom" stylesheets="@../stylesheets/overview.css" text="From">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -159,7 +159,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <Label fx:id="including" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css" text="Including">
+                  <Label fx:id="including" onMouseClicked="#selectIncluding" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css" text="Including">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
