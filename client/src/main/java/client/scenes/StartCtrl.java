@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.uicomponents.LanguageComboBox;
 import client.uicomponents.RecentlyVisitedCell;
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
@@ -49,14 +50,16 @@ public class StartCtrl implements Initializable {
     private final ConfigUtils utils;
     private final LanguageUtils languageUtils;
     private final MainCtrl mainCtrl;
+    private Config config;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl, Config config) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
         this.mainCtrl = mainCtrl;
         this.languageComboBox = new LanguageComboBox(languageUtils);
+        this.config = config;
     }
 
     private void openRecent(){
@@ -100,21 +103,19 @@ public class StartCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
         create.setText(textList.get("create"));
 //        createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
-//        joinEvent.setText(textList.get("joinEvent"));
-//        recentEvents.setText(textList.get("recentEvents"));
+        joinEvent.setText(textList.get("joinEvent"));
     }
 
     public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
+        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
         create.setText(textList.get("create"));
         createNewEvent.setText(textList.get("createNewEvent"));
         join.setText(textList.get("join"));
         joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
     }
 
     @Override
@@ -124,6 +125,17 @@ public class StartCtrl implements Initializable {
         listView.setItems(list);
         listView.setCellFactory(param -> new RecentlyVisitedCell());
         openRecent();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                languageUtils.setLang("nl");
+                break;
+            case "en":
+                languageUtils.setLang("en");
+                break;
+            default:
+                languageUtils.setLang("en");
+                break;
+        }
 //        languageComboBox = new LanguageComboBox(mainCtrl.getLanguageUtils());
         bottomHBox.getChildren().add(languageComboBox);
         this.create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
@@ -131,8 +143,9 @@ public class StartCtrl implements Initializable {
         this.createNewEvent.textProperty().bind(languageUtils.getBinding("start.createNewEventLabel"));
         this.joinEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
-//        this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
-//        switchToDutch();
+        // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
+
+        //switchToDutch();
         //switchToEnglish();
     }
 }

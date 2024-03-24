@@ -18,6 +18,7 @@ package client;
 import client.scenes.InvitationCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.StartCtrl;
+import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.scenes.OverviewCtrl;
 import client.utils.LanguageUtils;
@@ -42,6 +43,7 @@ public class InjectorModule implements Module {
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
         binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
+        binder.bind(Config.class).toInstance(createConfig());
     }
 
     private ConfigUtils createConfigUtils() {
@@ -58,4 +60,13 @@ public class InjectorModule implements Module {
             throw new RuntimeException(e);
         }
     }
+
+    private Config createConfig() {
+        try {
+            return new Config();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

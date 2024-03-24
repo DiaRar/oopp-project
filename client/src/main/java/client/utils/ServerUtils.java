@@ -24,8 +24,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import commons.Debt;
 import commons.Event;
 import commons.Participant;
+import commons.primary_keys.DebtPK;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -34,7 +36,7 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
 
-	private static final String SERVER = "http://localhost:8080/";
+	private static final String server = "http://localhost:8080/";
 
 	public void getQuotesTheHardWay() throws IOException, URISyntaxException {
 		var url = new URI("http://localhost:8080/api/quotes").toURL();
@@ -49,7 +51,7 @@ public class ServerUtils {
 	public Event getEvent(UUID eventId) {
 		return ClientBuilder
 				.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/" + eventId)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -58,7 +60,7 @@ public class ServerUtils {
 
 	public Event addEvent(Event event) {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -67,7 +69,7 @@ public class ServerUtils {
 
 	public List<Event> getEvents() {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -76,7 +78,7 @@ public class ServerUtils {
 
 	public Event updateEvent(UUID id, Event event) {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -85,7 +87,7 @@ public class ServerUtils {
 
 	public List<Participant> getParticipants() {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/participants/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -94,7 +96,7 @@ public class ServerUtils {
 
 	public Event addParticipant(Participant participant, UUID eventID) {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/" + eventID)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -104,7 +106,7 @@ public class ServerUtils {
 	public Participant getParticipant(UUID id) {
 		return ClientBuilder
 				.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
@@ -113,10 +115,38 @@ public class ServerUtils {
 
 	public Participant updateParticipant(Participant participant, UUID id) {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+	}
+
+	public List<Debt> getDebts(Event event) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(server)
+				.path("/api/events/" + event.getId() + "/debts")
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.get(new GenericType<List<Debt>>() {});
+	}
+
+	public Debt updateDebt(Event event, DebtPK debtPK, Debt newDebt) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(server)
+				.path("/api/events/" + event.getId() + "/debts/" + debtPK)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
+	}
+
+	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
+		return ClientBuilder
+				.newClient(new ClientConfig())
+				.target(server)
+				.path("/api/events/" + eventId + "/debts/" + debtId)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.delete(Debt.class);
 	}
 }
