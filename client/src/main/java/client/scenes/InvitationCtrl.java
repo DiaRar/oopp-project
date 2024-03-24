@@ -19,6 +19,8 @@ public class InvitationCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
+
+    private final Config config;
     @FXML
     private Label name;
     @FXML
@@ -37,10 +39,26 @@ public class InvitationCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         name.setText("New Year Party");
         inviteCode.setText("AC74ED");
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                switchToDutch();
+            case "en":
+                switchToEnglish();
+            default:
+                switchToEnglish();
+        }
     }
 
     public void sendInvites() {
         // TODO
+    }
+
+    public void switchToDutch() {
+        //TODO
+    }
+
+    public void switchToEnglish() {
+        //TODO
     }
 
     public void cancel() {

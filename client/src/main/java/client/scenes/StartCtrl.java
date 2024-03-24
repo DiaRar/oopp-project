@@ -45,6 +45,8 @@ public class StartCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private Config config;
 
+    private final Config config;
+
     @Inject
     public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl, Config config) {
         this.utils = configUtils;
