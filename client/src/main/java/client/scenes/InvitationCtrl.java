@@ -20,7 +20,6 @@ public class InvitationCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
 
-    private final Config config;
     @FXML
     private Label name;
     @FXML

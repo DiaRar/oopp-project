@@ -16,7 +16,7 @@ public class ParticipantTest {
     Event event;
     @BeforeEach
     public void setup() {
-        this.serverUtils = new ServerUtils("http://localhost:8080/");
+        this.serverUtils = new ServerUtils();
         this.event = new Event("Test");
     }
 

@@ -2,7 +2,6 @@ package client.utils;
 
 import commons.Event;
 import commons.Participant;
-import org.checkerframework.checker.regex.qual.Regex;
 
 import java.io.*;
 import java.util.*;

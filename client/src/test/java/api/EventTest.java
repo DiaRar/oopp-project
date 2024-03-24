@@ -25,7 +25,7 @@ public class EventTest {
     public void setup() {
         event = new Event("Test");
         participant = new Participant("John", "j.d@email.com");
-        serverUtils = new ServerUtils("http://localhost:8080/");
+        serverUtils = new ServerUtils();
     }
 
     //COMMENTED INTEGRATION TESTS AS PIPELINE CONFIGURATION RUNS THEM WITHOUT SERVER RUNNING, CAUSING A FAIL

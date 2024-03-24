@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
     private final ServerUtils server;
-    private final Config config;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
