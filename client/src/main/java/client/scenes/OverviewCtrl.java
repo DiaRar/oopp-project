@@ -64,6 +64,7 @@ public class OverviewCtrl {
     private ObservableList<Expense> expenses;
     private FilteredList<Expense> filteredExpenses;
     private ObservableList<Participant> participants;
+    private Participant currentParticipant;
     @FXML
     private Label title;
     @FXML
@@ -119,7 +120,8 @@ public class OverviewCtrl {
         filteredExpenses.addListener((ListChangeListener<? super Expense>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    list.getChildren().addAll(change.getFrom(), change.getAddedSubList().stream().map(expense -> expenseComponent(expense)).toList());
+                    list.getChildren().addAll(change.getFrom(), change.getAddedSubList().stream()
+                            .map(this::expenseComponent).toList());
                     System.out.println("Added");
                 } else if (change.wasRemoved()) {
                     System.out.println("Removed");
@@ -265,28 +267,23 @@ public class OverviewCtrl {
         mainCtrl.showStatistics();
     }
 
-    public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewDutch.csv"));
+ public void switchLanguage(Map<String, String> textMap) {
         title.setText(textMap.get("title"));
         sendInvites.setText(textMap.get("sendInvites"));
-        expensesLabel.setText(textMap.get("expensesLabel"));
         addExpense.setText(textMap.get("addExpense"));
         settleDebts.setText(textMap.get("settleDebts"));
         all.setText(textMap.get("all"));
         from.setText(textMap.get("from"));
         including.setText(textMap.get("including"));
     }
+    public void switchToDutch() {
+        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewDutch.csv"));
+        switchLanguage(textMap);
+    }
 
     public void switchToEnglish() {
         Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
-        title.setText(textMap.get("title"));
-        sendInvites.setText(textMap.get("sendInvites"));
-        expensesLabel.setText(textMap.get("expensesLabel"));
-        addExpense.setText(textMap.get("addExpense"));
-        settleDebts.setText(textMap.get("settleDebts"));
-        all.setText(textMap.get("all"));
-        from.setText(textMap.get("from"));
-        including.setText(textMap.get("including"));
+        switchLanguage(textMap);
     }
 
 }
