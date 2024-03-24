@@ -161,8 +161,13 @@ public class OverviewCtrl {
     }
 
     public void openInvitation() {
-        System.out.println(("Invite people"));
+        System.out.println("Invite people");
         mainCtrl.showInvitation();
+    }
+
+    public void openStatistics() {
+        System.out.println("Statistics");
+        mainCtrl.showStatistics();
     }
 
     public void switchToDutch() {
