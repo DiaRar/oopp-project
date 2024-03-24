@@ -126,8 +126,12 @@ public class StartCtrl implements Initializable {
         openRecent();
 //        languageComboBox = new LanguageComboBox(mainCtrl.getLanguageUtils());
         bottomHBox.getChildren().add(languageComboBox);
-        create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
-        join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
+        this.create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
+        this.join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
+        this.createNewEvent.textProperty().bind(languageUtils.getBinding("start.createNewEventLabel"));
+        this.joinEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
+        // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
+//        this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
 //        switchToDutch();
         //switchToEnglish();
     }

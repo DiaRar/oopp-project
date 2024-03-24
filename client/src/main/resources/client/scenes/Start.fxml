@@ -34,12 +34,12 @@
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Button>
-            <Label text="Create New Event">
+            <Label fx:id="createNewEvent" text="Create New Event">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Join Event" GridPane.rowIndex="2">
+            <Label fx:id="joinEvent" text="Join Event" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
