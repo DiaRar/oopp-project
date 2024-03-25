@@ -94,13 +94,13 @@ public class ServerUtils {
 				.get(new GenericType<List<Participant>>() {});
 	}
 
-	public Event addParticipant(Participant participant, UUID eventID) {
+	public Participant addParticipant(Participant participant, UUID eventID) {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(SERVER)
-				.path("/api/events/" + eventID)
+				.path("/api/events/" + eventID + "/participants/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
-				.post(Entity.entity(participant, APPLICATION_JSON), Event.class);
+				.post(Entity.entity(participant, APPLICATION_JSON), Participant.class);
 	}
 
 	public Participant getParticipant(UUID id) {

@@ -90,7 +90,7 @@ public class MainCtrl {
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
     }
 
-    public void callAddParticipantDialog(Event event) {
+    public void callAddParticipantDialog() {
         dialog = new Stage();
         contactDetailsCtrl.setParentEvent(event);
         dialog.initModality(Modality.APPLICATION_MODAL);

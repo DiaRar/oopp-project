@@ -245,7 +245,7 @@ public class OverviewCtrl {
     }
 
     public void addParticipantAction() {
-        mainCtrl.callAddParticipantDialog(event);
+        mainCtrl.callAddParticipantDialog();
     }
     public void openAddExpense() {
         System.out.println("Add expense");

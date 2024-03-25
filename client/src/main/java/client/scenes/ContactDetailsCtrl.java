@@ -1,7 +1,9 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.BankAccount;
 import commons.Event;
+import commons.Participant;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -53,6 +55,9 @@ public class ContactDetailsCtrl {
         String iban = ibanField.getText();
         String bic = bicField.getText();
         clearText();
+        Participant newParticipant = new Participant(name, email, new BankAccount(iban, bic));
+        newParticipant.setEvent(parentEvent);
+        server.addParticipant(newParticipant, parentEvent.getId());
         System.out.println(List.of(name, email, iban, bic));
         mainCtrl.closeDialog();
     }
