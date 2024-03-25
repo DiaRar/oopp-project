@@ -1,4 +1,4 @@
-package server.api;
+package server.api.rest;
 
 import commons.Debt;
 import commons.primary_keys.DebtPK;

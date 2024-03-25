@@ -2,25 +2,21 @@
 GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/participants/
 Accept: application/json
 
-### GET participants by id
-GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/participants/d1f2f51a-0b24-4879-8e44-193072ae13ef
-
 ### ADD a PARTICIPANT to an EVENT
 POST http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/participants/
 Content-Type: application/json
 
 {
-  "nickname": "diaco",
-  "bankAccount": {
-    "iban": "10dsdsda2",
-    "bic": "120"
-  }
+  "nickname": "ewaen"
 }
 
 ### UPDATES a PARTICIPANT
-PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/participants/e3ec153a-e2ec-4b7e-b970-8046f2729e4f
+PUT http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/participants/d1f2f51a-0b24-4879-8e44-193072ae13ef
 Content-Type: application/json
 
 {
   "nickname": "rar"
 }
+
+### DELETES a participant
+DELETE http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/participants/07ca37a9-81c2-47e0-a74b-b215eb5a3171

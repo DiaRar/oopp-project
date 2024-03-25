@@ -1,13 +1,15 @@
-package server.api;
+package server.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.Expense;
 import commons.views.View;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.ExpenseService;
+import server.services.WebSocketUpdateService;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -17,9 +19,12 @@ import java.util.UUID;
 public class ExpensesController {
 
     private final ExpenseService expenseService;
+    private final WebSocketUpdateService updateService;
 
-    public ExpensesController(ExpenseService expenseService) {
+
+    public ExpensesController(ExpenseService expenseService, WebSocketUpdateService updateService) {
         this.expenseService = expenseService;
+        this.updateService = updateService;
     }
 
     @GetMapping(path = {"", "/"})
@@ -35,6 +40,7 @@ public class ExpensesController {
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
         Expense saved = expenseService.save(eventId, expense);
+        updateService.sendAddedExpense(eventId, saved);
         return ResponseEntity.ok(saved);
     }
 
@@ -52,14 +58,17 @@ public class ExpensesController {
                                           @RequestBody Expense expense)
             throws EntityNotFoundException, IllegalArgumentException {
         Expense updated = expenseService.update(eventId, expenseId, expense);
+        updateService.sendUpdatedExpense(eventId, updated);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{expenseId}")
+    @Transactional
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Void> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
             throws EntityNotFoundException {
         expenseService.delete(expenseId);
+        updateService.sendRemovedExpense(eventId, expenseId);
         return ResponseEntity.ok().build();
     }
 }

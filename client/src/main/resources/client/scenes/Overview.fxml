@@ -5,9 +5,9 @@
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -96,11 +96,11 @@
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin>
             </Button>
-            <ChoiceBox fx:id="choiceBox" onAction="#choiceChanged" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
+            <ComboBox fx:id="comboBox" onAction="#choiceChanged" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
                <GridPane.margin>
-                  <Insets bottom="5.0" right="10.0" top="5.0" />
+                  <Insets bottom="5.0" right="10.0" />
                </GridPane.margin>
-            </ChoiceBox>
+            </ComboBox>
          </children>
       </GridPane>
    </top>
@@ -134,21 +134,21 @@
    <center>
       <StackPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <BorderPane>
+               <center>
+                  <ListView fx:id="list" BorderPane.alignment="CENTER" />
+               </center>
+               <styleClass>
+                  <String fx:value="bg" />
+                  <String fx:value="border" />
+               </styleClass>
                <StackPane.margin>
                   <Insets top="13.0" />
                </StackPane.margin>
-               <content>
-                  <VBox fx:id="list" spacing="10.0" styleClass="bg" />
-               </content>
                <padding>
                   <Insets top="20.0" />
                </padding>
-               <styleClass>
-                  <String fx:value="border" />
-                  <String fx:value="bg" />
-               </styleClass>
-            </ScrollPane>
+            </BorderPane>
             <HBox alignment="TOP_CENTER" maxHeight="1.0">
                <children>
                   <Label fx:id="all" onMouseClicked="#selectAll" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">

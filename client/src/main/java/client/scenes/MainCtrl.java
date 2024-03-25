@@ -1,8 +1,12 @@
 package client.scenes;
 
 import client.utils.LanguageUtils;
+import client.implementations.WSSessionHandler;
 import client.utils.ServerUtils;
+import client.utils.WebSocketUtils;
 import commons.Event;
+import commons.Expense;
+import commons.Participant;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -11,6 +15,7 @@ import javafx.util.Pair;
 import com.google.inject.Inject;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class MainCtrl {
     private Stage primaryStage;
@@ -42,14 +47,16 @@ public class MainCtrl {
 
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
+    private WebSocketUtils webSocketUtils;
 
     private double screenWidth;
     private double screenHeight;
 
     @Inject
-    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils) {
+    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils) {
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
+        this.webSocketUtils = webSocketUtils;
     }
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
@@ -97,13 +104,38 @@ public class MainCtrl {
     }
 
     public void showOverviewStart() {
+        try {
+            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws", new WSSessionHandler(this));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         saveDimensions();
         showOverview();
-        overviewCtrl.clear();
+//        overviewCtrl.clear();
         overviewCtrl.startup();
         restoreDimensions();
     }
-
+    public void eventNameChange(Event event) {
+        overviewCtrl.updateEventName(event.getName());
+    }
+    public void addParticipant(Participant participant) {
+        overviewCtrl.addParticipant(participant);
+    }
+    public void removeParticipant(Participant participant) {
+        overviewCtrl.removeParticipant(participant);
+    }
+    public void updateParticipant(Participant participant) {
+        overviewCtrl.updateParticipant(participant);
+    }
+    public void addExpense(Expense expense) {
+        overviewCtrl.addExpense(expense);
+    }
+    public void removeExpense(Expense expense) {
+        overviewCtrl.removeExpense(expense);
+    }
+    public void updateExpense(Expense expense) {
+        overviewCtrl.updateExpense(expense);
+    }
     public void showAddExpense() {
         saveDimensions();
         primaryStage.setTitle("Add Expense");

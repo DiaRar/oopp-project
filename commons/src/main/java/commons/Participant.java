@@ -22,7 +22,7 @@ public class Participant {
     private Event event;
 
     //for object mapper
-    protected Participant() {
+    public Participant() {
 
     }
     public Participant(String nickname, String email) {

@@ -1,4 +1,4 @@
-package server.api;
+package server.api.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,19 +8,24 @@ import org.junit.jupiter.api.Test;
 
 import commons.Event;
 
+import org.mockito.Mock;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import server.api.rest.EventController;
 import server.repositories.TestEventRepository;
 import server.services.EventService;
+import server.services.WebSocketUpdateService;
 
 public class EventControllerTest {
     private int id;
     private TestEventRepository repo;
     private EventController eventController;
-
+    @Mock
+    private SimpMessagingTemplate messagingTemplate;
     @BeforeEach
     public void setup() {
         id = 1;
         repo = new TestEventRepository();
-        eventController = new EventController(new EventService(repo));
+        eventController = new EventController(new EventService(repo), new WebSocketUpdateService(messagingTemplate));
     }
 
     @Test

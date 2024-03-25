@@ -1,4 +1,4 @@
-package server.api;
+package server.api.rest;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
