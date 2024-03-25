@@ -92,6 +92,7 @@ public class MainCtrl {
 
     public void callAddParticipantDialog() {
         dialog = new Stage();
+        contactDetailsCtrl.setAddMode();
         contactDetailsCtrl.setParentEvent(event);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);

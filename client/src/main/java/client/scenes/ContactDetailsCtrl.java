@@ -4,9 +4,10 @@ import client.utils.ServerUtils;
 import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -26,7 +27,7 @@ public class ContactDetailsCtrl {
     @FXML
     private TextField bicField;
     @FXML
-    private Label addNewParticipantLabel;
+    private Label topLabel;
     @FXML
     private Label nameLabel;
     @FXML
@@ -39,8 +40,14 @@ public class ContactDetailsCtrl {
     private Button addParticipantButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private ComboBox<String> editSelectorComboBox;
 
     private Event parentEvent;
+
+    // Will be used to bind text for translations
+    private StringProperty actionBtnText;
+    private StringProperty topLabelText;
 
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -64,6 +71,18 @@ public class ContactDetailsCtrl {
 
     public void setParentEvent(Event event) {
         this.parentEvent = event;
+    }
+
+    public void setAddMode() {
+        this.editSelectorComboBox.setVisible(false);
+        this.topLabel.setText("Add New Participant");
+        this.addParticipantButton.setText("Add Participant");
+    }
+
+    public void setEditMode() {
+        this.editSelectorComboBox.setVisible(true);
+        this.topLabel.setText("Edit Participant");
+        this.addParticipantButton.setText("Save");
     }
 
     public void cancel() {
