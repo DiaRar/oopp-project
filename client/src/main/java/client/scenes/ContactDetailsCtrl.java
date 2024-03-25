@@ -4,6 +4,8 @@ import client.utils.ServerUtils;
 import commons.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
@@ -21,8 +23,21 @@ public class ContactDetailsCtrl {
     private TextField ibanField;
     @FXML
     private TextField bicField;
+    @FXML
+    private Label addNewParticipantLabel;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label emailLabel;
+    @FXML
+    private Label ibanLabel;
+    @FXML
+    private Label bicLabel;
+    @FXML
+    private Button addParticipantButton;
+    @FXML
+    private Button cancelButton;
 
-    private Scene previousScene;
     private Event parentEvent;
 
     @Inject
@@ -37,12 +52,25 @@ public class ContactDetailsCtrl {
         String email = emailField.getText();
         String iban = ibanField.getText();
         String bic = bicField.getText();
+        clearText();
         System.out.println(List.of(name, email, iban, bic));
         mainCtrl.closeDialog();
     }
 
     public void setParentEvent(Event event) {
         this.parentEvent = event;
+    }
+
+    public void cancel() {
+        clearText();
+        mainCtrl.closeDialog();
+    }
+
+    private void clearText() {
+        nameField.setText("");
+        emailField.setText("");
+        ibanField.setText("");
+        bicField.setText("");
     }
 
 }
