@@ -91,13 +91,23 @@ public class MainCtrl {
     }
 
     public void callAddParticipantDialog() {
-        dialog = new Stage();
         contactDetailsCtrl.setAddMode();
         contactDetailsCtrl.setParentEvent(event);
+        openDialog("Add New Participant", contactDetailsScene);
+    }
+
+    public void callEditParticipantDialog() {
+        contactDetailsCtrl.setEditMode();
+        contactDetailsCtrl.setParentEvent(event);
+        openDialog("Edit Participant", contactDetailsScene);
+    }
+
+    private void openDialog(String title, Scene dialogScene) {
+        dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
-        dialog.setScene(contactDetailsScene);
-        dialog.setTitle("Add New Participant");
+        dialog.setScene(dialogScene);
+        dialog.setTitle(title);
         dialog.show();
     }
 
