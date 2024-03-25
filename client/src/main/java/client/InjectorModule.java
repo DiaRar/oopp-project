@@ -35,6 +35,7 @@ public class InjectorModule implements Module {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StartCtrl.class).in(Scopes.SINGLETON);
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(ContactDetailsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StatisticsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());

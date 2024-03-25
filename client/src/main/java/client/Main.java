@@ -38,8 +38,9 @@ public class Main extends Application {
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
         var statistics = FXML.load(StatisticsCtrl.class, "client", "scenes", "Statistics.fxml");
         var invitation = FXML.load(InvitationCtrl.class, "client", "scenes", "Invitation.fxml");
+        var contactDetails = FXML.load(ContactDetailsCtrl.class, "client", "scenes", "ContactDetails.fxml");
         var debts = FXML.load(DebtsCtrl.class, "client", "scenes", "Debts.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, debts, new ServerUtils());
+        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, contactDetails, debts, new ServerUtils());
     }
 }

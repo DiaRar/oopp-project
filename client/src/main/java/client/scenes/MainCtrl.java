@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -18,6 +19,11 @@ public class MainCtrl {
 
     private AddExpenseCtrl addExpenseCtrl;
     private Scene addExpenseScene;
+
+    private ContactDetailsCtrl contactDetailsCtrl;
+    private Scene contactDetailsScene;
+
+    private Stage dialog;
 
     private ServerUtils serverUtils;
 
@@ -34,9 +40,10 @@ public class MainCtrl {
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
-                     Pair<InvitationCtrl, Parent> invitation,
+                     Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails, 
                      Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils) {
         this.serverUtils = serverUtils;
+
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -46,6 +53,8 @@ public class MainCtrl {
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpenseScene = new Scene(addExpense.getValue());
 
+        this.contactDetailsCtrl = contactDetails.getKey();
+        this.contactDetailsScene = new Scene(contactDetails.getValue());
         this.debtsCtrl = debts.getKey();
         this.debtsScene = new Scene(debts.getValue());
 
@@ -79,6 +88,22 @@ public class MainCtrl {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+    }
+
+    public void callAddParticipantDialog(Event event) {
+        dialog = new Stage();
+        contactDetailsCtrl.setParentEvent(event);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        dialog.setScene(contactDetailsScene);
+        dialog.setTitle("Add New Participant");
+        dialog.show();
+    }
+
+    public void closeDialog() {
+        if (dialog != null) {
+            dialog.close();
+        }
     }
 
     public void showDebts() {
