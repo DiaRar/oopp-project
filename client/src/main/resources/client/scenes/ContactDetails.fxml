@@ -21,7 +21,7 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="editSelectorComboBox" prefWidth="150.0" visible="false" />
+                  <ComboBox fx:id="editSelectorComboBox" onAction="#selectEditParticipant" prefWidth="150.0" visible="false" />
                </children>
             </HBox>
             <Label fx:id="nameLabel" text="Name" />
@@ -35,7 +35,7 @@
             <HBox alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="580.0" spacing="10.0">
                <children>
                   <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                  <Button fx:id="addParticipantButton" alignment="CENTER" mnemonicParsing="false" onAction="#submitParticipant" text="Add Participant" />
+                  <Button fx:id="addParticipantButton" alignment="CENTER" mnemonicParsing="false" onAction="#confirmAction" text="Add Participant" />
                </children>
                <padding>
                   <Insets top="5.0" />
