@@ -138,7 +138,7 @@ public class StartCtrl implements Initializable {
                 recentsList.getItems().remove(event);
                 return;
             }
-            mainCtrl.showOverview();
+            mainCtrl.showOverviewStart();
         });
 
         return borderPane;
