@@ -103,20 +103,20 @@ public class ServerUtils {
 				.post(Entity.entity(participant, APPLICATION_JSON), Participant.class);
 	}
 
-	public Participant getParticipant(UUID id) {
+	public Participant getParticipant(UUID eventId, UUID id) {
 		return ClientBuilder
 				.newClient(new ClientConfig())
 				.target(SERVER)
-				.path("/api/participants/" + id)
+				.path("/api/events/" + eventId + "/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.get(Participant.class);
 	}
 
-	public Participant updateParticipant(Participant participant, UUID id) {
+	public Participant updateParticipant(Participant participant, UUID eventId, UUID id) {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(SERVER)
-				.path("/api/participants/" + id)
+				.path("/api/events/" + eventId + "/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);

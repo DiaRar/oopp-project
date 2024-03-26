@@ -4,7 +4,6 @@ import client.utils.ServerUtils;
 import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
-import javafx.beans.binding.ListBinding;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +14,6 @@ import javafx.util.Callback;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ContactDetailsCtrl implements Initializable {
@@ -49,6 +47,8 @@ public class ContactDetailsCtrl implements Initializable {
 
     private Event parentEvent;
     private ObservableList<Participant> participants;
+    private Participant toBeUpdatedParticipant;
+    private boolean editMode;
 
     // Will be used to bind text for translations
     private StringProperty actionBtnText;
@@ -62,17 +62,26 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void confirmAction() {
-        System.out.println("Created Participant"); // To print that it is updated in case of edit
+        System.out.println(editMode ? "Edited Participant" : "Created Participant");
+        Participant newParticipant = this.createParticipantFromFields();
+        this.clearText();
+        newParticipant.setEvent(parentEvent);
+        if (!editMode) { // add mode
+            server.addParticipant(newParticipant, parentEvent.getId());
+        } else { // edit mode
+            System.out.println(toBeUpdatedParticipant);
+            server.updateParticipant(newParticipant, parentEvent.getId(), toBeUpdatedParticipant.getId());
+        }
+        System.out.println(newParticipant);
+        mainCtrl.closeDialog();
+    }
+
+    private Participant createParticipantFromFields() {
         String name = nameField.getText();
         String email = emailField.getText();
         String iban = ibanField.getText();
         String bic = bicField.getText();
-        clearText();
-        Participant newParticipant = new Participant(name, email, new BankAccount(iban, bic));
-        newParticipant.setEvent(parentEvent);
-        server.addParticipant(newParticipant, parentEvent.getId());
-        System.out.println(List.of(name, email, iban, bic));
-        mainCtrl.closeDialog();
+        return new Participant(name, email, new BankAccount(iban, bic));
     }
 
     public void setParentEvent(Event event) {
@@ -81,6 +90,7 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void setAddMode() {
+        this.editMode = false;
         this.editSelectorComboBox.setVisible(false);
         this.setFieldsDisabled(false);
         this.topLabel.setText("Add New Participant");
@@ -88,6 +98,7 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void setEditMode() {
+        this.editMode = true;
         this.editSelectorComboBox.setVisible(true);
         this.setFieldsDisabled(true);
         this.topLabel.setText("Edit Participant");
@@ -100,6 +111,8 @@ public class ContactDetailsCtrl implements Initializable {
             setFieldsDisabled(true);
             return;
         }
+        selected = server.getParticipant(parentEvent.getId(), selected.getId());
+        this.toBeUpdatedParticipant = selected;
         setFieldsDisabled(false);
         setFieldData(selected);
     }
