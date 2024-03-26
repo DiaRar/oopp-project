@@ -17,6 +17,7 @@ package client.scenes;
 
 import client.utils.Config;
 import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
@@ -26,6 +27,7 @@ import commons.Participant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -40,16 +42,19 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.io.File;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.Map;
 
-public class OverviewCtrl {
+public class OverviewCtrl implements Initializable {
 
     private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final LanguageUtils languageUtils;
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
@@ -81,10 +86,11 @@ public class OverviewCtrl {
     @FXML
     private Button settleDebts;
     @Inject
-    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config) {
+    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
+        this.languageUtils = languageUtils;
     }
 
     public BorderPane expenseComponent(Expense expense) {
@@ -203,4 +209,15 @@ public class OverviewCtrl {
         including.setText(textMap.get("including"));
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+//        this.title.textProperty().bind(languageUtils.getBinding("overview.titleLabel"));
+//        this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
+//        this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
+//        this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
+//        this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
+//        this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
+//        this.from.textProperty().bind(languageUtils.getBinding("overview.fromLabel"));
+//        this.including.textProperty().bind(languageUtils.getBinding("overview.includingLabel"));
+    }
 }

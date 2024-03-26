@@ -70,12 +70,11 @@ public class StartCtrl implements Initializable {
      * opens overview with new event
      */
     public void create() {
-//        Event event = new Event();
-//        event.setName(createField.getText());
-//        Event retEvent = serverUtils.addEvent(event);
-//        mainCtrl.setEvent(retEvent.getId());
-//        mainCtrl.showOverview();
-//        switchToDutch();
+        Event event = new Event();
+        event.setName(createField.getText());
+        Event retEvent = serverUtils.addEvent(event);
+        mainCtrl.setEvent(retEvent.getId());
+        mainCtrl.showOverview();
     }
 
     /**
