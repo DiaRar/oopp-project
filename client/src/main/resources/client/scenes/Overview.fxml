@@ -91,17 +91,16 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </GridPane.margin>
-            </Button>
             <ChoiceBox fx:id="choiceBox" onAction="#choiceChanged" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" right="10.0" top="5.0" />
                </GridPane.margin>
             </ChoiceBox>
+            <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" />
+         </BorderPane.margin>
       </GridPane>
    </top>
    <padding>
@@ -159,7 +158,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <Label fx:id="including" onMouseClicked="#selectIncluding" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css" text="Including">
+                  <Label fx:id="including" onMouseClicked="#selectIncluding" stylesheets="@../stylesheets/overview.css" text="Including">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -169,6 +168,16 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
+                  <ChoiceBox fx:id="tagChoice" prefWidth="150.0" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css">
+                     <styleClass>
+                        <String fx:value="border" />
+                        <String fx:value="btn" />
+                        <String fx:value="bg" />
+                     </styleClass>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </ChoiceBox>
                </children>
             </HBox>
          </children>

@@ -85,6 +85,8 @@ public class OverviewCtrl {
     private Button addExpense;
     @FXML
     private Button settleDebts;
+    @FXML
+    private ChoiceBox<String> tagChoice;
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
