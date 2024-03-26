@@ -1,9 +1,14 @@
 package api;
 
+import client.utils.Config;
 import client.utils.ServerUtils;
 import commons.Event;
 
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.File;
+import java.io.IOException;
+
 /*
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
@@ -15,8 +20,8 @@ public class ParticipantTest {
     ServerUtils serverUtils;
     Event event;
     @BeforeEach
-    public void setup() {
-        this.serverUtils = new ServerUtils();
+    public void setup() throws IOException {
+        this.serverUtils = new ServerUtils(Config.read(new File("client/src/main/resources/config/config.properties")));
         this.event = new Event("Test");
     }
 

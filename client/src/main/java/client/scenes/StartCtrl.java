@@ -144,8 +144,5 @@ public class StartCtrl implements Initializable {
         this.joinEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
         // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
-
-        //switchToDutch();
-        //switchToEnglish();
     }
 }

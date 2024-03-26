@@ -34,10 +34,17 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
+import javax.inject.Inject;
+
 public class ServerUtils {
 
-	private static final String server = "http://localhost:8080/";
-
+	private final String server;
+	private final Config config;
+	@Inject
+	public ServerUtils(Config config) throws IOException {
+		this.config = config;
+		this.server = config.getServer();
+	}
 	public void getQuotesTheHardWay() throws IOException, URISyntaxException {
 		var url = new URI("http://localhost:8080/api/quotes").toURL();
 		var is = url.openConnection().getInputStream();

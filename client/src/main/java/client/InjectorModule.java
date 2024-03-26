@@ -22,6 +22,7 @@ import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.scenes.OverviewCtrl;
 import client.utils.LanguageUtils;
+import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -29,6 +30,7 @@ import com.google.inject.Scopes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -42,8 +44,9 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
-        binder.bind(LanguageUtils.class).toInstance(new LanguageUtils());
         binder.bind(Config.class).toInstance(createConfig());
+        binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
+        binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {
@@ -63,8 +66,8 @@ public class InjectorModule implements Module {
 
     private Config createConfig() {
         try {
-            return new Config();
-        } catch (FileNotFoundException e) {
+            return Config.read(new File("client/src/main/resources/config/config.properties"));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

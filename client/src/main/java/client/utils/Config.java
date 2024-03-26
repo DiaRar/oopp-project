@@ -1,7 +1,6 @@
 package client.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class Config {
@@ -13,12 +12,6 @@ public class Config {
         this.locale = locale;
         this.server = server;
         this.prefferedCurrency = prefferedCurrency;
-    }
-    public Config() throws FileNotFoundException {
-        Config config = read(new File("client/src/main/resources/config/config.properties"));
-        this.locale = config.getLocale();
-        this.server = config.getServer();
-        this.prefferedCurrency = config.getPrefferedCurrency();
     }
 
     public Locale getLocale() {
@@ -59,22 +52,28 @@ public class Config {
         return Objects.hash(getLocale(), getServer(), getPrefferedCurrency());
     }
 
-    public static Config read(File file) throws FileNotFoundException {
-        Scanner scanner = new Scanner(file);
-        Currency prefferedCurrency;
-        Locale locale;
-        Map<String, String> stringMap = ConfigUtils.readFile(file, "=");
+    public static Config read(File file) throws IOException {
+        Properties prop = new Properties();
+        Reader reader = new BufferedReader(new FileReader(file));
+        prop.load(reader);
+        String language = prop.getProperty("language");
+        String region = prop.getProperty("country");
+        Locale locale = new Locale.Builder().setLanguage(language).setRegion(region).build();
+        return new Config(locale, prop.getProperty("server"), Currency.getInstance(prop.getProperty("currency")));
+    }
+
+    public void save() throws FileNotFoundException {
         try {
-            locale = new Locale.Builder().setLanguage(stringMap.get("language")).setRegion(stringMap.get("country")).build();
+            OutputStream outputStream = new FileOutputStream(new File("client/src/main/resources/config/config.properties"));
+            Properties properties = new Properties();
+            properties.setProperty("server", server);
+            properties.setProperty("language", locale.getLanguage());
+            properties.setProperty("country", locale.getCountry());
+            properties.setProperty("currency", prefferedCurrency.getCurrencyCode());
+            properties.store(outputStream, "");
         } catch (Exception e) {
-            throw new IllegalArgumentException("There is no such language or region!");
+            throw new FileNotFoundException();
         }
-        String server = stringMap.get("server");
-        try {
-            prefferedCurrency = Currency.getInstance(stringMap.get("currency"));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("That currency does not exist!");
-        }
-        return new Config(locale, server, prefferedCurrency);
+
     }
 }

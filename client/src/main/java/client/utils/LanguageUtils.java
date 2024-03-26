@@ -4,6 +4,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import javax.inject.Inject;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -12,12 +13,11 @@ public class LanguageUtils {
     private String lang;
     private final ObjectProperty<ResourceBundle> resourceBundleProp = new SimpleObjectProperty<>();
 
-    public LanguageUtils() {
-        this("nl");
-    }
-
-    public LanguageUtils(String defaultLang) {
-        this.setLang(defaultLang);
+    private final Config config;
+    @Inject
+    public LanguageUtils(Config config) {
+        this.config = config;
+        this.setLang(config.getLocale().getLanguage());
     }
 
     public final ObjectProperty<ResourceBundle> resourceBundleProperty() {
@@ -49,6 +49,13 @@ public class LanguageUtils {
     public void setLang(String lang) {
         this.lang = lang;
         ResourceBundle newLang = ResourceBundle.getBundle("config.lang", Locale.forLanguageTag(lang));
+        Locale locale = new Locale.Builder().setLanguage(lang).setRegion(config.getLocale().getCountry()).build();
+        this.config.setLocale(locale);
+        try {
+            config.save();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         setResourceBundleProp(newLang);
         System.out.println("success!");
     }

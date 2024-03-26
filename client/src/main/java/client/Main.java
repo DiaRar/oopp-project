@@ -41,6 +41,7 @@ public class Main extends Application {
         var debts = FXML.load(DebtsCtrl.class, "client", "scenes", "Debts.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
         var languageUtils = INJECTOR.getInstance(LanguageUtils.class);
-        mc.init(primaryStage, startScreen, overview, addExpense, invitation, debts, new ServerUtils(), languageUtils);
+        var serverUtils = INJECTOR.getInstance(ServerUtils.class);
+        mc.init(primaryStage, startScreen, overview, addExpense, invitation, debts, serverUtils, languageUtils);
     }
 }
