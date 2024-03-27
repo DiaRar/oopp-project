@@ -8,6 +8,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 public class MainCtrl {
@@ -38,12 +39,18 @@ public class MainCtrl {
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
 
+    private double screenWidth;
+    private double screenHeight;
+
+    @Inject
+    public MainCtrl(ServerUtils serverUtils) {
+        this.serverUtils = serverUtils;
+    }
+
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
-                     Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails, 
-                     Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils) {
-        this.serverUtils = serverUtils;
-
+                     Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails,
+                     Pair<DebtsCtrl, Parent> debts) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -69,28 +76,37 @@ public class MainCtrl {
     }
 
     public void showStart() {
+        saveDimensions();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
+        if (event != null) restoreDimensions();
     }
 
     public void showOverview() {
+        saveDimensions();
         primaryStage.setTitle("Event Overview");
         primaryStage.setScene(overviewScene);
+        restoreDimensions();
     }
 
     public void showOverviewStart() {
+        saveDimensions();
         showOverview();
         overviewCtrl.clear();
         overviewCtrl.startup();
+        restoreDimensions();
     }
 
     public void showAddExpense() {
+        saveDimensions();
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+        restoreDimensions();
     }
 
     public void callAddParticipantDialog(Event event) {
+        saveDimensions();
         dialog = new Stage();
         contactDetailsCtrl.setParentEvent(event);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -98,6 +114,7 @@ public class MainCtrl {
         dialog.setScene(contactDetailsScene);
         dialog.setTitle("Add New Participant");
         dialog.show();
+        restoreDimensions();
     }
 
     public void closeDialog() {
@@ -107,22 +124,28 @@ public class MainCtrl {
     }
 
     public void showDebts() {
+        saveDimensions();
         primaryStage.setTitle("Open Debts");
         primaryStage.setScene(debtsScene);
         debtsCtrl.refresh();
         // TODO pass the current event as parameter
+        restoreDimensions();
     }
 
     public void showInvitation() {
+        saveDimensions();
         primaryStage.setTitle("Invite People");
         primaryStage.setScene(invitationScene);
         invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
+        restoreDimensions();
     }
 
     public void showStatistics() {
+        saveDimensions();
         primaryStage.setTitle("Statistics");
         primaryStage.setScene(statisticsScene);
         statisticsScene.setOnKeyPressed(e -> statisticsCtrl.keyPressed(e));
+        restoreDimensions();
     }
 
     public Event getEvent() {
@@ -132,6 +155,16 @@ public class MainCtrl {
     public void setEvent(UUID uuid) {
         if (this.event != null && this.event.getId().equals(uuid)) return;
         this.event = serverUtils.getEvent(uuid);
+    }
+
+    public void saveDimensions() {
+        screenWidth = primaryStage.getWidth();
+        screenHeight = primaryStage.getHeight();
+    }
+
+    public void restoreDimensions() {
+        primaryStage.setWidth(screenWidth);
+        primaryStage.setHeight(screenHeight);
     }
 }
 
