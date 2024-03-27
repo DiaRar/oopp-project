@@ -15,12 +15,9 @@
  */
 package client;
 
-import client.scenes.InvitationCtrl;
-import client.scenes.MainCtrl;
-import client.scenes.StartCtrl;
+import client.scenes.*;
 import client.utils.Config;
 import client.utils.ConfigUtils;
-import client.scenes.OverviewCtrl;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Binder;

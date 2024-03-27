@@ -53,8 +53,6 @@ public class StartCtrl implements Initializable {
     @FXML
     private HBox bottomHBox;
     private LanguageComboBox languageComboBox;
-
-    public ListView<String> recentsList;
     @FXML
     public ListView<Event> recentsList;
     private final ServerUtils serverUtils;
@@ -167,22 +165,6 @@ public class StartCtrl implements Initializable {
         alert.setHeaderText(header);
         alert.setContentText(context);
         alert.showAndWait();
-    }
-
-    public void switchToDutch() {
-//        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
-//        create.setText(textList.get("create"));
-//        createNewEvent.setText(textList.get("createNewEvent"));
-//        join.setText(textList.get("join"));
-//        joinEvent.setText(textList.get("joinEvent"));
-    }
-
-    public void switchToEnglish() {
-//        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
-//        create.setText(textList.get("create"));
-//        createNewEvent.setText(textList.get("createNewEvent"));
-//        join.setText(textList.get("join"));
-//        joinEvent.setText(textList.get("joinEvent"));
     }
 
     @Override
