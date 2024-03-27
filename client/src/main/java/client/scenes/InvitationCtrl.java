@@ -47,7 +47,6 @@ public class InvitationCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //this.inviteCode.textProperty().bind(languageUtils.getBinding("invitation.inviteCodeLabel"));
         this.sendInvites.textProperty().bind(languageUtils.getBinding("invitation.sendInvitesBtn"));
         this.inviteLabel.textProperty().bind(languageUtils.getBinding("invitation.inviteLabel"));
         this.invite1.textProperty().bind(languageUtils.getBinding("invitation.inviteEmailLabel"));
@@ -57,24 +56,19 @@ public class InvitationCtrl implements Initializable {
 
         switch (config.getLocale().getLanguage()) {
             case "nl":
-                switchToDutch();
+                languageUtils.setLang("nl");
+                break;
             case "en":
-                switchToEnglish();
+                languageUtils.setLang("en");
+                break;
             default:
-                switchToEnglish();
+                languageUtils.setLang("en");
+                break;
         }
     }
 
     public void sendInvites() {
         // TODO
-    }
-
-    public void switchToDutch() {
-        //TODO
-    }
-
-    public void switchToEnglish() {
-        //TODO
     }
 
     public void cancel() {

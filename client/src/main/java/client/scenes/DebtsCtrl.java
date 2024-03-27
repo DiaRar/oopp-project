@@ -147,18 +147,6 @@ public class DebtsCtrl implements Initializable {
         mainCtrl.showOverview();
     }
 
-//    public void switchToEnglish() {
-//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsEnglish.csv"), "@");
-//        title.setText(textMap.get("openDebts"));
-//        returnButton.setText(textMap.get("returnToOverview"));
-//    }
-//
-//    public void switchToDutch() {
-//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/debtsDutch.csv"), "@");
-//        title.setText(textMap.get("openDebts"));
-//        returnButton.setText(textMap.get("returnToOverview"));
-//    }
-
     public List<Debt> mockData() {
         Event event = new Event("New Year Party");
         BankAccount b1 = new BankAccount("myIBAN1", "myBIC1");

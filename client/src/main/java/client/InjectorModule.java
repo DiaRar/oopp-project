@@ -57,6 +57,7 @@ public class InjectorModule implements Module {
         try {
             return Config.read(new File("client/src/main/resources/config/config.properties"));
         } catch (IOException e) {
+            // TODO: Add alert box to say config was not set up
             throw new RuntimeException(e);
         }
     }

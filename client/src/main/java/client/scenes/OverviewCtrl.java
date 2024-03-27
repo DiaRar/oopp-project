@@ -105,7 +105,6 @@ public class OverviewCtrl implements Initializable {
         expenses = FXCollections.observableArrayList(event.getExpenses().stream().toList());
         filteredExpenses = new FilteredList<>(expenses);
         participants = FXCollections.observableArrayList(event.getParticipants().stream().toList());
-        title.setText(event.getName());
         participantsText.setText(participants.stream().map(Participant::getNickname).collect(Collectors.joining(", ")));
         choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
         List<BorderPane> collection =
