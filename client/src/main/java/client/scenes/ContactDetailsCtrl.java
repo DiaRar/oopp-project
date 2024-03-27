@@ -1,12 +1,12 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class ContactDetailsCtrl {
