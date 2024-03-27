@@ -73,6 +73,8 @@ public class ContactDetailsCtrl implements Initializable {
             server.updateParticipant(newParticipant, parentEvent.getId(), toBeUpdatedParticipant.getId());
         }
         System.out.println(newParticipant);
+        clearText();
+        editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();
     }
 
@@ -106,6 +108,7 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void selectEditParticipant() {
+        if (!editMode) return;
         Participant selected = this.editSelectorComboBox.getValue();
         if (selected == null) {
             setFieldsDisabled(true);
