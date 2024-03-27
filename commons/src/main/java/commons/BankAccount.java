@@ -1,5 +1,8 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -33,14 +36,16 @@ public class BankAccount {
         this.bic = bic;
     }
     @Id
+    @JsonView(View.CommonsView.class)
     public String getIban() {
         return iban;
     }
-
     public void setIban(String iban) {
         this.iban = iban;
     }
 
+    @JsonView(View.CommonsView.class)
+    @Basic
     public String getBic() {
         return bic;
     }
