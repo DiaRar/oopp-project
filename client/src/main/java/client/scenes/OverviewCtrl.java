@@ -20,7 +20,6 @@ import client.utils.LanguageUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
-import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
@@ -45,17 +44,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.net.URL;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
 
@@ -149,10 +145,10 @@ public class OverviewCtrl implements Initializable {
             }
         });
         participants.add(new Participant("Person 1", null));
-        participants.getFirst().setId(UUID.randomUUID());
+        participants.get(0).setId(UUID.randomUUID());
         participants.add(new Participant("Peson 2", null));
         expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
-                participants.getFirst(), participants));
+                participants.get(0), participants));
     }
     public void clear() {
         expenses = null;
@@ -307,35 +303,13 @@ public class OverviewCtrl implements Initializable {
         mainCtrl.showInvitation();
     }
 
-    public void switchToDutch() {
-//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewDutch.csv"), "@");
-//        title.setText(textMap.get("title"));
-//        sendInvites.setText(textMap.get("sendInvites"));
-//        expensesLabel.setText(textMap.get("expensesLabel"));
-//        addExpense.setText(textMap.get("addExpense"));
-//        settleDebts.setText(textMap.get("settleDebts"));
-//        all.setText(textMap.get("all"));
-//        from.setText(textMap.get("from"));
-//        including.setText(textMap.get("including"));
     public void openStatistics() {
         System.out.println("Statistics");
         mainCtrl.showStatistics();
     }
 
-    public void switchToEnglish() {
-//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewEnglish.csv"), "@");
-//        title.setText(textMap.get("title"));
-//        sendInvites.setText(textMap.get("sendInvites"));
-//        expensesLabel.setText(textMap.get("expensesLabel"));
-//        addExpense.setText(textMap.get("addExpense"));
-//        settleDebts.setText(textMap.get("settleDebts"));
-//        all.setText(textMap.get("all"));
-//        from.setText(textMap.get("from"));
-//        including.setText(textMap.get("including"));
-    }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+        public void initialize(URL url, ResourceBundle resourceBundle) {
         this.title.textProperty().bind(languageUtils.getBinding("overview.titleLabel"));
         this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
         this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
