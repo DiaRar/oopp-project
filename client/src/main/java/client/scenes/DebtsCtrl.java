@@ -73,6 +73,7 @@ public class DebtsCtrl implements Initializable {
         debtsList.getChildren().addAll(collection);
 
         // TODO add event name to title of the page
+        // TODO: Fix string binding
         title.setText("Open Debts - " + debts.get(0).getEvent().getName());
 
     }

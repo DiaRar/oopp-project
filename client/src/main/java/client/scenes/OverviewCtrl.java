@@ -23,6 +23,8 @@ import client.utils.ServerUtils;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -92,12 +94,18 @@ public class OverviewCtrl implements Initializable {
     private Button addExpense;
     @FXML
     private Button settleDebts;
+
+    private StringProperty fromText;
+    private StringProperty includingText;
+
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
         this.languageUtils = languageUtils;
+        this.fromText = new SimpleStringProperty();
+        this.includingText = new SimpleStringProperty();
     }
 
     public void startup() {
@@ -245,8 +253,9 @@ public class OverviewCtrl implements Initializable {
 
     public void choiceChanged() {
         String name = choiceBox.getValue();
-        from.setText("From ".concat(name));
-        including.setText("Including ".concat(name));
+        // TODO: Make proper string bindings
+        from.setText(fromText.getValue().concat(" ").concat(name));
+        including.setText(includingText.getValue().concat(" ").concat(name));
         currentParticipant = participants.get(0);
     }
     public void select(javafx.event.Event e) {
@@ -315,7 +324,7 @@ public class OverviewCtrl implements Initializable {
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
         this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
         this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
-        this.from.textProperty().bind(languageUtils.getBinding("overview.fromLabel"));
-        this.including.textProperty().bind(languageUtils.getBinding("overview.includingLabel"));
+        this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
+        this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
     }
 }
