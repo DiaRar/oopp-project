@@ -1,5 +1,7 @@
 package client.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
@@ -14,10 +16,14 @@ public class WebSocketUtils {
 
     public void connectToWebSocket(String url, StompSessionHandler sessionHandler) throws ExecutionException, InterruptedException {
         WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter(mapper()));
         stompSession = stompClient.connectAsync(url, sessionHandler).get();
     }
-
+    public ObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
     public StompSession getStompSession() {
         return stompSession;
     }
