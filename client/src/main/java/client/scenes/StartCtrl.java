@@ -1,6 +1,9 @@
 package client.scenes;
 
+import client.uicomponents.LanguageComboBox;
+import client.utils.Config;
 import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
@@ -17,9 +20,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class StartCtrl implements Initializable {
     private static final double FLOW_PANE_MARGIN = 5;
@@ -29,6 +33,7 @@ public class StartCtrl implements Initializable {
     private TextField createField;
     @FXML
     private ListView<String> listView;
+    @FXML
     public Button create;
     @FXML
     public Label createNewEvent;
@@ -39,21 +44,24 @@ public class StartCtrl implements Initializable {
     @FXML
     public Label recentEvents;
     @FXML
+    private HBox bottomHBox;
+    private LanguageComboBox languageComboBox;
+    @FXML
     public ListView<Event> recentsList;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
+    private final LanguageUtils languageUtils;
     private final MainCtrl mainCtrl;
+    private Config config;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl, Config config) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
+        this.languageUtils = languageUtils;
         this.mainCtrl = mainCtrl;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        refreshRecents();
+        this.languageComboBox = new LanguageComboBox(languageUtils);
+        this.config = config;
     }
 
     /**
@@ -152,21 +160,31 @@ public class StartCtrl implements Initializable {
         alert.showAndWait();
     }
 
-    public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startDutch.csv"));
-        create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
-    }
-
-    public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readLanguage(new File("client/src/main/resources/config/startEnglish.csv"));
-        create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
-        recentEvents.setText(textList.get("recentEvents"));
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        var recentEvents = utils.readRecents();
+        var list = FXCollections.observableArrayList(recentEvents.stream().map(Event::getName).toList());
+        //listView.setItems(list);
+        //listView.setCellFactory(param -> new RecentlyVisitedCell());
+        refreshRecents();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                languageUtils.setLang("nl");
+                break;
+            case "en":
+                languageUtils.setLang("en");
+                break;
+            default:
+                languageUtils.setLang("en");
+                break;
+        }
+//        languageComboBox = new LanguageComboBox(mainCtrl.getLanguageUtils());
+        bottomHBox.getChildren().add(languageComboBox);
+        this.create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
+        this.join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
+        this.createNewEvent.textProperty().bind(languageUtils.getBinding("start.createNewEventLabel"));
+        this.joinEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
+        // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
+        // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
     }
 }
