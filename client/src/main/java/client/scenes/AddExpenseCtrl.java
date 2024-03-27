@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
-import commons.Participant;
 import commons.Tag;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -122,18 +121,17 @@ public class AddExpenseCtrl implements Initializable {
         payer.setItems(FXCollections.observableArrayList("Paul", "Mike", "Irene", "Julia"));
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         setTags();
-        fillDebtors();
         switchToDutch();
     }
 
     public void fillDebtors() {
         // debtorsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        List<Participant> participants = utils.readParticipants();
-        if (participants.isEmpty()) return;
-        List<String> names = participants.stream()
-                .map(Participant::getNickname)
-                .collect(Collectors.toList());
-        debtorsList.setItems(FXCollections.observableList(names));
+//        List<Participant> participants = utils.readParticipants();
+//        if (participants.isEmpty()) return;
+//        List<String> names = participants.stream()
+//                .map(Participant::getNickname)
+//                .collect(Collectors.toList());
+//        debtorsList.setItems(FXCollections.observableList(names));
         // TODO replace mock data with the list of participants in the event
     }
 
