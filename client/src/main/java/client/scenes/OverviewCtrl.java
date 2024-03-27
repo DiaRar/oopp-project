@@ -110,6 +110,7 @@ public class OverviewCtrl implements Initializable {
 
     public void startup() {
         event = mainCtrl.getEvent();
+        title.setText(event.getName());
         expenses = FXCollections.observableArrayList(event.getExpenses().stream().toList());
         filteredExpenses = new FilteredList<>(expenses);
         participants = FXCollections.observableArrayList(event.getParticipants().stream().toList());
@@ -318,7 +319,6 @@ public class OverviewCtrl implements Initializable {
 
 
         public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.title.textProperty().bind(languageUtils.getBinding("overview.titleLabel"));
         this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
         this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
