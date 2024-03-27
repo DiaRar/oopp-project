@@ -333,7 +333,7 @@ public class OverviewCtrl implements Initializable {
             }
         };
     }
-    private static ListCell<Participant> getParticipantListCell() {
+    private ListCell<Participant> getParticipantListCell() {
         return new ListCell<>() {
             @Override
             protected void updateItem(Participant item, boolean empty) {
