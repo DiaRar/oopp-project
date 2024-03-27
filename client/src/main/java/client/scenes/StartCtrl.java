@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.uicomponents.LanguageComboBox;
-import client.uicomponents.RecentlyVisitedCell;
 import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.LanguageUtils;
@@ -20,15 +19,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.layout.HBox;
 
 import java.net.URL;
-import java.util.*;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -172,7 +165,7 @@ public class StartCtrl implements Initializable {
         var recentEvents = utils.readRecents();
         var list = FXCollections.observableArrayList(recentEvents.stream().map(Event::getName).toList());
         listView.setItems(list);
-        listView.setCellFactory(param -> new RecentlyVisitedCell());
+        //listView.setCellFactory(param -> new RecentlyVisitedCell());
         refreshRecents();
         switch (config.getLocale().getLanguage()) {
             case "nl":
