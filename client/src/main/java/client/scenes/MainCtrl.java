@@ -15,6 +15,8 @@ public class MainCtrl {
     private Stage primaryStage;
     private Scene startScene;
 
+    private StartCtrl startCtrl;
+
     private OverviewCtrl overviewCtrl;
     private Scene overviewScene;
 
@@ -53,6 +55,7 @@ public class MainCtrl {
                      Pair<DebtsCtrl, Parent> debts) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
+        this.startCtrl = start.getKey();
 
         this.overviewCtrl = overview.getKey();
         this.overviewScene = new Scene(overview.getValue());
@@ -79,6 +82,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
+        startCtrl.refreshRecents();
         if (event != null) restoreDimensions();
     }
 
