@@ -20,15 +20,19 @@ import client.utils.LanguageUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -41,9 +45,16 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.net.URL;
+import java.io.File;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
@@ -55,9 +66,12 @@ public class OverviewCtrl implements Initializable {
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
+    private static final double HARDCODED_EXPENSE = 12.0;
     private Event event;
     private ObservableList<Expense> expenses;
+    private FilteredList<Expense> filteredExpenses;
     private ObservableList<Participant> participants;
+    private Participant currentParticipant;
     @FXML
     private Label title;
     @FXML
@@ -89,6 +103,82 @@ public class OverviewCtrl implements Initializable {
         this.config = config;
         this.languageUtils = languageUtils;
     }
+
+    public void startup() {
+        event = mainCtrl.getEvent();
+        expenses = FXCollections.observableArrayList(event.getExpenses().stream().toList());
+        filteredExpenses = new FilteredList<>(expenses);
+        participants = FXCollections.observableArrayList(event.getParticipants().stream().toList());
+        title.setText(event.getName());
+        participantsText.setText(participants.stream().map(Participant::getNickname).collect(Collectors.joining(", ")));
+        choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
+        List<BorderPane> collection =
+                event.getExpenses().stream().map(this::expenseComponent).toList();
+        list.getChildren().addAll(collection);
+
+        // LISTENERS
+        participants.addListener((ListChangeListener<Participant>) change -> {
+            while (change.next()) {
+                StringJoiner stringJoiner = new StringJoiner(", ");
+                participants.forEach(participant -> stringJoiner.add(participant.getNickname()));
+                participantsText.setText(stringJoiner.toString());
+                if (change.wasAdded()) {
+                    choiceBox.getItems().addAll(change.getFrom(), change.getAddedSubList().stream().map(Participant::getNickname).toList());
+                    choiceBox.setValue(choiceBox.getItems().get(change.getFrom()));
+                } else if (change.wasRemoved()) {
+                    choiceBox.getItems().remove(change.getTo(), change.getTo() + change.getRemovedSize());
+                }
+            }
+        });
+        filteredExpenses.addListener((ListChangeListener<? super Expense>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    list.getChildren().addAll(change.getFrom(), change.getAddedSubList().stream()
+                            .map(this::expenseComponent).toList());
+                    System.out.println("Added");
+                } else if (change.wasRemoved()) {
+                    System.out.println("Removed");
+                    list.getChildren().remove(change.getTo(), change.getTo() + change.getRemovedSize());
+                } else if (change.wasUpdated()) {
+                    System.out.println("Updated");
+                } else if (change.wasReplaced()) {
+                    System.out.println("Replaced");
+                } else if (change.wasPermutated()) {
+                    System.out.println("Permutated");
+                }
+            }
+        });
+        participants.add(new Participant("Person 1", null));
+        participants.getFirst().setId(UUID.randomUUID());
+        participants.add(new Participant("Peson 2", null));
+        expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
+                participants.getFirst(), participants));
+    }
+    public void clear() {
+        expenses = null;
+        participants = null;
+        choiceBox.getItems().clear();
+        list.getChildren().clear();
+    }
+    public void addExpense(Expense expense) {
+        expenses.add(expense);
+    }
+    public void addExpense(int index, Expense expense) {
+        expenses.add(index, expense);
+    }
+    public Expense removeExpense(int index) {
+        return expenses.remove(index);
+    }
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
+    }
+    public void addParticipant(int index, Participant participant) {
+        participants.add(index, participant);
+    }
+    public Participant removeParticipant(int index) {
+        return participants.remove(index);
+    }
+
 
     public BorderPane expenseComponent(Expense expense) {
         BorderPane borderPane = new BorderPane();
@@ -147,13 +237,13 @@ public class OverviewCtrl implements Initializable {
 //        switchToDutch();
         switch (config.getLocale().getLanguage()) {
             case "nl":
-                switchToDutch();
+                languageUtils.setLang("nl");
                 break;
             case "en":
-                switchToEnglish();
+                languageUtils.setLang("en");
                 break;
             default:
-                switchToEnglish();
+                languageUtils.setLang("en");
                 break;
         }
     }
@@ -162,8 +252,43 @@ public class OverviewCtrl implements Initializable {
         String name = choiceBox.getValue();
         from.setText("From ".concat(name));
         including.setText("Including ".concat(name));
+        currentParticipant = participants.get(0);
+    }
+    public void select(javafx.event.Event e) {
+        Node target = (Node) e.getTarget();
+        Node label;
+        if (target instanceof Text) {
+            label = target.getParent();
+        } else {
+            label = target;
+        }
+        label.getParent().getChildrenUnmodifiable().forEach(node -> node.getStyleClass().remove("selected-participant"));
+        label.getStyleClass().add("selected-participant");
+    }
+    public void selectAll(javafx.event.Event e) {
+        select(e);
+    }
+    public void selectFrom(javafx.event.Event e) {
+        // TODO: tell user there needs to be a participant
+        if (currentParticipant == null) {
+            return;
+        }
+        select(e);
+        Predicate<Expense> fromParticipant = expense -> expense.getPayer().getId()
+                .equals(currentParticipant.getId());
+        filteredExpenses.setPredicate(fromParticipant);
+    }
+    public void selectIncluding(javafx.event.Event e) {
+        // TODO: tell user there needs to be a participant
+        if (currentParticipant == null) {
+            return;
+        }
+        select(e);
     }
 
+    public void addParticipantAction() {
+        mainCtrl.callAddParticipantDialog(event);
+    }
     public void openAddExpense() {
         System.out.println("Add expense");
         mainCtrl.showAddExpense();
@@ -178,7 +303,7 @@ public class OverviewCtrl implements Initializable {
     }
 
     public void openInvitation() {
-        System.out.println(("Invite people"));
+        System.out.println("Invite people");
         mainCtrl.showInvitation();
     }
 
@@ -192,6 +317,9 @@ public class OverviewCtrl implements Initializable {
 //        all.setText(textMap.get("all"));
 //        from.setText(textMap.get("from"));
 //        including.setText(textMap.get("including"));
+    public void openStatistics() {
+        System.out.println("Statistics");
+        mainCtrl.showStatistics();
     }
 
     public void switchToEnglish() {

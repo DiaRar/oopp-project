@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TestParticipantRepository implements ParticipantRepository {
 
@@ -41,7 +42,9 @@ public class TestParticipantRepository implements ParticipantRepository {
     }
     @Override
     public List<Participant> findParticipantsByEventId(UUID eventId) {
-        return null;
+        List<Participant> list = participants.stream()
+                .filter(x -> x.getEvent().getId().equals(eventId)).collect(Collectors.toList());
+        return list;
     }
     @Override
     public void flush() {
