@@ -140,8 +140,14 @@ public class ContactDetailsCtrl implements Initializable {
         System.out.println(participant);
         nameField.setText(participant.getNickname());
         emailField.setText(participant.getEmail());
-//        ibanField.setText(participant.getBankAccount().getIban());
-//        bicField.setText(participant.getBankAccount().getBic());
+        BankAccount bankAccount = participant.getBankAccount();
+        if (bankAccount == null) {
+            ibanField.setText("");
+            bicField.setText("");
+            return;
+        }
+        ibanField.setText(bankAccount.getIban());
+        bicField.setText(bankAccount.getBic());
     }
 
 

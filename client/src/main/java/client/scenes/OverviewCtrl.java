@@ -135,11 +135,6 @@ public class OverviewCtrl {
                 }
             }
         });
-        participants.add(new Participant("Person 1", null));
-        participants.getFirst().setId(UUID.randomUUID());
-        participants.add(new Participant("Peson 2", null));
-        expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
-                participants.getFirst(), participants));
     }
     public void clear() {
         expenses = null;
