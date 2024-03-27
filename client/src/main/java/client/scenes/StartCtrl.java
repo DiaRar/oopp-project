@@ -18,9 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 
-import java.io.File;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -102,19 +100,19 @@ public class StartCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
-        create.setText(textList.get("create"));
+//        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startDutch.csv"), "@");
+//        create.setText(textList.get("create"));
 //        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
+//        join.setText(textList.get("join"));
+//        joinEvent.setText(textList.get("joinEvent"));
     }
 
     public void switchToEnglish() {
-        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
-        create.setText(textList.get("create"));
-        createNewEvent.setText(textList.get("createNewEvent"));
-        join.setText(textList.get("join"));
-        joinEvent.setText(textList.get("joinEvent"));
+//        Map<String, String> textList = ConfigUtils.readFile(new File("client/src/main/resources/config/startEnglish.csv"), "@");
+//        create.setText(textList.get("create"));
+//        createNewEvent.setText(textList.get("createNewEvent"));
+//        join.setText(textList.get("join"));
+//        joinEvent.setText(textList.get("joinEvent"));
     }
 
     @Override

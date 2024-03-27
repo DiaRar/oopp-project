@@ -16,7 +16,6 @@
 package client.scenes;
 
 import client.utils.Config;
-import client.utils.ConfigUtils;
 import client.utils.LanguageUtils;
 import com.google.inject.Inject;
 
@@ -41,13 +40,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
-import java.io.File;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import java.util.Map;
 
 public class OverviewCtrl implements Initializable {
 
@@ -186,38 +183,38 @@ public class OverviewCtrl implements Initializable {
     }
 
     public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewDutch.csv"), "@");
-        title.setText(textMap.get("title"));
-        sendInvites.setText(textMap.get("sendInvites"));
-        expensesLabel.setText(textMap.get("expensesLabel"));
-        addExpense.setText(textMap.get("addExpense"));
-        settleDebts.setText(textMap.get("settleDebts"));
-        all.setText(textMap.get("all"));
-        from.setText(textMap.get("from"));
-        including.setText(textMap.get("including"));
+//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewDutch.csv"), "@");
+//        title.setText(textMap.get("title"));
+//        sendInvites.setText(textMap.get("sendInvites"));
+//        expensesLabel.setText(textMap.get("expensesLabel"));
+//        addExpense.setText(textMap.get("addExpense"));
+//        settleDebts.setText(textMap.get("settleDebts"));
+//        all.setText(textMap.get("all"));
+//        from.setText(textMap.get("from"));
+//        including.setText(textMap.get("including"));
     }
 
     public void switchToEnglish() {
-        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewEnglish.csv"), "@");
-        title.setText(textMap.get("title"));
-        sendInvites.setText(textMap.get("sendInvites"));
-        expensesLabel.setText(textMap.get("expensesLabel"));
-        addExpense.setText(textMap.get("addExpense"));
-        settleDebts.setText(textMap.get("settleDebts"));
-        all.setText(textMap.get("all"));
-        from.setText(textMap.get("from"));
-        including.setText(textMap.get("including"));
+//        Map<String, String> textMap = ConfigUtils.readFile(new File("client/src/main/resources/config/overviewEnglish.csv"), "@");
+//        title.setText(textMap.get("title"));
+//        sendInvites.setText(textMap.get("sendInvites"));
+//        expensesLabel.setText(textMap.get("expensesLabel"));
+//        addExpense.setText(textMap.get("addExpense"));
+//        settleDebts.setText(textMap.get("settleDebts"));
+//        all.setText(textMap.get("all"));
+//        from.setText(textMap.get("from"));
+//        including.setText(textMap.get("including"));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        this.title.textProperty().bind(languageUtils.getBinding("overview.titleLabel"));
-//        this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
-//        this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
-//        this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
-//        this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
-//        this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
-//        this.from.textProperty().bind(languageUtils.getBinding("overview.fromLabel"));
-//        this.including.textProperty().bind(languageUtils.getBinding("overview.includingLabel"));
+        this.title.textProperty().bind(languageUtils.getBinding("overview.titleLabel"));
+        this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
+        this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
+        this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
+        this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
+        this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
+        this.from.textProperty().bind(languageUtils.getBinding("overview.fromLabel"));
+        this.including.textProperty().bind(languageUtils.getBinding("overview.includingLabel"));
     }
 }
