@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.Parent;
@@ -26,6 +27,7 @@ public class MainCtrl {
     private Stage dialog;
 
     private ServerUtils serverUtils;
+    private LanguageUtils languageUtils;
 
     private Event event;
 
@@ -40,10 +42,10 @@ public class MainCtrl {
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
-                     Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails, 
-                     Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils) {
+                     Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails,
+                     Pair<DebtsCtrl, Parent> debts, ServerUtils serverUtils, LanguageUtils languageUtils) {
         this.serverUtils = serverUtils;
-
+        this.languageUtils = languageUtils;
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
 
@@ -131,6 +133,10 @@ public class MainCtrl {
 
     public void setEvent(UUID uuid) {
         this.event = serverUtils.getEvent(uuid);
+    }
+
+    public LanguageUtils getLanguageUtils() {
+        return this.languageUtils;
     }
 }
 
