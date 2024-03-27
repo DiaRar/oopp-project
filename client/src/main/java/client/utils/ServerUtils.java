@@ -113,7 +113,7 @@ public class ServerUtils {
 
 	public List<Expense> getExpenses(UUID eventId) {
 		return ClientBuilder.newClient(new ClientConfig())
-				.target(SERVER)
+				.target(server)
 				.path("/api/events/{eventId}/expenses")
 				.resolveTemplate("eventId", eventId)
 				.request(APPLICATION_JSON)

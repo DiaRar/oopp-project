@@ -20,7 +20,6 @@ import client.utils.LanguageUtils;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
-import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import javafx.beans.binding.Bindings;
@@ -43,15 +42,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
-
-import java.io.File;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.StringJoiner;
 import java.util.function.Predicate;
 
