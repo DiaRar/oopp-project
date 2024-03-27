@@ -16,13 +16,12 @@
 package client.scenes;
 
 import client.utils.ConfigUtils;
-import com.google.inject.Inject;
-
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import commons.Tag;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -31,24 +30,23 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
+import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -60,6 +58,7 @@ public class OverviewCtrl {
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
     private static final double HARDCODED_EXPENSE = 12.0;
+    private static final double TAG_SPACING = 5.0;
     private Event event;
     private ObservableList<Expense> expenses;
     private FilteredList<Expense> filteredExpenses;
@@ -86,7 +85,7 @@ public class OverviewCtrl {
     @FXML
     private Button settleDebts;
     @FXML
-    private ChoiceBox<String> tagChoice;
+    private ComboBox<SplitPane> tagChoice;
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
@@ -289,6 +288,33 @@ public class OverviewCtrl {
     public void switchToEnglish() {
         Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
         switchLanguage(textMap);
+    }
+
+    public SplitPane tagComponent(Tag tag) {
+        SplitPane tc = new SplitPane();
+        String hex = String.format("#%02x%02x%02x", tag.getColor().getRed(), tag.getColor().getGreen(), tag.getColor().getBlue());
+        Background bg = new Background(new BackgroundFill(Paint.valueOf(hex),
+                new CornerRadii(TAG_SPACING, 0, TAG_SPACING, 0, false),
+                new Insets(0, TAG_SPACING, 0, TAG_SPACING)));
+        Text text = new Text(tag.getName());
+        text.setFont(ARIAL_BOLD);
+        TextFlow tf = new TextFlow();
+        tf.setBackground(bg);
+
+        tc.getItems().add(text);
+        tc.getItems().add(tf);
+        return tc;
+    }
+
+    public void mockData() {
+        Tag tag1 = new Tag("Amaro", Color.blue);
+        Tag tag2 = new Tag("Beer", Color.yellow);
+        Tag tag3 = new Tag("Champagne", Color.orange);
+        List<Tag> tags = new ArrayList<>();
+        tags.add(tag1);
+        tags.add(tag2);
+        tags.add(tag3);
+        tagChoice.setItems(FXCollections.observableArrayList(tags.stream().map(this::tagComponent).toList()));
     }
 
 }

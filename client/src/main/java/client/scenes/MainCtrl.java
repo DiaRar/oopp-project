@@ -64,7 +64,8 @@ public class MainCtrl {
         this.statisticsCtrl = statistics.getKey();
         this.statisticsScene = new Scene(statistics.getValue());
 
-        showStart();
+        showOverview();
+        overviewCtrl.mockData();
         primaryStage.show();
     }
 
