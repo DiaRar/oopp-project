@@ -130,6 +130,7 @@ public class MainCtrl {
     }
 
     public void setEvent(UUID uuid) {
+        if (this.event != null && this.event.getId().equals(uuid)) return;
         this.event = serverUtils.getEvent(uuid);
     }
 }

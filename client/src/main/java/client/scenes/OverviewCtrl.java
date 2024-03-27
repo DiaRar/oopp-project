@@ -141,10 +141,15 @@ public class OverviewCtrl {
         expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
                 participants.getFirst(), participants));
     }
+
+    public void back() {
+        mainCtrl.showStart();
+    }
+
     public void clear() {
         expenses = null;
         participants = null;
-        choiceBox.getItems().clear();
+        choiceBox = new ChoiceBox<>();
         list.getChildren().clear();
     }
     public void addExpense(Expense expense) {
