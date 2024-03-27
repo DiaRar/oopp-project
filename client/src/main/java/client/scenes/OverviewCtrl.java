@@ -45,7 +45,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
-import java.io.File;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
