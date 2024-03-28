@@ -92,13 +92,24 @@ public class MainCtrl {
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
     }
 
-    public void callAddParticipantDialog(Event event) {
-        dialog = new Stage();
+    public void callAddParticipantDialog() {
+        contactDetailsCtrl.setAddMode();
         contactDetailsCtrl.setParentEvent(event);
+        openDialog("Add New Participant", contactDetailsScene);
+    }
+
+    public void callEditParticipantDialog() {
+        contactDetailsCtrl.setEditMode();
+        contactDetailsCtrl.setParentEvent(event);
+        openDialog("Edit Participant", contactDetailsScene);
+    }
+
+    private void openDialog(String title, Scene dialogScene) {
+        dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
-        dialog.setScene(contactDetailsScene);
-        dialog.setTitle("Add New Participant");
+        dialog.setScene(dialogScene);
+        dialog.setTitle(title);
         dialog.show();
     }
 

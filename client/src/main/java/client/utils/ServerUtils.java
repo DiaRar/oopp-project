@@ -101,29 +101,29 @@ public class ServerUtils {
 				.get(new GenericType<List<Participant>>() {});
 	}
 
-	public Event addParticipant(Participant participant, UUID eventID) {
+	public Participant addParticipant(Participant participant, UUID eventID) {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(server)
-				.path("/api/events/" + eventID)
+				.path("/api/events/" + eventID + "/participants/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
-				.post(Entity.entity(participant, APPLICATION_JSON), Event.class);
+				.post(Entity.entity(participant, APPLICATION_JSON), Participant.class);
 	}
 
-	public Participant getParticipant(UUID id) {
+	public Participant getParticipant(UUID eventId, UUID id) {
 		return ClientBuilder
 				.newClient(new ClientConfig())
 				.target(server)
-				.path("/api/participants/" + id)
+				.path("/api/events/" + eventId + "/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.get(Participant.class);
 	}
 
-	public Participant updateParticipant(Participant participant, UUID id) {
+	public Participant updateParticipant(Participant participant, UUID eventId, UUID id) {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(server)
-				.path("/api/participants/" + id)
+				.path("/api/events/" + eventId + "/participants/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
