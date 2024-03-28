@@ -92,6 +92,8 @@ public class OverviewCtrl implements Initializable {
     private Button addExpense;
     @FXML
     private Button settleDebts;
+    @FXML
+    private Button addTag;
 
     private StringProperty fromText;
     private StringProperty includingText;
@@ -335,5 +337,6 @@ public class OverviewCtrl implements Initializable {
         this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
         this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
         this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
+        this.addTag.textProperty().bind(languageUtils.getBinding("overview.addTag"));
     }
 }

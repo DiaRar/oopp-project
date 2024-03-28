@@ -6,15 +6,17 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Tag;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class AddTagCtrl {
-
+public class AddTagCtrl implements Initializable {
     private MainCtrl mainCtrl;
     private ServerUtils server;
     private Config config;
@@ -47,6 +49,25 @@ public class AddTagCtrl {
         this.languageUtils = languageUtils;
     }
 
+    public void initialize(URL location, ResourceBundle resources) {
+        this.title.textProperty().bind(languageUtils.getBinding("addTag.title"));
+        this.name.textProperty().bind(languageUtils.getBinding("addTag.name"));
+        this.color.textProperty().bind(languageUtils.getBinding("addTag.color"));
+        this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.saveBtn"));
+        this.cancelBtn.textProperty().bind(languageUtils.getBinding("addTag.cancelBtn"));
+        this.deleteBtn.textProperty().bind(languageUtils.getBinding("addTag.deleteBtn"));
+
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                languageUtils.setLang("nl");
+                break;
+            case "en":
+            default:
+                languageUtils.setLang("en");
+                break;
+        }
+    }
+
     public void cancel() {
         tags.getSelectionModel().clearSelection();
         nameField.clear();
@@ -64,6 +85,11 @@ public class AddTagCtrl {
             // TODO connect to endpoint PUT for tag
         }
         mainCtrl.showOverview();
+    }
+
+    public void delete() {
+        if (selectedTag == null) return;
+        // TODO connect to endpoint DELETE for tag
     }
 
     public void tagSelected() {
