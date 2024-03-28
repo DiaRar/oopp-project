@@ -7,6 +7,11 @@ import com.google.inject.Inject;
 import commons.Tag;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+
+import java.util.Objects;
 
 public class AddTagCtrl {
 
@@ -26,13 +31,13 @@ public class AddTagCtrl {
     private Button cancelBtn;
     @FXML
     private Button deleteBtn;
-
     @FXML
     private ComboBox<Tag> tags;
     @FXML
     private TextField nameField;
     @FXML
     private ColorPicker colorField;
+    private Tag selectedTag;
 
     @Inject
     public AddTagCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
@@ -40,5 +45,34 @@ public class AddTagCtrl {
         this.server = server;
         this.config = config;
         this.languageUtils = languageUtils;
+    }
+
+    public void cancel() {
+        tags.getSelectionModel().clearSelection();
+        nameField.clear();
+        colorField.setValue(Color.WHITE);
+        mainCtrl.showOverview();
+    }
+
+    public void save() {
+        String name = nameField.getText();
+        Color selected = colorField.getValue();
+        Tag newTag = new Tag(name, new java.awt.Color((float) selected.getRed(), (float) selected.getGreen(), (float) selected.getBlue()));
+        if (selectedTag == null) {
+            // TODO connect to endpoint POST for tag
+        } else {
+            // TODO connect to endpoint PUT for tag
+        }
+        mainCtrl.showOverview();
+    }
+
+    public void tagSelected() {
+        selectedTag = tags.getValue();
+    }
+
+    public void keyPressed(KeyEvent e) {
+        if (Objects.requireNonNull(e.getCode()) == KeyCode.ESCAPE) {
+            cancel();
+        }
     }
 }

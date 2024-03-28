@@ -321,6 +321,11 @@ public class OverviewCtrl implements Initializable {
         mainCtrl.showStatistics();
     }
 
+    public void openAddTags() {
+        System.out.println("Add Tags");
+        mainCtrl.showAddTags();
+    }
+
 
         public void initialize(URL url, ResourceBundle resourceBundle) {
         this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));

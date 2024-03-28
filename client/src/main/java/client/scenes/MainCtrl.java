@@ -174,6 +174,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Add Tag");
         primaryStage.setScene(addTagScene);
+        addTagScene.setOnKeyPressed(e -> addTagCtrl.keyPressed(e));
     }
 
     public Event getEvent() {
