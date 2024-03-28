@@ -16,12 +16,16 @@
 package client;
 
 import client.scenes.*;
+import client.utils.Config;
 import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
+import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -37,6 +41,9 @@ public class InjectorModule implements Module {
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StatisticsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
+        binder.bind(Config.class).toInstance(createConfig());
+        binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
+        binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {
@@ -45,4 +52,14 @@ public class InjectorModule implements Module {
         utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
         return utils;
     }
+
+    private Config createConfig() {
+        try {
+            return Config.read(new File("client/src/main/resources/config/config.properties"));
+        } catch (IOException e) {
+            // TODO: Add alert box to say config was not set up
+            throw new RuntimeException(e);
+        }
+    }
+
 }

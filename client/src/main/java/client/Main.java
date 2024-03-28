@@ -16,6 +16,7 @@
 package client;
 
 import client.scenes.*;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -41,6 +42,8 @@ public class Main extends Application {
         var contactDetails = FXML.load(ContactDetailsCtrl.class, "client", "scenes", "ContactDetails.fxml");
         var debts = FXML.load(DebtsCtrl.class, "client", "scenes", "Debts.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, contactDetails, debts, new ServerUtils());
+        var languageUtils = INJECTOR.getInstance(LanguageUtils.class);
+        var serverUtils = INJECTOR.getInstance(ServerUtils.class);
+        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, contactDetails, debts, serverUtils, languageUtils);
     }
 }

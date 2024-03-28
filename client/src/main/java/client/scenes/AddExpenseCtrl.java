@@ -1,5 +1,7 @@
 package client.scenes;
 
+import client.utils.Config;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
@@ -15,7 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.awt.*;
-import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -26,6 +27,9 @@ public class AddExpenseCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
+    private LanguageUtils languageUtils;
+
+    private Config config;
     @FXML
     private ComboBox<String> payer;
     @FXML
@@ -66,10 +70,12 @@ public class AddExpenseCtrl implements Initializable {
     private Label expenseType;
 
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.utils = utils;
+        this.config = config;
+        this.languageUtils = languageUtils;
     }
 
     public void cancel() {
@@ -121,7 +127,29 @@ public class AddExpenseCtrl implements Initializable {
         payer.setItems(FXCollections.observableArrayList("Paul", "Mike", "Irene", "Julia"));
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         setTags();
-        switchToDutch();
+        fillDebtors();
+        this.add.textProperty().bind(languageUtils.getBinding("addExpense.addBtn"));
+        this.cancel.textProperty().bind(languageUtils.getBinding("addExpense.cancelBtn"));
+        this.whoPaid.textProperty().bind(languageUtils.getBinding("addExpense.whoPaidLabel"));
+        this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.addEditExpenseLabel"));
+        this.whatFor.textProperty().bind(languageUtils.getBinding("addExpense.whatForLabel"));
+        this.howMuch.textProperty().bind(languageUtils.getBinding("addExpense.howMuchLabel"));
+        this.when.textProperty().bind(languageUtils.getBinding("addExpense.whenLabel"));
+        this.howToSplit.textProperty().bind(languageUtils.getBinding("addExpense.howToSplitLabel"));
+        this.expenseType.textProperty().bind(languageUtils.getBinding("addExpense.expenseTypeLabel"));
+        this.equallySplit.textProperty().bind(languageUtils.getBinding("addExpense.equallyRbtn"));
+        this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                languageUtils.setLang("nl");
+                break;
+            case "en":
+                languageUtils.setLang("en");
+                break;
+            default:
+                languageUtils.setLang("en");
+                break;
+        }
     }
 
     public void fillDebtors() {
@@ -163,24 +191,4 @@ public class AddExpenseCtrl implements Initializable {
         // TODO replace mock tags with tags from the current event
         // TODO use the tag's color in the UI
     }
-
-    public void switchToDutch() {
-        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseDutch.csv"));
-    }
-
-    public void switchToEnglish() {
-        Map<String, String> stringMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/addExpenseEnglish.csv"));
-        add.setText(stringMap.get("add"));
-        cancel.setText(stringMap.get("cancel"));
-        whoPaid.setText(stringMap.get("whoPaid"));
-        addEditExpense.setText(stringMap.get("addEditExpense"));
-        whatFor.setText(stringMap.get("whatFor"));
-        howMuch.setText(stringMap.get("howMuch"));
-        when.setText(stringMap.get("when"));
-        howToSplit.setText(stringMap.get("howToSplit"));
-        expenseType.setText(stringMap.get("expenseType"));
-        equallySplit.setText(stringMap.get("equally"));
-        partialSplit.setText(stringMap.get("partialSplit"));
-    }
-
 }

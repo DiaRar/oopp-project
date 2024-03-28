@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import commons.Participant;
 import commons.views.View;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +37,11 @@ public class ParticipantsController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Void> deleteParticipant(@PathVariable UUID eventId, @PathVariable UUID id)
             throws IllegalArgumentException, EntityNotFoundException {
+        participantsService.deleteParticipant(id);
         return ResponseEntity.ok().build();
     }
 
