@@ -72,6 +72,7 @@ public class OverviewCtrl implements Initializable {
     private FilteredList<Expense> filteredExpenses;
     private ObservableList<Participant> participants;
     private Participant currentParticipant;
+    private String currentTag;
     @FXML
     private Label title;
     @FXML
@@ -344,6 +345,11 @@ public class OverviewCtrl implements Initializable {
         return tag.getName();
     }
 
+    public void tagSelected() {
+        currentTag = tagChoice.getValue();
+        // filterForTags();
+    }
+
     public void mockData() {
         Tag tag1 = new Tag("Amaro", Color.blue);
         Tag tag2 = new Tag("Beer", Color.yellow);
@@ -353,6 +359,17 @@ public class OverviewCtrl implements Initializable {
         tags.add(tag2);
         tags.add(tag3);
         tagChoice.setItems(FXCollections.observableArrayList(tags.stream().map(this::tagComponent).toList()));
+    }
+
+    public void filterForTags(javafx.event.Event e) {
+        // TODO: tell user there needs to be a participant
+        if (currentTag == null) {
+            return;
+        }
+        select(e);
+        Predicate<Expense> forTags = expense -> expense.getTags().stream().map(Tag::getName).toList()
+                .contains(currentTag);
+        filteredExpenses.setPredicate(forTags);
     }
 
 }

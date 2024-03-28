@@ -169,7 +169,7 @@
                         <String fx:value="bg" />
                      </styleClass>
                   </Label>
-                  <ComboBox fx:id="tagChoice" prefWidth="150.0" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css">
+                  <ComboBox fx:id="tagChoice" onAction="#tagSelected" prefWidth="150.0" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css">
                      <styleClass>
                         <String fx:value="border" />
                         <String fx:value="bg" />
