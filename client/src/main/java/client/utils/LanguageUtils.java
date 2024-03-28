@@ -1,10 +1,10 @@
 package client.utils;
 
+import com.google.inject.Inject;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import javax.inject.Inject;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

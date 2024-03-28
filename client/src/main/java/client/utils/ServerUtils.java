@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import client.uicomponents.Alerts;
+import com.google.inject.Inject;
 import commons.Debt;
 import commons.Event;
 import commons.Participant;
@@ -37,7 +38,6 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Inject;
 
 public class ServerUtils {
 
@@ -138,47 +138,47 @@ public class ServerUtils {
 		}
 	}
 
-	public Event addParticipant(Participant participant, UUID eventID) {
-		try {
-			return ClientBuilder.newClient(new ClientConfig())
-					.target(server)
-					.path("/api/events/" + eventID)
-					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.post(Entity.entity(participant, APPLICATION_JSON), Event.class);
-		} catch (Exception ex) {
-			handleConnectionException(ex);
-			return null;
-		}
+	public Participant addParticipant(Participant participant, UUID eventID) {
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/events/" + eventID + "/participants/")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .post(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+        } catch (Exception ex) {
+            handleConnectionException(ex);
+            return null;
+        }
 	}
 
-	public Participant getParticipant(UUID id) {
-		try {
-			return ClientBuilder
-					.newClient(new ClientConfig())
-					.target(server)
-					.path("/api/participants/" + id)
-					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.get(Participant.class);
-		} catch (Exception ex) {
-			handleConnectionException(ex);
-			return null;
-		}
+	public Participant getParticipant(UUID eventId, UUID id) {
+        try {
+            return ClientBuilder
+                    .newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/events/" + eventId + "/participants/" + id)
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(Participant.class);
+        } catch (Exception ex) {
+            handleConnectionException(ex);
+            return null;
+        }
 	}
 
-	public Participant updateParticipant(Participant participant, UUID id) {
+	public Participant updateParticipant(Participant participant, UUID eventId, UUID id) {
 		try {
-			return ClientBuilder.newClient(new ClientConfig())
-					.target(server)
-					.path("/api/participants/" + id)
-					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
-		} catch (Exception ex) {
-			handleConnectionException(ex);
-			return null;
-		}
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/events/" + eventId + "/participants/" + id)
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+        } catch (Exception ex) {
+            handleConnectionException(ex);
+            return null;
+        }
 	}
 
 	public List<Debt> getDebts(Event event) {

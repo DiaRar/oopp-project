@@ -46,13 +46,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.StringJoiner;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class OverviewCtrl implements Initializable {
@@ -152,11 +150,6 @@ public class OverviewCtrl implements Initializable {
                 }
             }
         });
-        participants.add(new Participant("Person 1", null));
-        participants.get(0).setId(UUID.randomUUID());
-        participants.add(new Participant("Peson 2", null));
-        expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
-                participants.get(0), participants));
     }
 
     public void back() {
@@ -298,8 +291,13 @@ public class OverviewCtrl implements Initializable {
     }
 
     public void addParticipantAction() {
-        mainCtrl.callAddParticipantDialog(event);
+        mainCtrl.callAddParticipantDialog();
     }
+
+    public void editParticipantAction() {
+        mainCtrl.callEditParticipantDialog();
+    }
+
     public void openAddExpense() {
         System.out.println("Add expense");
         mainCtrl.showAddExpense();
