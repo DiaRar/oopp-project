@@ -2,6 +2,7 @@ package admin;
 
 import admin.scenes.LoginCtrl;
 import admin.scenes.MainCtrl;
+import admin.scenes.OverviewCtrl;
 import admin.uicomponents.Alerts;
 import admin.utils.Config;
 import admin.utils.ServerUtils;
@@ -18,6 +19,7 @@ public class InjectorModule implements Module {
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LoginCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.SINGLETON);
     }

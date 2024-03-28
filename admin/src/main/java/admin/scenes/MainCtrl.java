@@ -18,10 +18,11 @@ public class MainCtrl {
 
     public void init(Stage primaryStage, Pair<LoginCtrl, Parent> login, Pair<OverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
-        this.loginScene = new Scene(login.getValue());
         this.loginCtrl = login.getKey();
-        this.overviewScene = new Scene(overview.getValue());
+        this.loginScene = new Scene(login.getValue());
+
         this.overviewCtrl = overview.getKey();
+        this.overviewScene = new Scene(overview.getValue());
 
         showLogin();
         primaryStage.show();
@@ -36,6 +37,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Admin overview");
         primaryStage.setScene(overviewScene);
+        overviewCtrl.refreshOverview();
         restoreDimensions();
     }
 
