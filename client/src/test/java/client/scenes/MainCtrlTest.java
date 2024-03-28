@@ -15,16 +15,19 @@
  */
 package client.scenes;
 
+import client.utils.ServerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 public class MainCtrlTest {
 
     private MainCtrl sut;
 
     @BeforeEach
-    public void setup() {
-        sut = new MainCtrl();
+    public void setup() throws IOException {
+
     }
 
     @Test
