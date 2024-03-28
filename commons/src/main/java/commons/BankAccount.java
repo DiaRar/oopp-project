@@ -44,8 +44,8 @@ public class BankAccount {
         this.iban = iban;
     }
 
-    @JsonView(View.CommonsView.class)
     @Basic
+    @JsonView(View.CommonsView.class)
     public String getBic() {
         return bic;
     }

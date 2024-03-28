@@ -28,6 +28,7 @@ import client.uicomponents.Alerts;
 import com.google.inject.Inject;
 import commons.Debt;
 import commons.Event;
+import commons.Expense;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
@@ -108,6 +109,16 @@ public class ServerUtils {
 			handleConnectionException(ex);
 			return null;
 		}
+	}
+
+	public List<Expense> getExpenses(UUID eventId) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(server)
+				.path("/api/events/{eventId}/expenses")
+				.resolveTemplate("eventId", eventId)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.get(new GenericType<List<Expense>>() {});
 	}
 
 	public Event updateEvent(UUID id, Event event) {

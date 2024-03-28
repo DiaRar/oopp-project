@@ -1,30 +1,31 @@
 ### ADD an expense to an event
-POST http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/
+POST http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/
 Content-Type: application/json
 
 {
-  "title": "wow",
+  "title": "abcd",
   "amount": 2.0,
+  "date": "2024-03-27T15:16:22.469382",
   "payer": {
-    "id": "2d03bca6-1f9c-4ab9-9ee0-05ea621dc532",
+    "id": "7bb19bd0-dc9a-4c4e-8de8-be23c47551ec",
     "nickname": "diaco"
   },
   "debtors": [
     {
-      "id": "e3ec153a-e2ec-4b7e-b970-8046f2729e4f",
+      "id": "0a170ca4-ca89-43b3-b694-5c483d9e86b0",
       "nickname": "diaco"
     }
   ]
 }
 ### GET all EXPENSES of an EVENT
-GET http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/
+GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/
 Accept: application/json
 
 ### GET EXPENSE by ID
-GET http://localhost:8080/api/events/0a17a707-b0de-4fe0-bab3-cddbf520305f/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/6afb91a5-e942-4d62-866a-f584cf342768
 
 ### DELETE EXPENSE by ID
-DELETE http://localhost:8080/api/events/0a17a707-b0de-4fe0-bab3-cddbf520305f/expenses/e6dba492-cba3-4658-be18-4e87826b23db
+DELETE http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/16052803-249b-498e-bef1-10f882fcf160
 
 ### ADD an expense to an event
 PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/30276186-ced2-4d6b-ab22-536aff7b11cf
