@@ -2,6 +2,7 @@ package admin;
 
 import admin.scenes.LoginCtrl;
 import admin.scenes.MainCtrl;
+import admin.scenes.OverviewCtrl;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.application.Application;
@@ -17,8 +18,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         var login = FXML.load(LoginCtrl.class, "client", "scenes", "login.fxml");
+        var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "overview.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-
-        mc.init(primaryStage, login);
+        mc.init(primaryStage, login, overview);
     }
 }

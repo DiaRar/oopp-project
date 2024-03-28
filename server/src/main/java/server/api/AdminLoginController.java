@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import server.services.AdminPasswordService;
 
 @RestController
-@RequestMapping("api/admin/login")
+@RequestMapping("/api/admin/login")
 public class AdminLoginController {
     @GetMapping("/{password}")
     public ResponseEntity<Boolean> get(@PathVariable("password") String password) {
