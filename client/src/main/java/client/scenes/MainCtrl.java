@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.Parent;
@@ -29,6 +30,7 @@ public class MainCtrl {
     private Stage dialog;
 
     private ServerUtils serverUtils;
+    private LanguageUtils languageUtils;
 
     private Event event;
 
@@ -45,8 +47,9 @@ public class MainCtrl {
     private double screenHeight;
 
     @Inject
-    public MainCtrl(ServerUtils serverUtils) {
+    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils) {
         this.serverUtils = serverUtils;
+        this.languageUtils = languageUtils;
     }
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
@@ -170,5 +173,8 @@ public class MainCtrl {
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHeight);
     }
-}
 
+    public LanguageUtils getLanguageUtils() {
+        return this.languageUtils;
+    }
+}
