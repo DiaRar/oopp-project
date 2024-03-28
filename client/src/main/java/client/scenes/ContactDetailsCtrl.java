@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
@@ -11,8 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-
-import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 

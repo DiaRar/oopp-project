@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import com.google.inject.Inject;
 import commons.Debt;
 import commons.Event;
 import commons.Participant;
@@ -34,7 +35,6 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
-import javax.inject.Inject;
 
 public class ServerUtils {
 
