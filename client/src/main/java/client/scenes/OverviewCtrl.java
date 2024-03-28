@@ -85,7 +85,7 @@ public class OverviewCtrl {
     @FXML
     private Button settleDebts;
     @FXML
-    private ComboBox<SplitPane> tagChoice;
+    private ComboBox<String> tagChoice;
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
@@ -290,20 +290,17 @@ public class OverviewCtrl {
         switchLanguage(textMap);
     }
 
-    public SplitPane tagComponent(Tag tag) {
-        SplitPane tc = new SplitPane();
-        String hex = String.format("#%02x%02x%02x", tag.getColor().getRed(), tag.getColor().getGreen(), tag.getColor().getBlue());
-        Background bg = new Background(new BackgroundFill(Paint.valueOf(hex),
-                new CornerRadii(TAG_SPACING, 0, TAG_SPACING, 0, false),
-                new Insets(0, TAG_SPACING, 0, TAG_SPACING)));
-        Text text = new Text(tag.getName());
-        text.setFont(ARIAL_BOLD);
-        TextFlow tf = new TextFlow();
-        tf.setBackground(bg);
+    public String tagComponent(Tag tag) {
+//  TODO add color component
 
-        tc.getItems().add(text);
-        tc.getItems().add(tf);
-        return tc;
+//        Label tc = new Label();
+//        String hex = String.format("#%02x%02x%02x", tag.getColor().getRed(), tag.getColor().getGreen(), tag.getColor().getBlue());
+//        Background bg = new Background(new BackgroundFill(Paint.valueOf(hex),
+//                new CornerRadii(TAG_SPACING, 0, TAG_SPACING, 0, false),
+//                new Insets(0, TAG_SPACING, 0, TAG_SPACING)));
+//        tc.setText(tag.getName());
+//        tc.setFont(ARIAL_BOLD);
+        return tag.getName();
     }
 
     public void mockData() {
