@@ -18,6 +18,7 @@ package client;
 import client.scenes.*;
 import client.utils.Config;
 import client.utils.ConfigUtils;
+import client.utils.WebSocketUtils;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Binder;
@@ -40,6 +41,7 @@ public class InjectorModule implements Module {
         binder.bind(ContactDetailsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StatisticsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WebSocketUtils.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
