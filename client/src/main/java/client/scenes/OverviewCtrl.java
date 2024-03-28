@@ -166,7 +166,8 @@ public class OverviewCtrl implements Initializable {
     public void clear() {
         expenses = null;
         participants = null;
-        choiceBox = new ChoiceBox<>();
+        //TODO fix null pointer exception
+        choiceBox.getItems().clear();
         list.getChildren().clear();
     }
     public void addExpense(Expense expense) {
