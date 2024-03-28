@@ -8,8 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import com.google.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 public class MainCtrl {
