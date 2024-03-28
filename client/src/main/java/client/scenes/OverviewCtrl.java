@@ -322,7 +322,8 @@ public class OverviewCtrl implements Initializable {
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
         this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
         this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
-        this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
+        this.fromText.bind(languageUtils.getBinding("overview.fromLabel"));
         this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
-    }
+        this.participantsLabel.textProperty().bind(languageUtils.getBinding("overview.participantsLabel"));
+        }
 }
