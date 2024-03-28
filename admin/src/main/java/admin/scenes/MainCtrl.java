@@ -37,7 +37,8 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Admin overview");
         primaryStage.setScene(overviewScene);
-        overviewCtrl.refreshOverview();
+        //TODO FIX!
+        //overviewCtrl.refreshOverview();
         restoreDimensions();
     }
 
