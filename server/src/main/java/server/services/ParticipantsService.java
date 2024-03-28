@@ -44,7 +44,12 @@ public class ParticipantsService {
             repoParticipant.setEmail(participant.getEmail());
         }
         if (participant.getBankAccount() != null) {
-            repoParticipant.setBankAccount(participant.getBankAccount());
+            if (repoParticipant.getBankAccount() != null &&
+                    repoParticipant.getBankAccount().getIban().equals(participant.getBankAccount().getIban())) {
+                repoParticipant.getBankAccount().setBic(participant.getBankAccount().getBic());
+            } else {
+                repoParticipant.setBankAccount(participant.getBankAccount());
+            }
         }
         participantRepository.flush();
         return repoParticipant;

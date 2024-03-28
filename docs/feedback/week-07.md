@@ -16,9 +16,9 @@ Feedback: The agenda was shared with the TA sufficiently ahead of the meeting. I
 
 #### Performance of the *Previous* Minute Taker
 
-Mark: Insufficient
+Mark: Very Good
 
-Feedback: The previous minute taker did not upload the notes before our next meeting.
+Feedback: The previous minute taker took a good amount of notes, though they seem somewhat short for a meeting of 45 mins. Consider writing things more concretely. Also good inclusion of the task distribution for the week!
 
 
 #### Chair performance

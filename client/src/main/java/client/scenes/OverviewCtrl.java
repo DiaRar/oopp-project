@@ -15,45 +15,53 @@
  */
 package client.scenes;
 
-import client.utils.ConfigUtils;
+import client.utils.Config;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.awt.*;
-import java.io.File;
-import java.time.LocalDateTime;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.ResourceBundle;
+import java.util.StringJoiner;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class OverviewCtrl {
+public class OverviewCtrl implements Initializable {
 
+    private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final LanguageUtils languageUtils;
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
@@ -79,6 +87,10 @@ public class OverviewCtrl {
     @FXML
     private VBox list;
     @FXML
+    private Label expensesLabel;
+    @FXML
+    private Label participantsLabel;
+    @FXML
     private Button sendInvites;
     @FXML
     private Button addExpense;
@@ -86,18 +98,25 @@ public class OverviewCtrl {
     private Button settleDebts;
     @FXML
     private ComboBox<String> tagChoice;
+    private StringProperty fromText;
+    private StringProperty includingText;
+
     @Inject
-    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.config = config;
+        this.languageUtils = languageUtils;
+        this.fromText = new SimpleStringProperty();
+        this.includingText = new SimpleStringProperty();
     }
 
     public void startup() {
         event = mainCtrl.getEvent();
+        title.setText(event.getName());
         expenses = FXCollections.observableArrayList(event.getExpenses().stream().toList());
         filteredExpenses = new FilteredList<>(expenses);
         participants = FXCollections.observableArrayList(event.getParticipants().stream().toList());
-        title.setText(event.getName());
         participantsText.setText(participants.stream().map(Participant::getNickname).collect(Collectors.joining(", ")));
         choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
         List<BorderPane> collection =
@@ -136,11 +155,6 @@ public class OverviewCtrl {
                 }
             }
         });
-        participants.add(new Participant("Person 1", null));
-        participants.getFirst().setId(UUID.randomUUID());
-        participants.add(new Participant("Peson 2", null));
-        expenses.add(new Expense(HARDCODED_EXPENSE, "Example expense", LocalDateTime.now(),
-                participants.getFirst(), participants));
     }
     public void clear() {
         expenses = null;
@@ -207,10 +221,40 @@ public class OverviewCtrl {
         BorderPane.setAlignment(editImage, Pos.CENTER);
         return borderPane;
     }
+
+    public void refresh() {
+        event = mainCtrl.getEvent();
+        expenses = FXCollections.observableList(event.getExpenses().stream().toList());
+        participants = FXCollections.observableList(event.getParticipants().stream().toList());
+        title.setText(event.getName());
+        participantsText.setText(String.join(",",
+                participants.stream().map(Participant::getNickname).toList()));
+        choiceBox.getItems().addAll(participants.stream().map(Participant::getNickname).toList());
+        choiceBox.setValue(choiceBox.getItems().get(0));
+//        choiceBox.setValue(participants.get(0));
+//        System.out.println(event.getExpenses().toString());
+        List<BorderPane> collection =
+                event.getExpenses().stream().map(this::expenseComponent).toList();
+        list.getChildren().addAll(collection);
+//        switchToDutch();
+        switch (config.getLocale().getLanguage()) {
+            case "nl":
+                languageUtils.setLang("nl");
+                break;
+            case "en":
+                languageUtils.setLang("en");
+                break;
+            default:
+                languageUtils.setLang("en");
+                break;
+        }
+    }
+
     public void choiceChanged() {
         String name = choiceBox.getValue();
-        from.setText("From ".concat(name));
-        including.setText("Including ".concat(name));
+        // TODO: Make proper string bindings
+        from.setText(fromText.getValue().concat(" ").concat(name));
+        including.setText(includingText.getValue().concat(" ").concat(name));
         currentParticipant = participants.get(0);
     }
     public void select(javafx.event.Event e) {
@@ -246,8 +290,13 @@ public class OverviewCtrl {
     }
 
     public void addParticipantAction() {
-        mainCtrl.callAddParticipantDialog(event);
+        mainCtrl.callAddParticipantDialog();
     }
+
+    public void editParticipantAction() {
+        mainCtrl.callEditParticipantDialog();
+    }
+
     public void openAddExpense() {
         System.out.println("Add expense");
         mainCtrl.showAddExpense();
@@ -271,23 +320,15 @@ public class OverviewCtrl {
         mainCtrl.showStatistics();
     }
 
- public void switchLanguage(Map<String, String> textMap) {
-        title.setText(textMap.get("title"));
-        sendInvites.setText(textMap.get("sendInvites"));
-        addExpense.setText(textMap.get("addExpense"));
-        settleDebts.setText(textMap.get("settleDebts"));
-        all.setText(textMap.get("all"));
-        from.setText(textMap.get("from"));
-        including.setText(textMap.get("including"));
-    }
-    public void switchToDutch() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewDutch.csv"));
-        switchLanguage(textMap);
-    }
 
-    public void switchToEnglish() {
-        Map<String, String> textMap = ConfigUtils.readLanguage(new File("client/src/main/resources/config/overviewEnglish.csv"));
-        switchLanguage(textMap);
+        public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
+        this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
+        this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
+        this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
+        this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
+        this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
+        this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
     }
 
     public String tagComponent(Tag tag) {

@@ -59,7 +59,7 @@ public class Participant {
         return email;
     }
     // Relationships
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonView(View.ParticipantView.class)
     public BankAccount getBankAccount() {
         return bankAccount;

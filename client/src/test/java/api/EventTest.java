@@ -1,10 +1,15 @@
 package api;
 
+import client.utils.Config;
 import client.utils.ServerUtils;
 import commons.Event;
 
 import commons.Participant;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.File;
+import java.io.IOException;
+
 /*
 import org.junit.jupiter.api.Test;
 import commons.Expense;
@@ -22,10 +27,10 @@ public class EventTest {
     private Participant participant;
     private ServerUtils serverUtils;
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException {
         event = new Event("Test");
         participant = new Participant("John", "j.d@email.com");
-        serverUtils = new ServerUtils();
+        serverUtils = new ServerUtils(Config.read(new File("client/src/main/resources/config/config.properties")));
     }
 
     //COMMENTED INTEGRATION TESTS AS PIPELINE CONFIGURATION RUNS THEM WITHOUT SERVER RUNNING, CAUSING A FAIL
