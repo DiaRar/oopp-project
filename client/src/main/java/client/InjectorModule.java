@@ -22,8 +22,6 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -43,16 +41,8 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        try {
-            Path path = Paths.get("client/src/main/resources/config/recents.csv");
-            //TODO REMOVE!!
-            Path otherPath = Paths.get("client/src/main/resources/config/participants.csv");
-            utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
-            utils.setParticipantsFile(new FileReader(otherPath.toFile()));
-            return utils;
-        } catch (FileNotFoundException e) {
-            //TODO log and handle error
-            throw new RuntimeException(e);
-        }
+        Path path = Paths.get("./client/src/main/resources/config/recents.csv");
+        utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
+        return utils;
     }
 }
