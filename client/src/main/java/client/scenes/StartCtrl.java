@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.uicomponents.Alerts;
 import client.uicomponents.LanguageComboBox;
 import client.utils.Config;
 import client.utils.ConfigUtils;
@@ -20,7 +21,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,8 +33,6 @@ public class StartCtrl implements Initializable {
     @FXML
     private TextField createField;
     @FXML
-    private ListView<String> listView;
-    @FXML
     public Button create;
     @FXML
     public Label createNewEvent;
@@ -42,8 +40,6 @@ public class StartCtrl implements Initializable {
     public Button join;
     @FXML
     public Label joinEvent;
-    @FXML
-    public Label recentEvents;
     @FXML
     private HBox bottomHBox;
     private LanguageComboBox languageComboBox;
@@ -77,8 +73,6 @@ public class StartCtrl implements Initializable {
 
         var recentEvents = utils.readRecents();
         var list = FXCollections.observableArrayList(recentEvents.stream().map(Event::getName).toList());
-        //listView.setItems(list);
-        //listView.setCellFactory(param -> new RecentlyVisitedCell());
         refreshRecents();
         switch (config.getLocale().getLanguage()) {
             case "nl":
@@ -91,7 +85,6 @@ public class StartCtrl implements Initializable {
                 languageUtils.setLang("en");
                 break;
         }
-//        languageComboBox = new LanguageComboBox(mainCtrl.getLanguageUtils());
         bottomHBox.getChildren().add(languageComboBox);
         this.create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
         this.join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
@@ -107,7 +100,12 @@ public class StartCtrl implements Initializable {
     public void create() {
         Event event = new Event();
         event.setName(createField.getText());
+        if (event.getName().equals("")) {
+            Alerts.emptyNameAlert();
+            return;
+        }
         Event retEvent = serverUtils.addEvent(event);
+        if (retEvent == null) return;
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();
@@ -119,14 +117,27 @@ public class StartCtrl implements Initializable {
     public void join() {
         try {
             UUID uuid = UUID.fromString(joinField.getText());
+            Event retEvent = mainCtrl.getEvent();
+            if (retEvent == null) return;
+            utils.addRecent(retEvent);
             mainCtrl.setEvent(uuid);
-            utils.addRecent(mainCtrl.getEvent());
-            mainCtrl.showOverview();
+            mainCtrl.showOverviewStart();
         } catch (IllegalArgumentException ex) {
-            alertUser("Invalid UUID Format", "Oops! Invalid UUID format.",
-                    "Please ensure your UUID follows the correct format:\n" +
-                            "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+            Alerts.invalidUUIDAlert();
         }
+    }
+
+    public void joinRecent(Event event) {
+        try {
+            mainCtrl.setEvent(event.getId());
+        } catch (NotFoundException ex) {
+            Alerts.eventDeletedAlert();
+            utils.removeRecent(event.getId());
+            recentsList.getItems().remove(event);
+            return;
+        }
+        if (mainCtrl.getEvent() == null) return;
+        mainCtrl.showOverviewStart();
     }
 
     public void refreshRecents() {
@@ -174,26 +185,9 @@ public class StartCtrl implements Initializable {
         });
 
         borderPane.setOnMouseClicked(e -> {
-            try {
-                mainCtrl.setEvent(event.getId());
-            } catch (NotFoundException ex) {
-                alertUser("Event Status", "Attention! Event might have been deleted.",
-                        "The event you are trying to access might have been deleted or is no longer available.");
-                utils.removeRecent(event.getId());
-                recentsList.getItems().remove(event);
-                return;
-            }
-            mainCtrl.showOverviewStart();
+            joinRecent(event);
         });
 
         return borderPane;
-    }
-
-    public static void alertUser(String title, String header, String context) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(context);
-        alert.showAndWait();
     }
 }

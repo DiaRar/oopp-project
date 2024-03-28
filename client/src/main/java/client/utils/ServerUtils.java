@@ -24,10 +24,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import client.uicomponents.Alerts;
 import commons.Debt;
 import commons.Event;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
+import jakarta.ws.rs.ProcessingException;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -45,6 +47,15 @@ public class ServerUtils {
 		this.config = config;
 		this.server = config.getServer();
 	}
+
+	public void handleConnectionException(Exception ex) {
+		if (ex instanceof ProcessingException) {
+			Alerts.connectionRefusedAlert();
+		} else {
+			ex.printStackTrace(); // Print other exceptions for debugging
+		}
+	}
+
 	public void getQuotesTheHardWay() throws IOException, URISyntaxException {
 		var url = new URI("http://localhost:8080/api/quotes").toURL();
 		var is = url.openConnection().getInputStream();
@@ -56,104 +67,159 @@ public class ServerUtils {
 	}
 
 	public Event getEvent(UUID eventId) {
-		return ClientBuilder
-				.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/events/" + eventId)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get(Event.class);
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(config.getServer())
+					.path("/api/events/" + eventId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(Event.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Event addEvent(Event event) {
+		try {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(server)
 				.path("/api/events/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.post(Entity.entity(event, APPLICATION_JSON), Event.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public List<Event> getEvents() {
+		try {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(server)
 				.path("/api/events/")
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.get(new GenericType<List<Event>>() {});
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Event updateEvent(UUID id, Event event) {
+		try {
 		return ClientBuilder.newClient(new ClientConfig())
 				.target(server)
 				.path("/api/events/" + id)
 				.request(APPLICATION_JSON)
 				.accept(APPLICATION_JSON)
 				.put(Entity.entity(event, APPLICATION_JSON), Event.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public List<Participant> getParticipants() {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/participants/")
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get(new GenericType<List<Participant>>() {});
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/participants/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(new GenericType<List<Participant>>() {});
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Event addParticipant(Participant participant, UUID eventID) {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/events/" + eventID)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.post(Entity.entity(participant, APPLICATION_JSON), Event.class);
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventID)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(participant, APPLICATION_JSON), Event.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Participant getParticipant(UUID id) {
-		return ClientBuilder
-				.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/participants/" + id)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get(Participant.class);
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/participants/" + id)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(Participant.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Participant updateParticipant(Participant participant, UUID id) {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/participants/" + id)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/participants/" + id)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.put(Entity.entity(participant, APPLICATION_JSON), Participant.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public List<Debt> getDebts(Event event) {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/events/" + event.getId() + "/debts")
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.get(new GenericType<List<Debt>>() {});
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + event.getId() + "/debts")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(new GenericType<List<Debt>>() {});
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Debt updateDebt(Event event, DebtPK debtPK, Debt newDebt) {
-		return ClientBuilder.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/events/" + event.getId() + "/debts/" + debtPK)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + event.getId() + "/debts/" + debtPK)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 
 	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
-		return ClientBuilder
-				.newClient(new ClientConfig())
-				.target(server)
-				.path("/api/events/" + eventId + "/debts/" + debtId)
-				.request(APPLICATION_JSON)
-				.accept(APPLICATION_JSON)
-				.delete(Debt.class);
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/debts/" + debtId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete(Debt.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
 	}
 }
