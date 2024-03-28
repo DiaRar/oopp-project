@@ -30,6 +30,7 @@ public class LoginCtrl implements Initializable {
         }
 
         var passwordRes = serverUtils.tryPassword(password);
+        if (passwordRes == null) return;
         if (!passwordRes) {
             Alerts.incorrectPasswordAlert();
             return;
