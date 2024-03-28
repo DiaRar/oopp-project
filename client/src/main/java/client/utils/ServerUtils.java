@@ -29,6 +29,7 @@ import commons.Debt;
 import commons.Event;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -52,7 +53,7 @@ public class ServerUtils {
 		if (ex instanceof ProcessingException) {
 			Alerts.connectionRefusedAlert();
 		} else {
-			ex.printStackTrace(); // Print other exceptions for debugging
+			throw new NotFoundException(ex);
 		}
 	}
 
