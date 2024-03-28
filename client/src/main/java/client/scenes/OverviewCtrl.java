@@ -151,9 +151,15 @@ public class OverviewCtrl implements Initializable {
             }
         });
     }
+
+    public void back() {
+        mainCtrl.showStart();
+    }
+
     public void clear() {
         expenses = null;
         participants = null;
+        //TODO fix null pointer exception
         choiceBox.getItems().clear();
         list.getChildren().clear();
     }
