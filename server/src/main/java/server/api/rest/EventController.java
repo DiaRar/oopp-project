@@ -1,4 +1,4 @@
-package server.api;
+package server.api.rest;
 
 import java.util.*;
 
@@ -13,21 +13,30 @@ import org.springframework.web.bind.annotation.*;
 
 import commons.Event;
 import server.services.EventService;
+import server.services.WebSocketUpdateService;
 
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
 
     private final EventService eventService;
+    private final WebSocketUpdateService updateService;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, WebSocketUpdateService updateService) {
         this.eventService = eventService;
+        this.updateService = updateService;
     }
 
     @GetMapping(path = {"", "/"})
     @JsonView(View.CommonsView.class)
     public List<Event> getAll() {
         return eventService.getAll();
+    }
+
+    @GetMapping("/{id}/basic")
+    @JsonView(View.CommonsView.class)
+    public ResponseEntity<Event> getByIdBasic(@PathVariable("id") UUID id) throws EntityNotFoundException {
+        return ResponseEntity.ok(eventService.getById(id));
     }
 
     @GetMapping("/{id}")
@@ -50,6 +59,7 @@ public class EventController {
     public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event)
             throws EntityNotFoundException, IllegalArgumentException, NullPointerException {
         Event updated = eventService.update(id, event);
+        updateService.sendUpdatedEvent(updated);
         return ResponseEntity.ok(updated);
     }
     @DeleteMapping("/{id}")

@@ -43,6 +43,8 @@ public class ParticipantsService {
         if (participant.getEmail() != null) {
             repoParticipant.setEmail(participant.getEmail());
         }
+        if (participant.getBankAccount() != null && participant.getBankAccount().getIban().isEmpty())
+            participant.setBankAccount(null);
         if (participant.getBankAccount() != null) {
             if (repoParticipant.getBankAccount() != null &&
                     repoParticipant.getBankAccount().getIban().equals(participant.getBankAccount().getIban())) {
@@ -71,6 +73,8 @@ public class ParticipantsService {
         Event event = new Event();
         event.setId(eventId);
         participant.setEvent(event);
+        if (participant.getBankAccount() != null && participant.getBankAccount().getIban().isEmpty())
+            participant.setBankAccount(null);
         return participantRepository.save(participant);
     }
 }

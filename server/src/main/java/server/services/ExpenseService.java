@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.database.ExpenseRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -45,6 +47,9 @@ public class ExpenseService {
         }
         checkExpenseValidity(expense);
         setEvent(eventId, expense);
+        if (expense.getDate() == null) {
+            expense.setDate(LocalDateTime.now(ZoneId.of("Europe/Amsterdam")));
+        }
         // TODO: Create new debts
         return expenseRepo.saveAndFlush(expense);
     }

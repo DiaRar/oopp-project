@@ -1,4 +1,4 @@
-package server.api;
+package server.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.Participant;
@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.ParticipantsService;
+import server.services.WebSocketUpdateService;
 
 import java.util.*;
 
@@ -16,9 +17,11 @@ import java.util.*;
 @RequestMapping("/api/events/{eventId}/participants")
 public class ParticipantsController {
     private final ParticipantsService participantsService;
+    private final WebSocketUpdateService updateService;
 
-    public ParticipantsController(ParticipantsService participantsService) {
+    public ParticipantsController(ParticipantsService participantsService, WebSocketUpdateService updateService) {
         this.participantsService = participantsService;
+        this.updateService = updateService;
     }
     @GetMapping("/{id}")
     @JsonView(View.ParticipantView.class)
@@ -33,7 +36,9 @@ public class ParticipantsController {
     public ResponseEntity<Participant> updateParticipant(@PathVariable UUID eventId, @PathVariable UUID id,
                                                          @RequestBody Participant participant)
             throws IllegalArgumentException, EntityNotFoundException {
-        return ResponseEntity.ok(participantsService.updateParticipant(eventId, id, participant));
+        Participant response = participantsService.updateParticipant(eventId, id, participant);
+        updateService.sendUpdatedParticipant(eventId, response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -42,6 +47,7 @@ public class ParticipantsController {
     public ResponseEntity<Void> deleteParticipant(@PathVariable UUID eventId, @PathVariable UUID id)
             throws IllegalArgumentException, EntityNotFoundException {
         participantsService.deleteParticipant(id);
+        updateService.sendRemovedParticipant(eventId, id);
         return ResponseEntity.ok().build();
     }
 
@@ -56,6 +62,8 @@ public class ParticipantsController {
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Participant> addParticipant(@PathVariable UUID eventId, @RequestBody Participant participant)
             throws IllegalArgumentException {
-        return ResponseEntity.ok(participantsService.addParticipant(eventId, participant));
+        Participant response = participantsService.addParticipant(eventId, participant);
+        updateService.sendAddedParticipant(eventId, response);
+        return ResponseEntity.ok(response);
     }
 }
