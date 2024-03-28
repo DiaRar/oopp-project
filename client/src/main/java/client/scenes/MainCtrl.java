@@ -43,6 +43,9 @@ public class MainCtrl {
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
 
+    private AddTagCtrl addTagCtrl;
+    private Scene addTagScene;
+
     private double screenWidth;
     private double screenHeight;
 
@@ -55,7 +58,7 @@ public class MainCtrl {
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
                      Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails,
-                     Pair<DebtsCtrl, Parent> debts) {
+                     Pair<DebtsCtrl, Parent> debts, Pair<AddTagCtrl, Parent> tags) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
         this.startCtrl = start.getKey();
@@ -76,6 +79,9 @@ public class MainCtrl {
 
         this.statisticsCtrl = statistics.getKey();
         this.statisticsScene = new Scene(statistics.getValue());
+
+        this.addTagCtrl = tags.getKey();
+        this.addTagScene = new Scene(tags.getValue());
 
         showStart();
         primaryStage.show();
@@ -162,6 +168,12 @@ public class MainCtrl {
         primaryStage.setScene(statisticsScene);
         statisticsScene.setOnKeyPressed(e -> statisticsCtrl.keyPressed(e));
         restoreDimensions();
+    }
+
+    public void showAddTags() {
+        saveDimensions();
+        primaryStage.setTitle("Add Tag");
+        primaryStage.setScene(addTagScene);
     }
 
     public Event getEvent() {
