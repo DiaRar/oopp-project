@@ -324,6 +324,9 @@ public class OverviewCtrl implements Initializable {
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        // TODO add after
+        // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
+
     }
 
     private ListCell<Expense> getExpenseListCell() {
@@ -368,24 +371,8 @@ public class OverviewCtrl implements Initializable {
         return tag.getName();
     }
 
-    public void tagSelected() {
-        currentTag = tagChoice.getValue();
-        // filterForTags();
-    }
-
-    public void mockData() {
-        Tag tag1 = new Tag("Amaro", Color.blue);
-        Tag tag2 = new Tag("Beer", Color.yellow);
-        Tag tag3 = new Tag("Champagne", Color.orange);
-        List<Tag> tags = new ArrayList<>();
-        tags.add(tag1);
-        tags.add(tag2);
-        tags.add(tag3);
-        tagChoice.setItems(FXCollections.observableArrayList(tags.stream().map(this::tagComponent).toList()));
-    }
-
     public void filterForTags(javafx.event.Event e) {
-        // TODO: tell user there needs to be a participant
+        currentTag = tagChoice.getValue();
         if (currentTag == null) {
             return;
         }
