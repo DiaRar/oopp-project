@@ -5,12 +5,14 @@ import com.google.inject.Inject;
 import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,6 +45,9 @@ public class ContactDetailsCtrl implements Initializable {
     private Button cancelButton;
     @FXML
     private ComboBox<Participant> editSelectorComboBox;
+    @FXML
+    private HBox actionBtnHBox;
+    private Button deleteButton;
 
     private Event parentEvent;
     private ObservableList<Participant> participants;
@@ -50,8 +55,11 @@ public class ContactDetailsCtrl implements Initializable {
     private boolean editMode;
 
     // Will be used to bind text for translations
-    private StringProperty actionBtnText;
-    private StringProperty topLabelText;
+    private StringProperty addLabelText = new SimpleStringProperty();
+    private StringProperty editLabelText = new SimpleStringProperty();
+    private StringProperty addBtnText = new SimpleStringProperty();
+    private StringProperty saveBtnText = new SimpleStringProperty();
+    private StringProperty deleteBtnText = new SimpleStringProperty();
 
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -91,19 +99,21 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void setAddMode() {
+        this.clearText();
         this.editMode = false;
         this.editSelectorComboBox.setVisible(false);
         this.setFieldsDisabled(false);
-        this.topLabel.setText("Add New Participant");
-        this.addParticipantButton.setText("Add Participant");
+        this.topLabel.textProperty().bind(addLabelText);
+        this.addParticipantButton.textProperty().bind(addBtnText);
     }
 
     public void setEditMode() {
+        this.clearText();
         this.editMode = true;
         this.editSelectorComboBox.setVisible(true);
         this.setFieldsDisabled(true);
-        this.topLabel.setText("Edit Participant");
-        this.addParticipantButton.setText("Save");
+        this.topLabel.textProperty().bind(editLabelText);
+        this.addParticipantButton.textProperty().bind(saveBtnText);
     }
 
     public void selectEditParticipant() {
@@ -172,6 +182,17 @@ public class ContactDetailsCtrl implements Initializable {
             }
         });
         this.editSelectorComboBox.setButtonCell(getParticipantListCell());
+
+        this.addLabelText.bind(mainCtrl.getLanguageUtils().getBinding("contact.addParticipantLabel"));
+        this.editLabelText.bind(mainCtrl.getLanguageUtils().getBinding("contact.editParticipantLabel"));
+        this.saveBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.saveBtnText"));
+        this.addBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.addBtnText"));
+        this.deleteBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
+        this.cancelButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.cancelBtn"));
+        this.nameLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.nameLabel"));
+        this.emailLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.emailLabel"));
+        this.ibanLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.ibanLabel"));
+        this.bicLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.bicLabel"));
     }
 
     private static ListCell<Participant> getParticipantListCell() {
