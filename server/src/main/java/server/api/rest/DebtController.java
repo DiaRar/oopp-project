@@ -5,6 +5,7 @@ import commons.primary_keys.DebtPK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.DebtService;
+import server.services.WebSocketUpdateService;
 
 import java.util.UUID;
 
@@ -13,9 +14,11 @@ import java.util.UUID;
 public class DebtController {
 
     private final DebtService debtService;
+    private final WebSocketUpdateService updateService;
 
-    public DebtController(DebtService debtService) {
+    public DebtController(DebtService debtService, WebSocketUpdateService updateService) {
         this.debtService = debtService;
+        this.updateService = updateService;
     }
 
     @GetMapping("/{debtId}")
