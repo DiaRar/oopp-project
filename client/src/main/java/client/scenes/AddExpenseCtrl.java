@@ -6,7 +6,9 @@ import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 import commons.Tag;
+import commons.Participant;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -28,7 +30,6 @@ public class AddExpenseCtrl implements Initializable {
     private ConfigUtils utils;
     public ToggleGroup split;
     private LanguageUtils languageUtils;
-
     private Config config;
     @FXML
     private ComboBox<String> payer;
@@ -124,10 +125,10 @@ public class AddExpenseCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        payer.setItems(FXCollections.observableArrayList("Paul", "Mike", "Irene", "Julia"));
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         setTags();
         fillDebtors();
+        fillPayers();
         this.add.textProperty().bind(languageUtils.getBinding("addExpense.addBtn"));
         this.cancel.textProperty().bind(languageUtils.getBinding("addExpense.cancelBtn"));
         this.whoPaid.textProperty().bind(languageUtils.getBinding("addExpense.whoPaidLabel"));
@@ -144,8 +145,6 @@ public class AddExpenseCtrl implements Initializable {
                 languageUtils.setLang("nl");
                 break;
             case "en":
-                languageUtils.setLang("en");
-                break;
             default:
                 languageUtils.setLang("en");
                 break;
@@ -153,14 +152,20 @@ public class AddExpenseCtrl implements Initializable {
     }
 
     public void fillDebtors() {
-        // debtorsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//        List<Participant> participants = utils.readParticipants();
-//        if (participants.isEmpty()) return;
-//        List<String> names = participants.stream()
-//                .map(Participant::getNickname)
-//                .collect(Collectors.toList());
-//        debtorsList.setItems(FXCollections.observableList(names));
-        // TODO replace mock data with the list of participants in the event
+        if (mainCtrl.getEvent() == null) return;
+        debtorsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        List<Participant> participants = mainCtrl.getEvent().getParticipants();
+        if (participants.isEmpty()) return;
+        List<String> names = participants.stream()
+                .map(Participant::getNickname)
+                .collect(Collectors.toList());
+        debtorsList.setItems(FXCollections.observableList(names));
+    }
+
+    public void fillPayers() {
+        if (mainCtrl.getEvent() == null) return;
+        payer.setItems(FXCollections.observableArrayList(
+                mainCtrl.getEvent().getParticipants().stream().map(Participant::getNickname).toList()));
     }
 
     public void selectDebtor() {
@@ -190,5 +195,12 @@ public class AddExpenseCtrl implements Initializable {
                 .collect(Collectors.toList())));
         // TODO replace mock tags with tags from the current event
         // TODO use the tag's color in the UI
+    }
+
+    public void refresh() {
+        clearFields();
+        setTags();
+        fillPayers();
+        fillDebtors();
     }
 }
