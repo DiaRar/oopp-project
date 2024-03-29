@@ -87,8 +87,6 @@ public class OverviewCtrl implements Initializable {
     private Button addExpense;
     @FXML
     private Button settleDebts;
-    @FXML
-    private Button addTag;
 
     private StringProperty fromText;
     private StringProperty includingText;
@@ -300,13 +298,7 @@ public class OverviewCtrl implements Initializable {
         mainCtrl.showStatistics();
     }
 
-    public void openAddTags() {
-        System.out.println("Add Tags");
-        mainCtrl.showAddTags();
-    }
-
-
-        public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
         this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
@@ -314,7 +306,6 @@ public class OverviewCtrl implements Initializable {
         this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
         this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
         this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
-        this.addTag.textProperty().bind(languageUtils.getBinding("overview.addTag"));
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());

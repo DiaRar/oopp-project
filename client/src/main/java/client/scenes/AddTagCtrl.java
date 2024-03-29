@@ -72,7 +72,7 @@ public class AddTagCtrl implements Initializable {
         tags.getSelectionModel().clearSelection();
         nameField.clear();
         colorField.setValue(Color.WHITE);
-        mainCtrl.showOverview();
+        mainCtrl.showAddExpense();
     }
 
     public void save() {
@@ -84,7 +84,7 @@ public class AddTagCtrl implements Initializable {
         } else {
             // TODO connect to endpoint PUT for tag
         }
-        mainCtrl.showOverview();
+        mainCtrl.showAddExpense();
     }
 
     public void delete() {
