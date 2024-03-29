@@ -1,5 +1,6 @@
 package client.scenes;
 
+import org.apache.commons.lang3.*;
 import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
@@ -18,10 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -144,7 +147,8 @@ public class AddExpenseCtrl implements Initializable {
         if (payer.getSelectionModel().isEmpty()) return "payer";
         if (description.getText().isEmpty()) return "description";
         if (amount.getText().isEmpty()) return "amount";
-        if (date == null || date.getValue() == null) return "date";
+        if (!NumberUtils.isCreatable(amount.getText())) return "amount";
+        if (date == null || date.getValue() == null || date.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) return "date";
         if (!equallySplit.isSelected() && !partialSplit.isSelected()) return "debtors";
         if (partialSplit.isSelected() && selectedDebtors.getItems().isEmpty()) return "debtors";
         return "valid";
