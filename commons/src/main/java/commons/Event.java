@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -24,9 +25,9 @@ public class Event {
     private UUID id;
     private String name;
     // Relations
-    private Collection<Expense> expenses;
+    private List<Expense> expenses;
     private Collection<Tag> tags;
-    private Collection<Participant> participants;
+    private List<Participant> participants;
     private Collection<Debt> debts;
 
     /**
@@ -60,7 +61,8 @@ public class Event {
     // Relationships
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
     @JsonView(View.OverviewView.class)
-    public Collection<Expense> getExpenses() {
+    @OrderBy("date DESC")
+    public List<Expense> getExpenses() {
         return expenses;
     }
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
@@ -70,7 +72,7 @@ public class Event {
     }
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
     @JsonView(View.OverviewView.class)
-    public Collection<Participant> getParticipants() {
+    public List<Participant> getParticipants() {
         return participants;
     }
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
@@ -86,13 +88,13 @@ public class Event {
     public void setName(String name) {
         this.name = name;
     }
-    public void setExpenses(Collection<Expense> expenses) {
+    public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
     }
     public void setTags(Collection<Tag> tags) {
         this.tags = tags;
     }
-    public void setParticipants(Collection<Participant> participants) {
+    public void setParticipants(List<Participant> participants) {
         this.participants = participants;
     }
     public void setDebts(Collection<Debt> debts) {
