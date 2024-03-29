@@ -1,22 +1,20 @@
 package client.scenes;
 
-import org.apache.commons.lang3.*;
 import client.utils.Config;
+import client.utils.ConfigUtils;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
-import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 import commons.Expense;
-import commons.Tag;
 import commons.Participant;
+import commons.Tag;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -25,8 +23,8 @@ import java.awt.*;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
