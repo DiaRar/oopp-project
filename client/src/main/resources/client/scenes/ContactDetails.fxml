@@ -32,7 +32,7 @@
             <TextField fx:id="ibanField" />
             <Label fx:id="bicLabel" text="BIC" />
             <TextField fx:id="bicField" />
-            <HBox fx:id="actionBtnBHox" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="580.0" spacing="10.0">
+            <HBox fx:id="actionBtnHBox" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="580.0" spacing="10.0">
                <children>
                   <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="addParticipantButton" alignment="CENTER" mnemonicParsing="false" onAction="#confirmAction" text="Add Participant" />

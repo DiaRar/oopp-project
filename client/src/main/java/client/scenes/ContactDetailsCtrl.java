@@ -9,10 +9,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -59,7 +62,6 @@ public class ContactDetailsCtrl implements Initializable {
     private StringProperty editLabelText = new SimpleStringProperty();
     private StringProperty addBtnText = new SimpleStringProperty();
     private StringProperty saveBtnText = new SimpleStringProperty();
-    private StringProperty deleteBtnText = new SimpleStringProperty();
 
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -105,6 +107,7 @@ public class ContactDetailsCtrl implements Initializable {
         this.setFieldsDisabled(false);
         this.topLabel.textProperty().bind(addLabelText);
         this.addParticipantButton.textProperty().bind(addBtnText);
+        this.actionBtnHBox.getChildren().remove(deleteButton);
     }
 
     public void setEditMode() {
@@ -114,6 +117,9 @@ public class ContactDetailsCtrl implements Initializable {
         this.setFieldsDisabled(true);
         this.topLabel.textProperty().bind(editLabelText);
         this.addParticipantButton.textProperty().bind(saveBtnText);
+        if (!this.actionBtnHBox.getChildren().contains(deleteButton)) {
+            this.actionBtnHBox.getChildren().add(1, deleteButton);
+        }
     }
 
     public void selectEditParticipant() {
@@ -187,12 +193,22 @@ public class ContactDetailsCtrl implements Initializable {
         this.editLabelText.bind(mainCtrl.getLanguageUtils().getBinding("contact.editParticipantLabel"));
         this.saveBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.saveBtnText"));
         this.addBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.addBtnText"));
-        this.deleteBtnText.bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
         this.cancelButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.cancelBtn"));
         this.nameLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.nameLabel"));
         this.emailLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.emailLabel"));
         this.ibanLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.ibanLabel"));
         this.bicLabel.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.bicLabel"));
+
+        this.deleteButton = new Button();
+        this.deleteButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
+        this.actionBtnHBox.getChildren().add(1, deleteButton);
+        // TODO: Add confirmation
+        this.deleteButton.setOnAction(eventClick -> {
+            server.deleteParticipant(parentEvent.getId(), toBeUpdatedParticipant.getId());
+            clearText();
+            mainCtrl.closeDialog();
+        });
+        this.deleteButton.setTextFill(Color.RED);
     }
 
     private static ListCell<Participant> getParticipantListCell() {
