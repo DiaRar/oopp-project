@@ -19,6 +19,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import commons.Tag;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public interface TagRepository extends JpaRepository<Tag, UUID> {}
+public interface TagRepository extends JpaRepository<Tag, UUID> {
+    public Optional<Tag> findTagById(UUID uuid);
+
+    public List<Tag> findTagsByEventId(UUID id);
+
+    public Optional<Tag> findTagByIdAndEventId(UUID id, UUID eventId);
+
+    public Integer deleteTagById(UUID id);
+}
