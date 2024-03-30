@@ -192,6 +192,20 @@ public class ServerUtils {
         }
 	}
 
+	public void deleteParticipant(UUID eventId, UUID id) {
+		try {
+			ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/participants/{id}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("id", id)
+					.request()
+					.delete();
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+		}
+	}
+
 	public List<Debt> getDebts(Event event) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
