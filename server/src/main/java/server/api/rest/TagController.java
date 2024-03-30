@@ -44,7 +44,7 @@ public class TagController {
     }
 
     @PutMapping("/{tagId}")
-    public ResponseEntity<Tag> putTag(@PathVariable UUID eventId, @PathVariable UUID tagId, @RequestBody Tag tag) {
+    public ResponseEntity<Tag> putTag(@PathVariable UUID tagId, @RequestBody Tag tag) {
         try {
             return ResponseEntity.ok(tagService.update(tagId, tag));
         } catch (Exception e) {
