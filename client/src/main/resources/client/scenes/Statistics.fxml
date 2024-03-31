@@ -19,7 +19,7 @@
             <Font name="Arial" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="21.0" layoutY="21.0" prefHeight="37.0" prefWidth="154.0" text="Statistics">
+      <Label fx:id="title" layoutX="21.0" layoutY="21.0" prefHeight="38.0" prefWidth="404.0">
          <font>
             <Font name="Arial Bold" size="31.0" />
          </font>
