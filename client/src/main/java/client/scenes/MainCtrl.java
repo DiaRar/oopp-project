@@ -198,6 +198,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Statistics");
         primaryStage.setScene(statisticsScene);
+        statisticsCtrl.startup();
         statisticsScene.setOnKeyPressed(e -> statisticsCtrl.keyPressed(e));
         restoreDimensions();
     }
