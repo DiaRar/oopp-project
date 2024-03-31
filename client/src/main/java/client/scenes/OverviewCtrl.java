@@ -17,11 +17,12 @@ package client.scenes;
 
 import client.utils.Config;
 import client.utils.LanguageUtils;
-import com.google.inject.Inject;
-
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
+import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import commons.Tag;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,12 +43,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import java.util.StringJoiner;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
 
@@ -58,8 +60,13 @@ public class OverviewCtrl implements Initializable {
     private static final double EXPENSE_EDIT_SIZE = 17;
     private static final double EXPENSE_MARGIN = 10;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
+    private static final double HARDCODED_EXPENSE = 12.0;
+    private static final double TAG_SPACING = 5.0;
+    private Event event;
     private ObservableList<Expense> expenses;
     private ObservableList<Participant> participants;
+    private Participant currentParticipant;
+    private String currentTag;
     private FilteredList<Expense> filteredExpenses;
     private ObjectBinding<Predicate<Expense>> fromPredicate;
     private ObjectBinding<Predicate<Expense>> includingPredicate;
@@ -87,7 +94,8 @@ public class OverviewCtrl implements Initializable {
     private Button addExpense;
     @FXML
     private Button settleDebts;
-
+    @FXML
+    private ComboBox<String> tagChoice;
     private StringProperty fromText;
     private StringProperty includingText;
 
@@ -298,8 +306,7 @@ public class OverviewCtrl implements Initializable {
         mainCtrl.showStatistics();
     }
 
-
-        public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         this.sendInvites.textProperty().bind(languageUtils.getBinding("overview.sendInvitesBtn"));
         this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
@@ -307,10 +314,12 @@ public class OverviewCtrl implements Initializable {
         this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
         this.fromText.bind(languageUtils.getBinding("overview.allLabel"));
         this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
-
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        // TODO add after
+        // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
+
     }
 
     private ListCell<Expense> getExpenseListCell() {
@@ -341,4 +350,29 @@ public class OverviewCtrl implements Initializable {
             }
         };
     }
+
+    public String tagComponent(Tag tag) {
+//  TODO add color component
+
+//        Label tc = new Label();
+//        String hex = String.format("#%02x%02x%02x", tag.getColor().getRed(), tag.getColor().getGreen(), tag.getColor().getBlue());
+//        Background bg = new Background(new BackgroundFill(Paint.valueOf(hex),
+//                new CornerRadii(TAG_SPACING, 0, TAG_SPACING, 0, false),
+//                new Insets(0, TAG_SPACING, 0, TAG_SPACING)));
+//        tc.setText(tag.getName());
+//        tc.setFont(ARIAL_BOLD);
+        return tag.getName();
+    }
+
+    public void filterForTags(javafx.event.Event e) {
+        currentTag = tagChoice.getValue();
+        if (currentTag == null) {
+            return;
+        }
+        select(e);
+        Predicate<Expense> forTags = expense -> expense.getTags().stream().map(Tag::getName).toList()
+                .contains(currentTag);
+        filteredExpenses.setPredicate(forTags);
+    }
+
 }
