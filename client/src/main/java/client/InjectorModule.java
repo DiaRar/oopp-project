@@ -48,6 +48,7 @@ public class InjectorModule implements Module {
         binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
         binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {

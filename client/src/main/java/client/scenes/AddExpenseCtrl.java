@@ -72,6 +72,8 @@ public class AddExpenseCtrl implements Initializable {
     private Label howToSplit;
     @FXML
     private Label expenseType;
+    @FXML
+    private Button addTag;
 
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
@@ -192,6 +194,7 @@ public class AddExpenseCtrl implements Initializable {
         this.expenseType.textProperty().bind(languageUtils.getBinding("addExpense.expenseTypeLabel"));
         this.equallySplit.textProperty().bind(languageUtils.getBinding("addExpense.equallyRbtn"));
         this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
+        this.addTag.textProperty().bind(languageUtils.getBinding("addExpense.addTag"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -199,7 +202,6 @@ public class AddExpenseCtrl implements Initializable {
             case "en":
             default:
                 languageUtils.setLang("en");
-                break;
         }
     }
 
@@ -253,5 +255,10 @@ public class AddExpenseCtrl implements Initializable {
         setTags();
         fillPayers();
         fillDebtors();
+    }
+
+    public void openAddTags() {
+        System.out.println("Add Tags");
+        mainCtrl.showAddTags();
     }
 }
