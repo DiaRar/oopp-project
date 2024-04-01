@@ -26,13 +26,11 @@ import java.util.*;
 
 import client.uicomponents.Alerts;
 import com.google.inject.Inject;
-import commons.Debt;
-import commons.Event;
-import commons.Expense;
-import commons.Participant;
+import commons.*;
 import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
+import org.checkerframework.checker.units.qual.C;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -289,6 +287,65 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public List<Tag> getTags(UUID eventId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(new GenericType<List<Tag>>() {});
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag getTag(UUID eventId, UUID tagId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag updateTag(UUID eventId, UUID tagId, Tag newTag) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.put(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag deleteTag(UUID eventId, UUID tagId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete(Tag.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;
