@@ -15,6 +15,7 @@
  */
 package client;
 
+import client.implementations.WSSessionHandler;
 import client.scenes.*;
 import client.utils.Config;
 import client.utils.ConfigUtils;
@@ -49,6 +50,7 @@ public class InjectorModule implements Module {
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
         binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WSSessionHandler.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {

@@ -98,7 +98,6 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
-        startCtrl.refreshRecents();
         if (event != null) restoreDimensions();
     }
 
@@ -111,13 +110,12 @@ public class MainCtrl {
 
     public void showOverviewStart() {
         try {
-            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws", new WSSessionHandler(this));
+            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
         saveDimensions();
         showOverview();
-//        overviewCtrl.clear();
         overviewCtrl.startup();
         restoreDimensions();
     }

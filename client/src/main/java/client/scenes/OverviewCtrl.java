@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import atlantafx.base.theme.Tweaks;
 import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
@@ -318,6 +319,7 @@ public class OverviewCtrl implements Initializable {
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        this.list.getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
         this.backButton.textProperty().bind(languageUtils.getBinding("overview.backButton"));
         // TODO add after
         // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));

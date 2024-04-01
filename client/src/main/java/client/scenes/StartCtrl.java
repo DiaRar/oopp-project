@@ -1,5 +1,9 @@
 package client.scenes;
 
+import atlantafx.base.controls.Tile;
+import atlantafx.base.theme.Styles;
+import atlantafx.base.theme.Tweaks;
+import atlantafx.base.util.Animations;
 import client.uicomponents.Alerts;
 import client.uicomponents.LanguageComboBox;
 import client.utils.Config;
@@ -9,47 +13,58 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import jakarta.ws.rs.NotFoundException;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class StartCtrl implements Initializable {
-    private static final double FLOW_PANE_MARGIN = 5;
+    private static final int ANIMATION_DURATION = 5_000;
+
     @FXML
-    private TextField joinField;
+    private Label createNewEvent;
+    @FXML
+    private Label joinExistingEvent;
     @FXML
     private TextField createField;
     @FXML
-    public Button create;
+    private Button createButton;
     @FXML
-    public Label createNewEvent;
+    private TextField joinField;
     @FXML
-    public Button join;
+    public Button joinButton;
     @FXML
-    public Label joinEvent;
+    public ToggleGroup language;
     @FXML
-    private HBox bottomHBox;
-    private LanguageComboBox languageComboBox;
+    public MenuItem download;
+    private final LanguageComboBox languageComboBox;
+    private final DoubleProperty width;
     @FXML
     public ListView<Event> recentsList;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final LanguageUtils languageUtils;
     private final MainCtrl mainCtrl;
-    private Config config;
+    private final Config config;
 
     @Inject
     public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl, Config config) {
@@ -59,21 +74,35 @@ public class StartCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
         this.languageComboBox = new LanguageComboBox(languageUtils);
         this.config = config;
+        width = new SimpleDoubleProperty();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        joinField.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) join();
-        });
-
+        createButton.setGraphic(new FontIcon(Feather.PLUS));
+        createButton.getStyleClass().add(Styles.SUCCESS);
+        joinButton.setGraphic(new FontIcon(Feather.LOG_IN));
+        Animations.rotateIn(createNewEvent, new Duration(ANIMATION_DURATION)).playFromStart();
         createField.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) create();
+            if (e.getCode() == KeyCode.ENTER) createButton.fire();
+            e.consume();
         });
-
-        var recentEvents = utils.readRecents();
-        var list = FXCollections.observableArrayList(recentEvents.stream().map(Event::getName).toList());
+        joinField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) joinButton.fire();
+            e.consume();
+        });
         refreshRecents();
+        recentsList.getSelectionModel().selectFirst();
+        recentsList.setOnKeyPressed((e) -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                Event selected = recentsList.getSelectionModel().getSelectedItem();
+                if (selected == null)
+                    return;
+                joinRecent(selected);
+            }
+            e.consume();
+        });
+        download.setGraphic(new FontIcon(Feather.DOWNLOAD));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -85,22 +114,25 @@ public class StartCtrl implements Initializable {
                 languageUtils.setLang("en");
                 break;
         }
-        bottomHBox.getChildren().add(languageComboBox);
-        this.create.textProperty().bind(languageUtils.getBinding("start.createBtn"));
-        this.join.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
+        this.createButton.textProperty().bind(languageUtils.getBinding("start.createBtn"));
+        this.joinButton.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
         this.createNewEvent.textProperty().bind(languageUtils.getBinding("start.createNewEventLabel"));
-        this.joinEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
+        this.joinExistingEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
         // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
     }
 
+    public void setLanguage() {
+        RadioMenuItem item = (RadioMenuItem) language.getSelectedToggle();
+        languageUtils.setLang(item.getId());
+    }
     /**
      * opens overview with new event
      */
     public void create() {
         Event event = new Event();
         event.setName(createField.getText());
-        if (event.getName().equals("")) {
+        if (event.getName().isEmpty()) {
             Alerts.emptyNameAlert();
             return;
         }
@@ -141,10 +173,16 @@ public class StartCtrl implements Initializable {
     }
 
     public void refreshRecents() {
-        List<Event> recentEventsList = utils.readRecents();
+        List<Event> recentEvents = utils.readRecents();
+        List<Event> recentEventsList = (List<Event>) serverUtils.getEvents().stream().map(serverEvent -> {
+            if (recentEvents.stream().anyMatch(event -> event.getId().equals(serverEvent.getId()))) {
+                return Optional.of(serverEvent);
+            }
+            return Optional.empty();
+        }).filter(Optional::isPresent).map(Optional::get).toList();
         ObservableList<Event> events = FXCollections.observableArrayList(recentEventsList);
         recentsList.setItems(events);
-
+        recentsList.getStyleClass().addAll(Styles.DENSE);
         recentsList.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Event item, boolean empty) {
@@ -153,41 +191,38 @@ public class StartCtrl implements Initializable {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    BorderPane borderPane = generateRecentEvent(item);
-                    setGraphic(borderPane);
+                    Tile tile = generateRecentEvent(item);
+                    setGraphic(tile);
                 }
             }
         });
     }
 
-    public BorderPane generateRecentEvent(Event event) {
-        BorderPane borderPane = new BorderPane();
-
+    public Tile generateRecentEvent(Event event) {
         // Event Title
-        Text eventTitle = new Text(event.getName());
-        TextFlow content = new TextFlow(eventTitle);
-        HBox description = new HBox(content);
-        HBox.setMargin(description, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
+        Tile eventTile = new Tile(event.getName(), null);
 
         // Remove button
-        Button removeButton = new Button("Remove");
-        HBox buttons = new HBox(removeButton);
-        HBox.setMargin(removeButton, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
+        Button removeButton = new Button("", new FontIcon(Feather.TRASH));
+        removeButton.getStyleClass().addAll(Styles.DANGER, Styles.FLAT, Styles.BUTTON_ICON);
+        Button editButton = new Button("", new FontIcon(Feather.EDIT));
+        editButton.getStyleClass().addAll(Styles.ACCENT, Styles.FLAT, Styles.BUTTON_ICON);
+        HBox buttons = new HBox(editButton, removeButton);
         buttons.setAlignment(Pos.CENTER_RIGHT);
-
-        borderPane.setCenter(description);
-        borderPane.setRight(buttons);
-
+        eventTile.setAction(buttons);
         // On click
         removeButton.setOnAction(e -> {
             utils.removeRecent(event.getId());
             recentsList.getItems().remove(event);
         });
 
-        borderPane.setOnMouseClicked(e -> {
-            joinRecent(event);
+        eventTile.setOnMouseClicked((e) -> {
+            if (event.equals(recentsList.getSelectionModel().getSelectedItem())) {
+                joinRecent(event);
+            } else {
+                recentsList.getSelectionModel().select(event);
+            }
         });
-
-        return borderPane;
+        return eventTile;
     }
 }

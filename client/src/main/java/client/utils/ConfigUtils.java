@@ -18,7 +18,6 @@ public class ConfigUtils {
             String[] line;
             while ((line = reader.readNext()) != null) {
                 Event newEvent = new Event();
-                newEvent.setName(line[0]);
                 newEvent.setId(UUID.fromString(line[1]));
                 events.add(newEvent);
             }

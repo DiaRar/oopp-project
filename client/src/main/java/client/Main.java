@@ -15,6 +15,7 @@
  */
 package client;
 
+import atlantafx.base.theme.PrimerLight;
 import client.scenes.*;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -32,6 +33,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
         var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
