@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -9,37 +10,59 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
-   <children>
-      <Button fx:id="add" layoutX="391.0" layoutY="492.0" mnemonicParsing="false" onAction="#ok" text="Add" />
-      <Button fx:id="cancel" layoutX="307.0" layoutY="492.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-      <TextField fx:id="description" layoutX="129.0" layoutY="112.0" prefHeight="26.0" prefWidth="250.0" />
-      <Label fx:id="whoPaid" layoutX="33.0" layoutY="76.0" prefHeight="18.0" prefWidth="79.0" text="Who paid?" />
-      <Label fx:id="addEditExpense" layoutX="151.0" layoutY="14.0" prefHeight="35.0" prefWidth="159.0" text="Add/Edit Expense">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
+   <center>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="description" layoutX="129.0" layoutY="112.0" prefHeight="26.0" prefWidth="250.0" />
+            <Label fx:id="whoPaid" layoutX="33.0" layoutY="76.0" prefHeight="18.0" prefWidth="79.0" text="Who paid?" />
+            <ComboBox fx:id="payer" layoutX="129.0" layoutY="72.0" prefWidth="150.0" />
+            <Label fx:id="whatFor" layoutX="33.0" layoutY="116.0" prefHeight="18.0" prefWidth="79.0" text="What for?" />
+            <TextField fx:id="amount" layoutX="129.0" layoutY="152.0" prefHeight="26.0" prefWidth="150.0" />
+            <Label fx:id="howMuch" layoutX="33.0" layoutY="156.0" prefHeight="18.0" prefWidth="79.0" text="How much?" />
+            <ComboBox fx:id="currency" layoutX="291.0" layoutY="152.0" prefHeight="26.0" prefWidth="88.0" />
+            <Label fx:id="when" layoutX="33.0" layoutY="195.0" prefHeight="18.0" prefWidth="79.0" text="When?" />
+            <DatePicker fx:id="date" layoutX="129.0" layoutY="192.0" />
+            <Label fx:id="howToSplit" layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
+            <Label fx:id="expenseType" layoutX="254.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
+            <ComboBox fx:id="tag" layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="126.0" promptText="Tag" />
+            <RadioButton fx:id="equallySplit" layoutX="33.0" layoutY="256.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="198.0" text="Equally (between everybody)">
+               <toggleGroup>
+                  <ToggleGroup fx:id="split" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="partialSplit" layoutX="33.0" layoutY="278.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="138.0" text="Only some people" toggleGroup="$split" />
+            <ListView fx:id="debtorsList" layoutX="33.0" layoutY="316.0" onKeyPressed="#keyPressedDebtors" onMouseClicked="#selectDebtor" prefHeight="202.0" prefWidth="103.0" visible="false" />
+            <ListView fx:id="selectedDebtors" disable="true" layoutX="141.0" layoutY="315.0" prefHeight="202.0" prefWidth="103.0" visible="false" />
+            <Button fx:id="addTag" layoutX="294.0" layoutY="303.0" mnemonicParsing="false" onAction="#openAddTags" text="Add/Edit Tag" />
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <Label fx:id="addEditExpense" prefHeight="35.0" prefWidth="159.0" text="Add/Edit Expense" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="payer" layoutX="129.0" layoutY="72.0" prefWidth="150.0" />
-      <Label fx:id="whatFor" layoutX="33.0" layoutY="116.0" prefHeight="18.0" prefWidth="79.0" text="What for?" />
-      <TextField fx:id="amount" layoutX="129.0" layoutY="152.0" prefHeight="26.0" prefWidth="150.0" />
-      <Label fx:id="howMuch" layoutX="33.0" layoutY="156.0" prefHeight="18.0" prefWidth="79.0" text="How much?" />
-      <ComboBox fx:id="currency" layoutX="291.0" layoutY="152.0" prefHeight="26.0" prefWidth="88.0" />
-      <Label fx:id="when" layoutX="33.0" layoutY="195.0" prefHeight="18.0" prefWidth="79.0" text="When?" />
-      <DatePicker fx:id="date" layoutX="129.0" layoutY="192.0" />
-      <Label fx:id="howToSplit" layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
-      <Label fx:id="expenseType" layoutX="254.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
-      <ComboBox fx:id="tag" layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="186.0" />
-      <RadioButton fx:id="equallySplit" layoutX="33.0" layoutY="256.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="198.0" text="Equally (between everybody)">
-         <toggleGroup>
-            <ToggleGroup fx:id="split" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="partialSplit" layoutX="33.0" layoutY="278.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="138.0" text="Only some people" toggleGroup="$split" />
-      <ListView fx:id="debtorsList" layoutX="33.0" layoutY="316.0" onKeyPressed="#keyPressedDebtors" onMouseClicked="#selectDebtor" prefHeight="202.0" prefWidth="103.0" visible="false" />
-      <ListView fx:id="selectedDebtors" disable="true" layoutX="141.0" layoutY="315.0" prefHeight="202.0" prefWidth="103.0" visible="false" />
-      <Button fx:id="addTag" layoutX="355.0" layoutY="303.0" mnemonicParsing="false" onAction="#openAddTags" text="Add/Edit Tag" />
-   </children>
-</AnchorPane>
+   </top>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="cancel" alignment="CENTER" mnemonicParsing="false" onAction="#cancel" text="Cancel">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="add" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#ok" text="Add">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
