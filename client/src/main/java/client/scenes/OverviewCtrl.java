@@ -96,6 +96,8 @@ public class OverviewCtrl implements Initializable {
     private Button settleDebts;
     @FXML
     private ComboBox<String> tagChoice;
+    @FXML
+    private Button backButton;
     private StringProperty fromText;
     private StringProperty includingText;
 
@@ -318,6 +320,7 @@ public class OverviewCtrl implements Initializable {
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        this.backButton.textProperty().bind(languageUtils.getBinding("overview.backButton"));
         // TODO add after
         // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
 
