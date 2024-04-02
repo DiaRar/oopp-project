@@ -132,13 +132,13 @@ public class AddExpenseCtrl implements Initializable {
 
         if (tag.getSelectionModel().isEmpty()) {
             Expense expense = new Expense(amt, desc, time, pay, debt);
-            mainCtrl.addExpense(expense);
+            server.addExpense(mainCtrl.getEvent().getId(), expense);
         } else {
             Collection<Tag> tg = mainCtrl.getEvent().getTags().stream()
                     .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t.getName()))
                     .collect(Collectors.toList());
             Expense expense = new Expense(amt, desc, time, pay, debt, tg);
-            mainCtrl.addExpense(expense);
+            server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
         cancel();
     }
