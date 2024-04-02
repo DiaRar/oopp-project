@@ -5,6 +5,7 @@ import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Tag;
+import commons.converter.ColorConverter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -80,12 +81,13 @@ public class AddTagCtrl implements Initializable {
     public void save() {
         String name = nameField.getText();
         Color selected = colorField.getValue();
-        Tag newTag = new Tag(name, new java.awt.Color((float) selected.getRed(), (float) selected.getGreen(), (float) selected.getBlue()));
-        if (selectedTag == null) {
-            server.addTag(mainCtrl.getEvent().getId(), newTag);
-        } else {
-            server.updateTag(mainCtrl.getEvent().getId(), selectedTag.getId(), newTag);
-        }
+//        Tag newTag = new Tag(name, new ColorConverter().convertToEntityAttribute(
+//                new ColorConverter().convertToDatabaseColumn(selected)));
+//        if (selectedTag == null) {
+//            server.addTag(mainCtrl.getEvent().getId(), newTag);
+//        } else {
+//            server.updateTag(mainCtrl.getEvent().getId(), selectedTag.getId(), newTag);
+//        }
         cancel();
     }
 
