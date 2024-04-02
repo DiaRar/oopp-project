@@ -62,7 +62,6 @@ public class OverviewCtrl implements Initializable {
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
     private static final double HARDCODED_EXPENSE = 12.0;
     private static final double TAG_SPACING = 5.0;
-    private Event event;
     private ObservableList<Expense> expenses;
     private ObservableList<Participant> participants;
     private Participant currentParticipant;

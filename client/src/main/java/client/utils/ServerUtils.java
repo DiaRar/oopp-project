@@ -248,4 +248,18 @@ public class ServerUtils {
 			return null;
 		}
 	}
+
+	public Expense addExpense(UUID eventID, Expense expense) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventID + "/expenses/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
 }
