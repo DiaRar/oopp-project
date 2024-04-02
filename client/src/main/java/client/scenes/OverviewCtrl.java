@@ -19,7 +19,6 @@ import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
