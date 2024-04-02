@@ -35,7 +35,7 @@ public class DebtController {
     public ResponseEntity<Debt> post(@PathVariable("eventId") UUID eventId,
                                      @RequestBody Debt debt) {
         try {
-            Debt saved = debtService.add(debt);
+            Debt saved = debtService.add(eventId, debt);
             return ResponseEntity.ok(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

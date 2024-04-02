@@ -71,9 +71,11 @@ public class Debt {
         this.amount = amount;
     }
     public void setPayer(Participant payer) {
+        this.id.setPayerId(payer.getId());
         this.payer = payer;
     }
     public void setDebtor(Participant debtor) {
+        this.id.setDebtorId(debtor.getId());
         this.debtor = debtor;
     }
     public void setEvent(Event event) {

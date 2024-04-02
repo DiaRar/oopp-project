@@ -1,6 +1,7 @@
 package server.services;
 
 import commons.Debt;
+import commons.Event;
 import commons.primary_keys.DebtPK;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,10 @@ public class DebtService {
         return debtRepo.findDebtsByDebtorId(id);
     }
 
-    public Debt add(Debt debt) {
+    public Debt add(UUID eventId, Debt debt) {
+        Event event = new Event();
+        event.setId(eventId);
+        debt.setEvent(event);
         return debtRepo.save(debt);
     }
 
@@ -58,4 +62,5 @@ public class DebtService {
         debtRepo.deleteById(id);
         return deletedDebt.get();
     }
+
 }
