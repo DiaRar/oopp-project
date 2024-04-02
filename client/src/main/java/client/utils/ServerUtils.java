@@ -20,6 +20,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.AnnotatedArrayType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -300,6 +301,20 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.delete(Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+	public Tag addTag(UUID eventId, Tag tag) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

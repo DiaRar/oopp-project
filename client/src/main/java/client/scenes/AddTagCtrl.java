@@ -5,6 +5,7 @@ import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Tag;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -70,6 +71,7 @@ public class AddTagCtrl implements Initializable {
 
     public void cancel() {
         tags.getSelectionModel().clearSelection();
+        setTags();
         nameField.clear();
         colorField.setValue(Color.WHITE);
         mainCtrl.showAddExpense();
@@ -80,16 +82,17 @@ public class AddTagCtrl implements Initializable {
         Color selected = colorField.getValue();
         Tag newTag = new Tag(name, new java.awt.Color((float) selected.getRed(), (float) selected.getGreen(), (float) selected.getBlue()));
         if (selectedTag == null) {
-            // TODO connect to endpoint POST for tag
+            server.addTag(mainCtrl.getEvent().getId(), newTag);
         } else {
-            // TODO connect to endpoint PUT for tag
+            server.updateTag(mainCtrl.getEvent().getId(), selectedTag.getId(), newTag);
         }
-        mainCtrl.showAddExpense();
+        cancel();
     }
 
     public void delete() {
-        if (selectedTag == null) return;
-        // TODO connect to endpoint DELETE for tag
+        if (selectedTag == null || selectedTag.getId() == null) return;
+        server.deleteTag(mainCtrl.getEvent().getId(), selectedTag.getId());
+        cancel();
     }
 
     public void tagSelected() {
@@ -100,5 +103,11 @@ public class AddTagCtrl implements Initializable {
         if (Objects.requireNonNull(e.getCode()) == KeyCode.ESCAPE) {
             cancel();
         }
+    }
+
+    public void setTags() {
+        if (mainCtrl.getEvent() == null) return;
+        if (server.getTags(mainCtrl.getEvent().getId()) == null) return;
+        tags.setItems(FXCollections.observableList(server.getTags(mainCtrl.getEvent().getId())));
     }
 }
