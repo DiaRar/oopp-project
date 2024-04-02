@@ -53,6 +53,17 @@ public class Config {
     }
 
     public static Config read(File file) throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+            Writer writer = new BufferedWriter(new FileWriter(file));
+            writer.write("#\n" +
+                    "#Tue Apr 02 14:36:50 CEST 2024\n" +
+                    "country=RO\n" +
+                    "currency=EUR\n" +
+                    "language=en\n" +
+                    "server=http\\://localhost\\:8080/\n");
+            writer.close();
+        }
         Properties prop = new Properties();
         Reader reader = new BufferedReader(new FileReader(file));
         prop.load(reader);
