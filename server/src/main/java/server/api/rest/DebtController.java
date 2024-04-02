@@ -47,7 +47,7 @@ public class DebtController {
                                     @PathVariable("debtId") DebtPK debtId,
                                     @RequestBody Debt debt) {
         try {
-            Debt updated = debtService.update(debtId, debt);
+            Debt updated = debtService.update(eventId, debtId, debt);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -55,14 +55,11 @@ public class DebtController {
     }
 
     @DeleteMapping("/{debtId}")
-    public ResponseEntity<Debt> delete(@PathVariable("eventId") UUID eventId,
+    public ResponseEntity<Void> delete(@PathVariable("eventId") UUID eventId,
                                        @PathVariable("debtId") DebtPK debtId) {
-        try {
-            Debt deleted = debtService.delete(debtId);
-            return ResponseEntity.ok(deleted);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        debtService.delete(debtId);
+        updateService.sendRemovedDebt(eventId, debtId);
+        return ResponseEntity.ok().build();
     }
 
 }

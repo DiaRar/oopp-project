@@ -29,4 +29,5 @@ public interface DebtRepository extends JpaRepository<Debt, DebtPK> {
     Collection<Debt> findDebtsByDebtorId(UUID id);
     Collection<Debt> findDebtsByDebtor(Participant debtor);
     Collection<Debt> findDebtsByEventId(UUID id);
+    Integer deleteDebtById(DebtPK id);
 }

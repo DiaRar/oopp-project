@@ -48,19 +48,28 @@ public class DebtService {
         return debtRepo.save(debt);
     }
 
-    public Debt update(DebtPK id, Debt debt) {
+    public Debt update(UUID eventId, DebtPK id, Debt debt) {
         // TODO: check if the new Debt is a valid input
         debt.setId(id);
-        return debtRepo.save(debt);
+        Debt repoDebt = getById(id);
+        if (!repoDebt.getEvent().getId().equals(eventId)) {
+            throw new IllegalArgumentException("Event and Debt mismatch!");
+        }
+        if (repoDebt.getAmount() != null) {
+            repoDebt.setAmount(debt.getAmount());
+        }
+        debtRepo.flush();
+        return repoDebt;
     }
 
-    public Debt delete(DebtPK id) {
-        Optional<Debt> deletedDebt = debtRepo.findById(id);
-        if (deletedDebt.isEmpty()) {
-            throw new EntityNotFoundException("Did not find the specified debt.");
+    public void delete(DebtPK id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
         }
-        debtRepo.deleteById(id);
-        return deletedDebt.get();
+        Integer deletedRows = debtRepo.deleteDebtById(id);
+        if (deletedRows != 1) {
+            throw new EntityNotFoundException("Could not find the debt");
+        }
     }
 
 }
