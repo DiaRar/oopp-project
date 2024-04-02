@@ -8,6 +8,7 @@ import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.Tag;
 import jakarta.ws.rs.NotFoundException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,12 +17,18 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -104,6 +111,9 @@ public class StartCtrl implements Initializable {
             Alerts.emptyNameAlert();
             return;
         }
+        serverUtils.addTag(event.getId(), new Tag("Food", Color.orange));
+        serverUtils.addTag(event.getId(), new Tag("Ticket", Color.GREEN));
+        serverUtils.addTag(event.getId(), new Tag("Transport", Color.BLUE));
         Event retEvent = serverUtils.addEvent(event);
         if (retEvent == null) return;
         utils.addRecent(retEvent);
