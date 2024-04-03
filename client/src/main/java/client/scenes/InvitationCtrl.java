@@ -1,9 +1,6 @@
 package client.scenes;
 
-import client.utils.Config;
-import client.utils.LanguageUtils;
-import client.utils.ServerUtils;
-import client.utils.ConfigUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
@@ -11,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.net.URL;
 import java.util.*;
@@ -51,8 +50,6 @@ public class InvitationCtrl implements Initializable {
         this.inviteLabel.textProperty().bind(languageUtils.getBinding("invitation.inviteLabel"));
         this.invite1.textProperty().bind(languageUtils.getBinding("invitation.inviteEmailLabel"));
         this.cancel.textProperty().bind(languageUtils.getBinding("invitation.cancelBtn"));
-        name.setText("New Year Party");
-        inviteCode.setText("AC74ED");
 
         switch (config.getLocale().getLanguage()) {
             case "nl":
@@ -67,8 +64,19 @@ public class InvitationCtrl implements Initializable {
         }
     }
 
+    public void setFields() {
+        inviteCode.setText(mainCtrl.getEvent().getId().toString());
+        name.setText(mainCtrl.getEvent().getName());
+    }
+
     public void sendInvites() {
-        // TODO
+        String[] addresses = emails.getText().split("\\n|\\n\\r");
+        emails.clear();
+        for (String x : addresses) {
+            EmailUtils utils = new EmailUtils(x, mainCtrl.getEvent().getId().toString());
+            utils.start();
+        }
+        mainCtrl.showOverview();
     }
 
     public void cancel() {

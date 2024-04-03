@@ -191,6 +191,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Invite People");
         primaryStage.setScene(invitationScene);
+        invitationCtrl.setFields();
         invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
         restoreDimensions();
     }
