@@ -8,8 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.net.URL;
 import java.util.*;
