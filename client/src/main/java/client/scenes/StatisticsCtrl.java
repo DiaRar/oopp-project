@@ -13,6 +13,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 
@@ -65,7 +66,15 @@ public class StatisticsCtrl implements Initializable {
     private ArrayList<PieChart.Data> getData() {
         ArrayList<PieChart.Data> data = new ArrayList<>();
         HashMap<Tag, Double> map = new HashMap<>();
+        Tag other = new Tag("Other", new Color(0));
         for (Expense x : event.getExpenses()) {
+            if (x.getTags() == null || x.getTags().size() == 0) {
+                if (!map.containsKey(other)) {
+                    map.put(other, x.getAmount());
+                }
+                map.replace(other, map.get(other) + x.getAmount());
+                continue;
+            };
             for (Tag y : x.getTags()) {
                 if (map.containsKey(y)) {
                     map.replace(y, map.get(y) + x.getAmount());
@@ -83,7 +92,7 @@ public class StatisticsCtrl implements Initializable {
     private double getSum() {
         double sum = 0;
         for (Expense x : event.getExpenses()) {
-            sum = x.getAmount();
+            sum = sum + x.getAmount();
         }
         return sum;
     }
