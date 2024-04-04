@@ -1,7 +1,10 @@
 package server.services;
 
+import commons.Debt;
 import commons.Event;
 import commons.Expense;
+import commons.Participant;
+import commons.primary_keys.DebtPK;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.database.ExpenseRepository;
@@ -14,9 +17,11 @@ import java.util.*;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepo;
+    private final DebtService debtService;
 
-    public ExpenseService(ExpenseRepository expenseRepo) {
+    public ExpenseService(ExpenseRepository expenseRepo, DebtService debtService) {
         this.expenseRepo = expenseRepo;
+        this.debtService = debtService;
     }
     private static void setEvent(UUID eventId, Expense expense) {
         // TODO: Check that this event exists
@@ -50,7 +55,12 @@ public class ExpenseService {
         if (expense.getDate() == null) {
             expense.setDate(LocalDateTime.now(ZoneId.of("Europe/Amsterdam")));
         }
-        // TODO: Create new debts
+        Participant payer = expense.getPayer();
+        Collection<Participant> debtors = expense.getDebtors();
+        Double debtedAmount = expense.getAmount() / debtors.size();
+        Event event = new Event();
+        event.setId(eventId);
+        updateDebtsByAmount(payer, debtors, debtedAmount, event);
         return expenseRepo.saveAndFlush(expense);
     }
 
@@ -58,6 +68,8 @@ public class ExpenseService {
             throws IllegalArgumentException, EntityNotFoundException {
         // Ensure that the expense already exists; throws an exception otherwise
         Expense repoExpense = getById(expenseId);
+        Double debtedAmount = repoExpense.getAmount() / repoExpense.getDebtors().size();
+        updateDebtsByAmount(repoExpense.getPayer(), repoExpense.getDebtors(), -debtedAmount, repoExpense.getEvent());
         if (!repoExpense.getEvent().getId().equals(eventId)) {
            throw new IllegalArgumentException("Event and Expense mismatch!");
         }
@@ -77,17 +89,18 @@ public class ExpenseService {
             repoExpense.setDate(expense.getDate());
         }
         expenseRepo.flush();
-        // TODO: Update existing debts
+        debtedAmount = repoExpense.getAmount() / repoExpense.getDebtors().size();
+        updateDebtsByAmount(repoExpense.getPayer(), repoExpense.getDebtors(), debtedAmount, repoExpense.getEvent());
         return repoExpense;
     }
 
     public void delete(UUID expenseId) {
         if (expenseId == null)
             throw new IllegalArgumentException("Id cannot be null!");
+        Expense fromRepo = getById(expenseId);
+        Double debtedAmount = fromRepo.getAmount() / fromRepo.getDebtors().size();
+        updateDebtsByAmount(fromRepo.getPayer(), fromRepo.getDebtors(), -debtedAmount, fromRepo.getEvent());
         Integer deletedRows = expenseRepo.deleteExpenseById(expenseId);
-        if (deletedRows != 1) {
-            throw new EntityNotFoundException("Could not find the repo");
-        }
     }
 
     private void checkExpenseValidity(Expense expense) throws IllegalArgumentException {
@@ -99,6 +112,34 @@ public class ExpenseService {
         }
         if (expense.getDebtors() == null || expense.getDebtors().isEmpty()) {
             throw new IllegalArgumentException("Debtors are missing!");
+        }
+    }
+
+    private void updateDebtsByAmount(Participant payer, Collection<Participant> debtors, Double debtedAmount, Event event) {
+        for (Participant debtor : debtors) {
+            // Update debts from payer to debtor
+            Debt payerToDebtor = new Debt(payer, debtor, 0.0, event);
+            Optional<Debt> fromRepo = debtService.getOptionalById(payerToDebtor.getId());
+            if (fromRepo.isPresent()) {
+                Double currentAmount = fromRepo.get().getAmount();
+                payerToDebtor.setAmount(currentAmount - debtedAmount);
+                debtService.update(event.getId(), payerToDebtor.getId(), payerToDebtor);
+            } else {
+                payerToDebtor.setAmount(-debtedAmount);
+                debtService.add(event.getId(), payerToDebtor);
+            }
+
+            // Update debts from debtor to payer
+            Debt debtorToPayer = new Debt(debtor, payer, 0.0, event);
+            fromRepo = debtService.getOptionalById(debtorToPayer.getId());
+            if (fromRepo.isPresent()) {
+                Double currentAmount = fromRepo.get().getAmount();
+                debtorToPayer.setAmount(currentAmount + debtedAmount);
+                debtService.update(event.getId(), debtorToPayer.getId(), debtorToPayer);
+            } else {
+                debtorToPayer.setAmount(debtedAmount);
+                debtService.add(event.getId(), debtorToPayer);
+            }
         }
     }
 }

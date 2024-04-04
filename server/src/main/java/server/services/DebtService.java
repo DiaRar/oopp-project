@@ -25,6 +25,10 @@ public class DebtService {
         this.debtorsRepo =  debtorsRepo;
     }
 
+    public Optional<Debt> getOptionalById(DebtPK id) {
+        return debtRepo.findById(id);
+    }
+
     public Debt getById(DebtPK id) {
         Optional<Debt> od = debtRepo.findById(id);
         if (od.isEmpty()) {

@@ -63,6 +63,11 @@ public class Debt {
     public Event getEvent() {
         return event;
     }
+
+    public DebtPK getId() {
+        return id;
+    }
+
     // Setters
     public void setId(DebtPK id) {
         this.id = id;
