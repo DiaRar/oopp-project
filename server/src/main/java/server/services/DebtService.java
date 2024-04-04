@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.classes.ParticipantDebtPair;
 import server.database.DebtRepository;
-import server.database.ParticipantRepository;
 
 import java.util.*;
 
@@ -18,14 +17,9 @@ public class DebtService {
     private static final double THRESHOLD = 0.0005;
 
     private final DebtRepository debtRepo;
-    private final ParticipantRepository payerRepo;
-    private final Collection<ParticipantRepository> debtorsRepo;
 
-    public DebtService(DebtRepository debtRepo, ParticipantRepository payerRepo,
-                       Collection<ParticipantRepository> debtorsRepo) {
+    public DebtService(DebtRepository debtRepo) {
         this.debtRepo = debtRepo;
-        this.payerRepo = payerRepo;
-        this.debtorsRepo =  debtorsRepo;
     }
 
     public Optional<Debt> getOptionalById(DebtPK id) {
