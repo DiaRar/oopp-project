@@ -46,6 +46,9 @@ public class InjectorModule implements Module {
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
         binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
+        binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
     }
 
     private ConfigUtils createConfigUtils() {
@@ -57,7 +60,7 @@ public class InjectorModule implements Module {
 
     private Config createConfig() {
         try {
-            return Config.read(new File("client/src/main/resources/config/config.properties"));
+            return Config.read(new File("./client/src/main/resources/config/config.properties"));
         } catch (IOException e) {
             // TODO: Add alert box to say config was not set up
             throw new RuntimeException(e);

@@ -192,6 +192,20 @@ public class ServerUtils {
         }
 	}
 
+	public void deleteParticipant(UUID eventId, UUID id) {
+		try {
+			ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/participants/{id}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("id", id)
+					.request()
+					.delete();
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+		}
+	}
+
 	public List<Debt> getDebts(Event event) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
@@ -229,6 +243,20 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.delete(Debt.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Expense addExpense(UUID eventID, Expense expense) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventID + "/expenses/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;
