@@ -2,6 +2,7 @@ package server.api.rest;
 
 import commons.Debt;
 import commons.primary_keys.DebtPK;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.DebtService;
@@ -59,6 +60,13 @@ public class DebtController {
                                        @PathVariable("debtId") DebtPK debtId) {
         debtService.delete(debtId);
         updateService.sendRemovedDebt(eventId, debtId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recalculate")
+    @Transactional
+    public ResponseEntity<Void> recalculate(@PathVariable("eventId") UUID eventId) {
+        debtService.recalculate(eventId);
         return ResponseEntity.ok().build();
     }
 
