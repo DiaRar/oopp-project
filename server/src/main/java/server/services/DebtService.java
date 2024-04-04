@@ -140,6 +140,8 @@ public class DebtService {
         }
     }
 
+    // TODO: Partial settling of debt
+
     private int compareAmounts(Double a, Double b) {
         if (Math.abs(a - b) <= THRESHOLD) {
             return 0;

@@ -70,4 +70,6 @@ public class DebtController {
         return ResponseEntity.ok().build();
     }
 
+    // TODO: Partial settling of debt
+
 }
