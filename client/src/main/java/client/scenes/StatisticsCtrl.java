@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
-import commons.Event;
 import commons.Expense;
 import commons.Tag;
 import javafx.collections.FXCollections;
@@ -13,6 +12,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 
@@ -20,7 +20,6 @@ public class StatisticsCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
-    private Event event;
 
 
     @FXML
@@ -42,8 +41,7 @@ public class StatisticsCtrl implements Initializable {
     }
 
     public void startup() {
-        event = mainCtrl.getEvent();
-        title.setText("Statistics of event: " + event.getName());
+        title.setText("Statistics of event: " + mainCtrl.getEvent().getName());
         amount.setText("" + getSum() + "$");
         chart.setData(FXCollections.observableArrayList(getData()));
     }
@@ -65,7 +63,16 @@ public class StatisticsCtrl implements Initializable {
     private ArrayList<PieChart.Data> getData() {
         ArrayList<PieChart.Data> data = new ArrayList<>();
         HashMap<Tag, Double> map = new HashMap<>();
-        for (Expense x : event.getExpenses()) {
+        Tag other = new Tag("Other", new Color(0));
+        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+            if (x.getTags() == null || x.getTags().size() == 0) {
+                if (!map.containsKey(other)) {
+                    map.put(other, x.getAmount());
+                } else {
+                    map.replace(other, map.get(other) + x.getAmount());
+                }
+                continue;
+            };
             for (Tag y : x.getTags()) {
                 if (map.containsKey(y)) {
                     map.replace(y, map.get(y) + x.getAmount());
@@ -82,8 +89,8 @@ public class StatisticsCtrl implements Initializable {
 
     private double getSum() {
         double sum = 0;
-        for (Expense x : event.getExpenses()) {
-            sum = x.getAmount();
+        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+            sum = sum + x.getAmount();
         }
         return sum;
     }
