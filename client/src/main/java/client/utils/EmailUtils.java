@@ -5,7 +5,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-public class EmailUtils extends Thread {
+public class EmailUtils {
     private JavaMailSenderImpl mailSender;
     private String address;
     private String code;
@@ -15,7 +15,7 @@ public class EmailUtils extends Thread {
         this.code = code;
         mailSender = new JavaMailSenderImpl();
     }
-    public void run() {
+    public void sendEmail() {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(port);
         mailSender.setUsername("ooppteam12@gmail.com");

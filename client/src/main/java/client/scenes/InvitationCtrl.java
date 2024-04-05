@@ -11,12 +11,15 @@ import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class InvitationCtrl implements Initializable {
     private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
+    private Executor executor;
     private LanguageUtils languageUtils;
     @FXML
     private Button sendInvites;
@@ -40,6 +43,7 @@ public class InvitationCtrl implements Initializable {
         this.utils = utils;
         this.config = config;
         this.languageUtils = languageUtils;
+        this.executor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class InvitationCtrl implements Initializable {
         emails.clear();
         for (String x : addresses) {
             EmailUtils utils = new EmailUtils(x, mainCtrl.getEvent().getId().toString());
-            utils.start();
+            executor.execute(utils::sendEmail);
         }
         mainCtrl.showOverview();
     }
