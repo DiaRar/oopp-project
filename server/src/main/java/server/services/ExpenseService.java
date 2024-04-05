@@ -4,7 +4,6 @@ import commons.Debt;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
-import commons.primary_keys.DebtPK;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import server.database.ExpenseRepository;
