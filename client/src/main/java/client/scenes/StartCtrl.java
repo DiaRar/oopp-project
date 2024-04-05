@@ -110,11 +110,11 @@ public class StartCtrl implements Initializable {
             Alerts.emptyNameAlert();
             return;
         }
-        serverUtils.addTag(event.getId(), new Tag("Food", Color.orange));
-        serverUtils.addTag(event.getId(), new Tag("Ticket", Color.GREEN));
-        serverUtils.addTag(event.getId(), new Tag("Transport", Color.BLUE));
         Event retEvent = serverUtils.addEvent(event);
         if (retEvent == null) return;
+        serverUtils.addTag(retEvent.getId(), new Tag("Food", Color.orange));
+        serverUtils.addTag(retEvent.getId(), new Tag("Ticket", Color.GREEN));
+        serverUtils.addTag(retEvent.getId(), new Tag("Transport", Color.BLUE));
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();

@@ -80,13 +80,14 @@ public class AddTagCtrl implements Initializable {
     public void save() {
         String name = nameField.getText();
         Color selected = colorField.getValue();
-//        Tag newTag = new Tag(name, new ColorConverter().convertToEntityAttribute(
-//                new ColorConverter().convertToDatabaseColumn(selected)));
-//        if (selectedTag == null) {
-//            server.addTag(mainCtrl.getEvent().getId(), newTag);
-//        } else {
-//            server.updateTag(mainCtrl.getEvent().getId(), selectedTag.getId(), newTag);
-//        }
+        Tag newTag = new Tag(name, new java.awt.Color((float) selected.getRed(), (float) selected.getGreen(),
+                (float) selected.getBlue(), (float) selected.getOpacity()));
+        newTag.setEvent(mainCtrl.getEvent());
+        if (selectedTag == null) {
+            server.addTag(mainCtrl.getEvent().getId(), newTag);
+        } else {
+            server.updateTag(mainCtrl.getEvent().getId(), selectedTag.getId(), newTag);
+        }
         cancel();
     }
 
@@ -108,7 +109,7 @@ public class AddTagCtrl implements Initializable {
 
     public void setTags() {
         if (mainCtrl.getEvent() == null) return;
-        if (server.getTags(mainCtrl.getEvent().getId()) == null) return;
-        tags.setItems(FXCollections.observableList(server.getTags(mainCtrl.getEvent().getId())));
+//        if (server.getTags(mainCtrl.getEvent().getId()) == null) return;
+        tags.setItems(FXCollections.observableList(mainCtrl.getEvent().getTags().stream().toList()));
     }
 }

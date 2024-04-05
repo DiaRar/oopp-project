@@ -95,7 +95,7 @@ public class OverviewCtrl implements Initializable {
     @FXML
     private Button settleDebts;
     @FXML
-    private ComboBox<String> tagChoice;
+    private ComboBox<Tag> tagChoice;
     private StringProperty fromText;
     private StringProperty includingText;
 
@@ -129,6 +129,7 @@ public class OverviewCtrl implements Initializable {
         );
         all.getParent().getChildrenUnmodifiable().forEach(node -> node.getStyleClass().remove("selected-participant"));
         all.getStyleClass().add("selected-participant");
+        this.tagChoice.getItems().addAll(mainCtrl.getEvent().getTags());
     }
 
     public void updateEventName(String eventName) {
@@ -318,6 +319,8 @@ public class OverviewCtrl implements Initializable {
         this.comboBox.setCellFactory(param -> getParticipantListCell());
         this.comboBox.setButtonCell(getParticipantListCell());
         this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        this.tagChoice.setCellFactory(tagListView -> getTagListCell());
+        this.tagChoice.setButtonCell(getTagListCell());
         // TODO add after
         // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
 
@@ -351,6 +354,22 @@ public class OverviewCtrl implements Initializable {
             }
         };
     }
+    private ListCell<Tag> getTagListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Tag item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getName());
+                    setGraphic(null);
+                }
+            }
+        };
+    }
+
 
     public String tagComponent(Tag tag) {
 //  TODO add color component
@@ -366,13 +385,9 @@ public class OverviewCtrl implements Initializable {
     }
 
     public void filterForTags(javafx.event.Event e) {
-        currentTag = tagChoice.getValue();
-        if (currentTag == null) {
-            return;
-        }
         select(e);
-        Predicate<Expense> forTags = expense -> expense.getTags().stream().map(Tag::getName).toList()
-                .contains(currentTag);
+        Predicate<Expense> forTags = expense -> expense.getTags()
+                .contains(tagChoice.getValue());
         filteredExpenses.setPredicate(forTags);
     }
 
