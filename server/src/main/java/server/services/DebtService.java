@@ -140,7 +140,21 @@ public class DebtService {
         }
     }
 
-    // TODO: Partial settling of debt
+    public Debt settle(UUID eventId, UUID payerId, UUID debtorId, Double amount) {
+        Debt payerToDebtor = getById(new DebtPK(payerId, debtorId));
+        Debt debtorToPayer = getById(new DebtPK(debtorId, payerId));
+        if (!payerToDebtor.getEvent().getId().equals(eventId)) {
+            throw new IllegalArgumentException("Event and Debt mismatch!");
+        }
+        if (amount > debtorToPayer.getAmount()) {
+            throw new IllegalArgumentException("Cannot settle for more than the amount");
+        }
+        Double newAmount = debtorToPayer.getAmount() - amount;
+        payerToDebtor.setAmount(-newAmount);
+        debtorToPayer.setAmount(newAmount);
+        debtRepo.flush();
+        return payerToDebtor;
+    }
 
     private int compareAmounts(Double a, Double b) {
         if (Math.abs(a - b) <= THRESHOLD) {
