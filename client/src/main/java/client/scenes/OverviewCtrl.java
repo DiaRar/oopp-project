@@ -96,6 +96,7 @@ public class OverviewCtrl implements Initializable {
     private Button statistics;
     private ModalBox modalBox;
     private Dialog dialog;
+
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
