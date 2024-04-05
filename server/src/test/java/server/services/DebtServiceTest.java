@@ -11,8 +11,7 @@ import server.database.DebtRepository;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class DebtServiceTest {
@@ -37,7 +36,7 @@ public class DebtServiceTest {
         debtor.setId(UUID.fromString("63953720-1c27-4664-8078-1cbbcfba583e"));
         event = new Event();
         event.setId(UUID.fromString("4b975f92-d65a-4a0f-91de-8849d6fc9928"));
-        debt = new Debt(payer, debtor, 1.0, event);
+        debt = new Debt(payer, debtor, -1.0, event);
     }
 
     @Test
@@ -155,7 +154,7 @@ public class DebtServiceTest {
     }
 
     @Test
-    public void recalculate0Test() {
+    public void recalculateZeroAmountsTest() {
         Participant a = new Participant("a", "aemail");
         Participant b = new Participant("b", "bemail");
         a.setId(UUID.fromString("e4d570b8-ef3a-41da-900d-a4587d1b15ef"));
@@ -184,6 +183,36 @@ public class DebtServiceTest {
         ArgumentCaptor<Debt> debtsCaptor = ArgumentCaptor.forClass(Debt.class);
         verify(debtRepository, atMost(0)).save(debtsCaptor.capture());
 
+    }
+
+    @Test
+    public void settleTest() {
+        debt.setAmount(-4.0);
+        when(debtRepository.findById(new DebtPK(payer.getId(), debtor.getId())))
+                .thenReturn(Optional.of(debt));
+        when(debtRepository.findById(new DebtPK(debtor.getId(), payer.getId())))
+                .thenReturn(Optional.of(new Debt(debtor, payer, -debt.getAmount(), event)));
+
+        debtService.settle(event.getId(), payer.getId(), debtor.getId(), 2.0);
+
+        verify(debtRepository).findById(debt.getId());
+        verify(debtRepository).findById(new DebtPK(debtor.getId(), payer.getId()));
+        verify(debtRepository).flush();
+
+        assertEquals(-2.0, debt.getAmount());
+    }
+
+    @Test
+    public void settleFailTest() {
+        debt.setAmount(-4.0);
+        when(debtRepository.findById(new DebtPK(payer.getId(), debtor.getId())))
+                .thenReturn(Optional.of(debt));
+        when(debtRepository.findById(new DebtPK(debtor.getId(), payer.getId())))
+                .thenReturn(Optional.of(new Debt(debtor, payer, -debt.getAmount(), event)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            debtService.settle(event.getId(), payer.getId(), debtor.getId(), 5.0);
+        });
     }
 
 }
