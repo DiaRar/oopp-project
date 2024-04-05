@@ -5,7 +5,6 @@ import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Tag;
-import commons.converter.ColorConverter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
