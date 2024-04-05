@@ -1,5 +1,7 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,16 +37,19 @@ public class Tag {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(View.CommonsView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "name")
+    @JsonView(View.CommonsView.class)
     public String getName() {
         return name;
     }
     @Basic
     @Column(name = "color")
+    @JsonView(View.CommonsView.class)
     public Color getColor() {
         return color;
     }
