@@ -71,5 +71,11 @@ public class DebtController {
     }
 
     // TODO: Partial settling of debt
+    @PostMapping("/settle/{payerId}/{debtorId}")
+    public ResponseEntity<Void> settle(@PathVariable("eventId") UUID eventId, @PathVariable("payerId") UUID payerId,
+                                       @PathVariable("debtorId") UUID debtorId, @RequestBody Double amount) {
+        debtService.settle(eventId, payerId, debtorId, amount);
+        return ResponseEntity.ok().build();
+    }
 
 }
