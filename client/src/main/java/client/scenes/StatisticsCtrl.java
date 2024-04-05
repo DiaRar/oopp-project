@@ -68,8 +68,9 @@ public class StatisticsCtrl implements Initializable {
             if (x.getTags() == null || x.getTags().size() == 0) {
                 if (!map.containsKey(other)) {
                     map.put(other, x.getAmount());
+                }else {
+                    map.replace(other, map.get(other) + x.getAmount());
                 }
-                map.replace(other, map.get(other) + x.getAmount());
                 continue;
             };
             for (Tag y : x.getTags()) {
