@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="557.0" prefWidth="502.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.InvitationCtrl">
+<BorderPane minHeight="10.0" minWidth="10.0" prefHeight="557.0" prefWidth="502.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.InvitationCtrl">
    <center>
       <StackPane prefHeight="397.0" prefWidth="486.0" BorderPane.alignment="CENTER">
          <children>
@@ -42,7 +42,7 @@
       <Insets bottom="10.0" left="10.0" right="10.0" />
    </padding>
    <top>
-      <BorderPane prefHeight="103.0" prefWidth="419.0" BorderPane.alignment="CENTER">
+      <BorderPane minHeight="10.0" minWidth="10.0" prefHeight="103.0" prefWidth="419.0" BorderPane.alignment="CENTER">
          <top>
             <Label fx:id="name" prefHeight="38.0" prefWidth="242.0" BorderPane.alignment="TOP_LEFT">
                <font>
@@ -56,7 +56,7 @@
          <left>
             <HBox prefHeight="32.0" prefWidth="483.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="inviteLabel" prefHeight="35.0" prefWidth="230.0" text="Give people the following code:">
+                  <Label fx:id="inviteLabel" prefHeight="38.0" prefWidth="242.0" text="Give people the following code:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
@@ -86,7 +86,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0" prefWidth="125.0" text="Cancel" />
+                  <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" prefHeight="11.0" prefWidth="126.0" text="Cancel" />
                   <Button fx:id="sendInvites" alignment="CENTER" mnemonicParsing="false" onAction="#sendInvites" prefWidth="1000.0" text="Send invites" textAlignment="CENTER" GridPane.columnIndex="1" />
                </children>
             </GridPane>
