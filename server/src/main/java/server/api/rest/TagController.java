@@ -1,6 +1,8 @@
 package server.api.rest;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import commons.Tag;
+import commons.views.View;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.TagService;
@@ -27,6 +29,7 @@ public class TagController {
     }
 
     @GetMapping("/{tagId}")
+    @JsonView(View.CommonsView.class)
     public ResponseEntity<Tag> getTagById(@PathVariable UUID tagId) {
         try {
             return ResponseEntity.ok(tagService.getById(tagId));
@@ -35,6 +38,7 @@ public class TagController {
         }
     }
     @PostMapping({"", "/"})
+    @JsonView(View.CommonsView.class)
     public ResponseEntity<Tag> postTag(@PathVariable UUID eventId, @RequestBody Tag tag) {
         try {
             return ResponseEntity.ok(tagService.add(eventId, tag));
@@ -44,6 +48,7 @@ public class TagController {
     }
 
     @PutMapping("/{tagId}")
+    @JsonView(View.CommonsView.class)
     public ResponseEntity<Tag> putTag(@PathVariable UUID tagId, @RequestBody Tag tag) {
         try {
             return ResponseEntity.ok(tagService.update(tagId, tag));
@@ -53,6 +58,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{tagId}")
+    @JsonView(View.CommonsView.class)
     public ResponseEntity<Void> deleteTag(@PathVariable UUID tagId) {
         try {
             tagService.delete(tagId);
