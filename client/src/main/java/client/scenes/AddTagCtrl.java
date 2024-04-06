@@ -4,8 +4,10 @@ import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Event;
 import commons.Tag;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -42,12 +44,16 @@ public class AddTagCtrl implements Initializable {
     private ColorPicker colorField;
     private Tag selectedTag;
 
+    private Event parentEvent;
+    private ObservableList<Tag> tagsList;
+
     @Inject
     public AddTagCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
         this.languageUtils = languageUtils;
+        this.tagsList = FXCollections.observableArrayList();
     }
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,6 +63,10 @@ public class AddTagCtrl implements Initializable {
         this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.saveBtn"));
         this.cancelBtn.textProperty().bind(languageUtils.getBinding("addTag.cancelBtn"));
         this.deleteBtn.textProperty().bind(languageUtils.getBinding("addTag.deleteBtn"));
+
+        this.tags.setItems(tagsList);
+        this.tags.setCellFactory(tagListView -> getTagListCell());
+        this.tags.setButtonCell(getTagListCell());
 
         switch (config.getLocale().getLanguage()) {
             case "nl":
@@ -71,7 +81,6 @@ public class AddTagCtrl implements Initializable {
 
     public void cancel() {
         tags.getSelectionModel().clearSelection();
-        setTags();
         nameField.clear();
         colorField.setValue(Color.WHITE);
         mainCtrl.showAddExpense();
@@ -107,9 +116,24 @@ public class AddTagCtrl implements Initializable {
         }
     }
 
-    public void setTags() {
-        if (mainCtrl.getEvent() == null) return;
-//        if (server.getTags(mainCtrl.getEvent().getId()) == null) return;
-        tags.setItems(FXCollections.observableList(mainCtrl.getEvent().getTags().stream().toList()));
+    private ListCell<Tag> getTagListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Tag item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getName());
+                    setGraphic(null);
+                }
+            }
+        };
+    }
+
+    public void setParentEvent(Event event) {
+        this.parentEvent = event;
+        this.tagsList.setAll(parentEvent.getTags());
     }
 }

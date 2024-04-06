@@ -130,7 +130,7 @@ public class OverviewCtrl implements Initializable {
         );
         all.getParent().getChildrenUnmodifiable().forEach(node -> node.getStyleClass().remove("selected-participant"));
         all.getStyleClass().add("selected-participant");
-        this.tagChoice.getItems().addAll(mainCtrl.getEvent().getTags());
+        this.tagChoice.getItems().setAll(mainCtrl.getEvent().getTags());
     }
 
     public void updateEventName(String eventName) {
@@ -323,8 +323,6 @@ public class OverviewCtrl implements Initializable {
         this.tagChoice.setCellFactory(tagListView -> getTagListCell());
         this.tagChoice.setButtonCell(getTagListCell());
         this.backButton.textProperty().bind(languageUtils.getBinding("overview.backButton"));
-        // TODO add after
-        // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
 
     }
 
