@@ -4,6 +4,7 @@ import commons.Debt;
 import commons.Event;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -215,4 +216,46 @@ public class DebtServiceTest {
         });
     }
 
+    @Test
+    public void updateTest() {
+
+    }
+
+    @Test
+    public void deleteSucceedTest() {
+        when(debtRepository.deleteDebtById(new DebtPK(payer.getId(), debtor.getId()))).thenReturn(1);
+        assertSame(1, debtService.delete(new DebtPK(payer.getId(), debtor.getId())));
+    }
+
+    @Test
+    public void deleteFailTest() {
+        when(debtRepository.deleteDebtById(new DebtPK(payer.getId(), debtor.getId()))).thenReturn(2);
+        assertThrows(EntityNotFoundException.class, () -> {
+            debtService.delete(new DebtPK(payer.getId(), debtor.getId()));
+        });
+    }
+
+    @Test
+    public void deleteNullTest() {
+        assertThrows(IllegalArgumentException.class, () -> {
+           debtService.delete(null);
+        });
+    }
+
+    @Test
+    public void updateSucceedTest() {
+        when(debtRepository.findById(debt.getId())).thenReturn(Optional.of(debt));
+        Debt updateDebt = new Debt(payer.getId(), debtor.getId(), -2.0, event);
+        assertEquals(-2.0, debtService.update(event.getId(), debt.getId(), updateDebt).getAmount());
+    }
+
+    @Test
+    public void updateFailTest() {
+        when(debtRepository.findById(debt.getId())).thenReturn(Optional.of(debt));
+        Event event1 = new Event("fail");
+        Debt updateDebt = new Debt(payer.getId(), debtor.getId(), -2.0, event);
+        assertThrows(IllegalArgumentException.class, () -> {
+            debtService.update(event1.getId(), debt.getId(), updateDebt);
+        });
+    }
 }
