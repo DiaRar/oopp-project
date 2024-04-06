@@ -62,13 +62,14 @@ public class TagService {
         return repoTag;
     }
 
-    public void delete(UUID uuid) {
+    public Integer delete(UUID uuid) {
         if (uuid == null)
             throw new IllegalArgumentException("Id cannot be null!");
         Integer deletedRows = tagRepository.deleteTagById(uuid);
         if (deletedRows != 1) {
            throw new EntityNotFoundException("Could not find the Tag!");
         }
+        return deletedRows;
     }
 
 }

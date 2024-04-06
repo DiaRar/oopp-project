@@ -63,7 +63,7 @@ public class DebtService {
         return repoDebt;
     }
 
-    public void delete(DebtPK id) {
+    public Integer delete(DebtPK id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
@@ -71,6 +71,7 @@ public class DebtService {
         if (deletedRows != 1) {
             throw new EntityNotFoundException("Could not find the debt");
         }
+        return deletedRows;
     }
 
     public void recalculate(UUID eventId) {
