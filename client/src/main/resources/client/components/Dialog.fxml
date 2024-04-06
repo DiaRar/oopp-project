@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import atlantafx.base.layout.InputGroup?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root prefHeight="274.0" prefWidth="300.0" spacing="10.0" type="VBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label text="Filter expenses by:">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <VBox>
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Payer" />
+                  <InputGroup>
+                     <children>
+                        <ComboBox fx:id="payer" prefWidth="1000.0" />
+                        <Button fx:id="resetPayer" minWidth="30.0" mnemonicParsing="false" />
+                     </children>
+                  </InputGroup>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Paid for" />
+                  <InputGroup>
+                     <children>
+                        <ComboBox fx:id="paidFor" prefWidth="1000.0" />
+                        <Button fx:id="resetPaidFor" minWidth="30.0" mnemonicParsing="false" />
+                     </children>
+                  </InputGroup>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Tag" />
+                  <InputGroup>
+                     <children>
+                        <ComboBox fx:id="tags" prefWidth="1000.0" />
+                        <Button fx:id="resetTags" minWidth="30.0" mnemonicParsing="false" />
+                     </children>
+                  </InputGroup>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Date" />
+                  <InputGroup>
+                     <children>
+                        <ComboBox fx:id="period" minWidth="-Infinity" prefWidth="100.0" visibleRowCount="2" />
+                        <DatePicker fx:id="date" />
+                        <Button fx:id="resetDate" minWidth="30.0" mnemonicParsing="false" prefWidth="30.0" />
+                     </children>
+                  </InputGroup>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets left="15.0" right="15.0" />
+         </padding>
+      </VBox>
+   </children>
+</fx:root>

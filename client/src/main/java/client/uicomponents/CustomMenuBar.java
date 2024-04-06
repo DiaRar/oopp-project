@@ -1,12 +1,14 @@
 package client.uicomponents;
 
 import atlantafx.base.theme.*;
+import client.scenes.MainCtrl;
 import client.utils.LanguageUtils;
-import com.google.inject.Inject;
+import client.utils.ServerUtils;
+import com.google.inject.Singleton;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
+import commons.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -18,18 +20,47 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
+@Singleton
 public class CustomMenuBar extends MenuBar {
     private ToggleGroup language;
     private ToggleGroup theme;
+    private Menu languages;
+    private MenuItem download;
+    private Menu edit;
+    private MenuItem name;
+    private Menu help;
+    private MenuItem tooltips;
+    private Menu themes;
+    public void bind(LanguageUtils languageUtils, MainCtrl mainCtrl, ServerUtils serverUtils) {
+        languages.textProperty().bind(languageUtils.getBinding("menu.language"));
+        download.textProperty().bind(languageUtils.getBinding("menu.language.download"));
+        edit.textProperty().bind(languageUtils.getBinding("menu.edit"));
+        name.textProperty().bind(languageUtils.getBinding("menu.edit.name"));
+        help.textProperty().bind(languageUtils.getBinding("menu.help"));
+        tooltips.textProperty().bind(languageUtils.getBinding("menu.help.tooltips"));
+        themes.textProperty().bind(languageUtils.getBinding("menu.theme"));
+        name.setOnAction(actionEvent -> {
+            var dialog = new TextInputDialog();
+            dialog.setTitle("New Name");
+            dialog.setContentText("Enter new event name:");
+            dialog.setHeaderText("Event edit");
+            dialog.initOwner(getScene().getWindow());
+            dialog.getEditor().setText(mainCtrl.getEvent().getName());
+            dialog.getEditor().setOnAction(e -> dialog.setResult(dialog.getEditor().getText()));
+            dialog.setOnCloseRequest(e -> {
+                Event event = new Event();
+                event.setId(mainCtrl.getEvent().getId());
+                event.setName(dialog.getResult());
+                serverUtils.updateEvent(event.getId(), event);
+            });
+            dialog.show();
+        });
+    }
     public CustomMenuBar() {
         super();
         ClassLoader loader = getClass().getClassLoader();
-
-
         language = new ToggleGroup();
-        Menu languages = new Menu("Language");
-
+        languages = new Menu("Language");
         ImageView greatBrittain = new ImageView(
                 Objects.requireNonNull(loader.getResource("client/flags/UK.png")).toString()
         );
@@ -53,15 +84,19 @@ public class CustomMenuBar extends MenuBar {
         dutch.setToggleGroup(language);
         dutch.setId("nl");
 
-        MenuItem download = new MenuItem("Download", new FontIcon(Feather.DOWNLOAD));
+        download = new MenuItem("Download", new FontIcon(Feather.DOWNLOAD));
         languages.getItems().addAll(english, dutch, download);
 
+        edit = new Menu("Edit");
+        name = new MenuItem("Event Name", new FontIcon(Feather.EDIT_2));
+        edit.getItems().add(name);
+        edit.setVisible(false);
 
-        Menu help = new Menu("Help");
-        MenuItem tooltips = new MenuItem("Tooltips");
+        help = new Menu("Help");
+        tooltips = new MenuItem("Tooltips");
         help.getItems().add(tooltips);
 
-        Menu themes = new Menu("Theme");
+        themes = new Menu("Theme");
         theme = new ToggleGroup();
 
         Theme primerLightTheme = new PrimerLight();
@@ -97,7 +132,13 @@ public class CustomMenuBar extends MenuBar {
         dracula.setOnAction((e) -> Application.setUserAgentStylesheet(draculaTheme.getUserAgentStylesheet()));
 
         themes.getItems().addAll(primerLight, primerDark, nordLight, nordDark, cupertinoLight, cupertinoDark, dracula);
-        this.getMenus().addAll(languages, help, themes);
+        this.getMenus().addAll(languages, edit, help, themes);
+    }
+    public void hideEdit() {
+        edit.setVisible(false);
+    }
+    public void showEdit() {
+        edit.setVisible(true);
     }
     public void setAction(EventHandler<ActionEvent> e) {
         language.getToggles().forEach(toggle -> ((RadioMenuItem) toggle).setOnAction(e));

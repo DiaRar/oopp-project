@@ -1,18 +1,15 @@
 package client.scenes;
 
-import atlantafx.base.theme.Dracula;
-import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Theme;
 import client.uicomponents.CustomMenuBar;
+import client.uicomponents.Dialog;
 import client.utils.LanguageUtils;
-import client.implementations.WSSessionHandler;
 import client.utils.ServerUtils;
 import client.utils.WebSocketUtils;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import javafx.application.Application;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -20,8 +17,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import com.google.inject.Inject;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -55,7 +50,7 @@ public class MainCtrl {
 
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
-    private WebSocketUtils webSocketUtils;
+    private final WebSocketUtils webSocketUtils;
 
     private AddTagCtrl addTagCtrl;
     private Scene addTagScene;
@@ -112,6 +107,7 @@ public class MainCtrl {
     public void showStart() {
         saveDimensions();
         startCtrl.getRoot().setTop(menuBar);
+        menuBar.hideEdit();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
         if (event != null) restoreDimensions();
@@ -120,6 +116,7 @@ public class MainCtrl {
     public void showOverview() {
         saveDimensions();
         overviewCtrl.getRoot().setTop(menuBar);
+        menuBar.showEdit();
         primaryStage.setTitle("Event Overview");
         primaryStage.setScene(overviewScene);
         restoreDimensions();
@@ -260,5 +257,14 @@ public class MainCtrl {
     public void setLanguage(String id) {
         languageUtils.setLang(id);
     }
+//    public void showDialog() {
+//        primaryStage.setScene(filterScene);
+//    }
+//    public Dialog getFilterDialog() {
+//        return filter;
+//    }
+//    public Scene getFilterScene() {
+//        return filterScene;
+//    }
 }
 

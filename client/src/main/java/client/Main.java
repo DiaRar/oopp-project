@@ -17,6 +17,7 @@ package client;
 
 import atlantafx.base.theme.PrimerLight;
 import client.scenes.*;
+import client.uicomponents.Dialog;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -29,6 +30,9 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+    public static MyFXML getFxml() {
+        return FXML;
     }
 
     @Override
@@ -43,6 +47,7 @@ public class Main extends Application {
         var debts = FXML.load(DebtsCtrl.class, "client", "scenes", "Debts.fxml");
         var tags = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, contactDetails, debts, tags);
+        mc.init(primaryStage, startScreen, overview, addExpense, statistics,
+                invitation, contactDetails, debts, tags);
     }
 }

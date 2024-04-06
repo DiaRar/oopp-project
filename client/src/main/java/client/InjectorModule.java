@@ -18,6 +18,7 @@ package client;
 import client.implementations.WSSessionHandler;
 import client.scenes.*;
 import client.uicomponents.CustomMenuBar;
+import client.uicomponents.Dialog;
 import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.WebSocketUtils;

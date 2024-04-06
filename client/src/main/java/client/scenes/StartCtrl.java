@@ -120,9 +120,10 @@ public class StartCtrl implements Initializable {
         this.joinButton.textProperty().bind(languageUtils.getBinding("start.joinBtn"));
         this.createNewEvent.textProperty().bind(languageUtils.getBinding("start.createNewEventLabel"));
         this.joinExistingEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
-        // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
-        // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
-        this.root.setTop(mainCtrl.getMenuBar());
+        this.createField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.name"));
+        this.joinField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.invite"));
+         this.root.setTop(mainCtrl.getMenuBar());
+        mainCtrl.getMenuBar().bind(languageUtils, mainCtrl, serverUtils);
     }
     public BorderPane getRoot() {
         return root;
