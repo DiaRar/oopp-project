@@ -15,10 +15,10 @@
  */
 package client;
 
+import atlantafx.base.theme.PrimerLight;
 import client.scenes.*;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,9 +29,13 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    public static MyFXML getFxml() {
+        return FXML;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
         var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
@@ -41,6 +45,7 @@ public class Main extends Application {
         var debts = FXML.load(DebtsCtrl.class, "client", "scenes", "Debts.fxml");
         var tags = FXML.load(AddTagCtrl.class, "client", "scenes", "AddTag.fxml");
         var mc = INJECTOR.getInstance(MainCtrl.class);
-        mc.init(primaryStage, startScreen, overview, addExpense, statistics, invitation, contactDetails, debts, tags);
+        mc.init(primaryStage, startScreen, overview, addExpense, statistics,
+                invitation, contactDetails, debts, tags);
     }
 }

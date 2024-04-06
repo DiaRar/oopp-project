@@ -1,206 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import atlantafx.base.controls.ModalPane?>
+<?import atlantafx.base.layout.InputGroup?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="400.0" styleClass="bg" stylesheets="@/client/stylesheets/overview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.OverviewCtrl">
-   <top>
-      <GridPane prefHeight="129.0" prefWidth="400.0" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="271.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="100.0" prefWidth="130.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="88.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="120.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="107.0" minHeight="1.0" prefHeight="17.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label fx:id="title" text="Event Title">
-               <font>
-                  <Font name="Arial Bold" size="18.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Label>
-            <Button fx:id="sendInvites" mnemonicParsing="false" onAction="#openInvitation" prefHeight="1000.0" prefWidth="1000.0" text="Send Invites" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </GridPane.margin>
-            </Button>
-            <VBox prefHeight="1000.0" prefWidth="10000.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-               <children>
-                  <HBox spacing="3.0">
+<StackPane fx:id="stack" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.OverviewCtrl">
+   <children>
+      <BorderPane fx:id="root" prefHeight="600.0" prefWidth="500.0">
+         <center>
+            <BorderPane styleClass="bg" stylesheets="@/client/stylesheets/overview.css">
+               <top>
+                  <VBox BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" top="10.0" />
+                     </BorderPane.margin>
                      <children>
-                        <Label fx:id="participantsLabel" text="Participants">
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="title" text="Event Title">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Button fx:id="sendInvites" mnemonicParsing="false" onAction="#openInvitation" text="Invite" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <VBox>
+                           <children>
+                              <HBox spacing="3.0">
+                                 <children>
+                                    <Label fx:id="participantsLabel" text="Participants">
+                                       <font>
+                                          <Font name="Arial Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="editParticipant" maxHeight="16.0" minHeight="16.0" mnemonicParsing="false" onAction="#editParticipantAction" prefHeight="16.0" />
+                                    <Button fx:id="addParticipant" maxHeight="16.0" minHeight="16.0" mnemonicParsing="false" onAction="#addParticipantAction" prefHeight="16.0" />
+                                 </children>
+                              </HBox>
+                              <Text fx:id="participantsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Placeholder" />
+                           </children>
+                        </VBox>
+                        <Label fx:id="expensesLabel" text="Expenses">
                            <font>
                               <Font name="Arial Bold" size="14.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" onMouseClicked="#editParticipantAction" pickOnBounds="true" preserveRatio="true">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <image>
-                              <Image url="@/client/images/edit.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" onMouseClicked="#addParticipantAction" pickOnBounds="true" preserveRatio="true">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <image>
-                              <Image url="@/client/images/addparticipant.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <BorderPane HBox.hgrow="ALWAYS">
+                                 <right>
+                                    <InputGroup BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="filterButton" mnemonicParsing="false" text="Filter" />
+                                          <Button fx:id="resetButton" mnemonicParsing="false" text="Reset" />
+                                       </children>
+                                       <BorderPane.margin>
+                                          <Insets left="5.0" />
+                                       </BorderPane.margin>
+                                    </InputGroup>
+                                 </right>
+                                 <center>
+                                    <InputGroup fx:id="parentExpenseInput" BorderPane.alignment="CENTER">
+                                       <children>
+                                                                  <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" text="Add Expense" />
+                                          <Button fx:id="sendMoney" mnemonicParsing="false" text="Send" />
+                                       </children>
+                                    </InputGroup>
+                                 </center>
+                              </BorderPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </top>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </padding>
+               <bottom>
+                  <HBox BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets top="10.0" />
+                     </BorderPane.margin>
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="Back" />
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="statistics" mnemonicParsing="false" onAction="#openStatistics" prefHeight="34.0" prefWidth="86.0" text="Statistics" />
+                              <Button fx:id="settleDebts" mnemonicParsing="false" onAction="#openDebts" text="Settle Debts" />
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
-                  <Text fx:id="participantsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Placeholder" />
-               </children>
-            </VBox>
-            <Label fx:id="expensesLabel" text="Expenses" GridPane.rowIndex="2">
-               <font>
-                  <Font name="Arial Bold" size="14.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Label>
-
-            <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" prefHeight="1000.0" prefWidth="1000.0" text="Add Expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </GridPane.margin>
-            </Button>
-            <ComboBox fx:id="comboBox" onAction="#choiceChanged" prefHeight="26.0" prefWidth="10000.0" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets bottom="5.0" right="10.0" />
-               </GridPane.margin>
-            </ComboBox>
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="5.0" />
-         </BorderPane.margin>
-      </GridPane>
-   </top>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" />
-   </padding>
-   <bottom>
-      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
-         <children>
-            <GridPane maxWidth="10000.0" prefWidth="10000.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="296.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="100.0" prefWidth="110.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                  <Button mnemonicParsing="false" onAction="#openStatistics" prefHeight="26.0" prefWidth="100.0" text="Statistics" />
-                  <Button fx:id="settleDebts" alignment="CENTER" mnemonicParsing="false" onAction="#openDebts" prefWidth="1000.0" text="Settle Debts" textAlignment="CENTER" GridPane.columnIndex="1" />
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" prefWidth="1000.0" text="Back" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
-
-         </children>
-         <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin>
-      </HBox>
-   </bottom>
-   <center>
-      <StackPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
-         <children>
-            <BorderPane>
+               </bottom>
                <center>
-                  <ListView fx:id="list" BorderPane.alignment="CENTER" />
+                  <BorderPane>
+                     <center>
+                        <ListView fx:id="list" BorderPane.alignment="CENTER" />
+                     </center>
+                     <styleClass>
+                        <String fx:value="bg" />
+                        <String fx:value="border" />
+                     </styleClass>
+                  </BorderPane>
                </center>
-               <styleClass>
-                  <String fx:value="bg" />
-                  <String fx:value="border" />
-               </styleClass>
-               <StackPane.margin>
-                  <Insets top="13.0" />
-               </StackPane.margin>
-               <padding>
-                  <Insets top="20.0" />
-               </padding>
             </BorderPane>
-            <HBox alignment="TOP_CENTER" maxHeight="1.0">
-               <children>
-                  <Label fx:id="all" onMouseClicked="#selectAll" style="-fx-border-radius: 5px 0px 0px 5px;" stylesheets="@../stylesheets/overview.css" text="All">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <styleClass>
-                        <String fx:value="border" />
-                        <String fx:value="btn" />
-                        <String fx:value="bg" />
-                     </styleClass>
-                  </Label>
-                  <Label fx:id="from" onMouseClicked="#selectFrom" stylesheets="@../stylesheets/overview.css" text="From">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <styleClass>
-                        <String fx:value="border" />
-                        <String fx:value="btn" />
-                        <String fx:value="bg" />
-                     </styleClass>
-                  </Label>
-                  <Label fx:id="including" onMouseClicked="#selectIncluding" stylesheets="@../stylesheets/overview.css" text="Including">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <styleClass>
-                        <String fx:value="border" />
-                        <String fx:value="btn" />
-                        <String fx:value="bg" />
-                     </styleClass>
-                  </Label>
-                  <ComboBox fx:id="tagChoice" onAction="#filterForTags" prefWidth="150.0" style="-fx-border-radius: 0px 5px 5px 0px;" stylesheets="@../stylesheets/overview.css">
-                     <styleClass>
-                        <String fx:value="border" />
-                        <String fx:value="bg" />
-                     </styleClass>
-                     <padding>
-                        <Insets top="3.0" />
-                     </padding>
-                  </ComboBox>
-               </children>
-            </HBox>
-         </children>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-      </StackPane>
-   </center>
-</BorderPane>
+         </center>
+      </BorderPane>
+      <ModalPane fx:id="modal" viewOrder="-15.0" />
+   </children>
+</StackPane>

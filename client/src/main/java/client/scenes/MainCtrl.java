@@ -1,18 +1,20 @@
 package client.scenes;
 
+import atlantafx.base.theme.Theme;
+import client.uicomponents.CustomMenuBar;
 import client.utils.LanguageUtils;
-import client.implementations.WSSessionHandler;
 import client.utils.ServerUtils;
 import client.utils.WebSocketUtils;
+import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import com.google.inject.Inject;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -47,19 +49,21 @@ public class MainCtrl {
 
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
-    private WebSocketUtils webSocketUtils;
+    private final WebSocketUtils webSocketUtils;
 
     private AddTagCtrl addTagCtrl;
     private Scene addTagScene;
 
     private double screenWidth;
     private double screenHeight;
+    private CustomMenuBar menuBar;
 
     @Inject
-    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils) {
+    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils, CustomMenuBar menuBar) {
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
         this.webSocketUtils = webSocketUtils;
+        this.menuBar = menuBar;
     }
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
@@ -90,20 +94,28 @@ public class MainCtrl {
         this.addTagCtrl = tags.getKey();
         this.addTagScene = new Scene(tags.getValue());
 
+        this.menuBar.setAction((e) -> setLanguage(menuBar.getSelectedToggleId()));
+        this.menuBar.selectToggleById(languageUtils.getLang());
+
         showStart();
         primaryStage.show();
     }
-
+    public CustomMenuBar getMenuBar() {
+        return menuBar;
+    }
     public void showStart() {
         saveDimensions();
+        startCtrl.getRoot().setTop(menuBar);
+        menuBar.hideEdit();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
-        startCtrl.refreshRecents();
         if (event != null) restoreDimensions();
     }
 
     public void showOverview() {
         saveDimensions();
+        overviewCtrl.getRoot().setTop(menuBar);
+        menuBar.showEdit();
         primaryStage.setTitle("Event Overview");
         primaryStage.setScene(overviewScene);
         restoreDimensions();
@@ -111,13 +123,12 @@ public class MainCtrl {
 
     public void showOverviewStart() {
         try {
-            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws", new WSSessionHandler(this));
+            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
         saveDimensions();
         showOverview();
-//        overviewCtrl.clear();
         overviewCtrl.startup();
         restoreDimensions();
     }
@@ -125,13 +136,21 @@ public class MainCtrl {
         overviewCtrl.updateEventName(event.getName());
     }
     public void addParticipant(Participant participant) {
+        event.addParticipant(participant);
         overviewCtrl.addParticipant(participant);
     }
     public void removeParticipant(Participant participant) {
+        event.getParticipants().removeIf(removed -> removed.getId().equals(participant.getId()));
+        event.getExpenses().removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
         overviewCtrl.removeParticipant(participant);
     }
     public void updateParticipant(Participant participant) {
+        event.getParticipants().stream().filter(listParticipant -> participant.getId()
+                .equals(listParticipant.getId())).toList().getFirst().setNickname(participant.getNickname());
         overviewCtrl.updateParticipant(participant);
+    }
+    public void switchTheme(Theme theme) {
+        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }
     public void addExpense(Expense expense) {
         overviewCtrl.addExpense(expense);
@@ -234,5 +253,17 @@ public class MainCtrl {
     public LanguageUtils getLanguageUtils() {
         return this.languageUtils;
     }
+    public void setLanguage(String id) {
+        languageUtils.setLang(id);
+    }
+//    public void showDialog() {
+//        primaryStage.setScene(filterScene);
+//    }
+//    public Dialog getFilterDialog() {
+//        return filter;
+//    }
+//    public Scene getFilterScene() {
+//        return filterScene;
+//    }
 }
 

@@ -33,6 +33,7 @@ import commons.Participant;
 import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -192,9 +193,9 @@ public class ServerUtils {
         }
 	}
 
-	public void deleteParticipant(UUID eventId, UUID id) {
+	public Response deleteParticipant(UUID eventId, UUID id) {
 		try {
-			ClientBuilder.newClient(new ClientConfig())
+			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
 					.path("/api/events/{eventId}/participants/{id}")
 					.resolveTemplate("eventId", eventId)
@@ -203,6 +204,7 @@ public class ServerUtils {
 					.delete();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
+			return null;
 		}
 	}
 
@@ -257,6 +259,21 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+	public Response deleteExpense(UUID eventID, UUID expenseId) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/expenses/{expenseId}")
+					.resolveTemplate("eventId", eventID)
+					.resolveTemplate("expenseId", expenseId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

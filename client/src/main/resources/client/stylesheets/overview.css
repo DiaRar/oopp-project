@@ -7,9 +7,6 @@
     -fx-border-radius: 1em;
 }
 
-.bg {
-    -fx-background-color: white;
-}
 .btn:hover, .selected-participant {
     -fx-background-color: black;
     -fx-text-fill: white;
@@ -20,11 +17,6 @@
     -fx-border-color :transparent;
     -fx-background-radius : 0.0em;
     -fx-border-radius :2.0em;
-}
-
-.bold {
-    -fx-font-family: "Arial";
-    -fx-font-weight: 700;
 }
 
 .scroll-bar:horizontal .increment-button ,
@@ -68,8 +60,4 @@
     -fx-background-color : linear-gradient(from 0% 0% to 100% 100%, #ff930f, #fff95b);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
-}
-.root {
-    -fx-font-size: 13px;
-    -fx-font-family: "Arial";
 }
