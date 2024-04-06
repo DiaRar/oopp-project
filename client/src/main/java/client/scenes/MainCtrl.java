@@ -237,7 +237,7 @@ public class MainCtrl {
         primaryStage.setTitle("Add Tag");
         primaryStage.setScene(addTagScene);
         addTagScene.setOnKeyPressed(e -> addTagCtrl.keyPressed(e));
-        addTagCtrl.setTags();
+        addTagCtrl.setParentEvent(event);
     }
 
     public Event getEvent() {
