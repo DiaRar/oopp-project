@@ -1,8 +1,10 @@
 package server.services;
 
+import commons.Debt;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import commons.primary_keys.DebtPK;
 import commons.views.View;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,19 @@ public class WebSocketUpdateService {
     public void sendUpdatedExpense(UUID eventId, Expense expense) {
         messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getCommons());
     }
+
+    public void sendAddedDebt(UUID eventId, Debt debt) {
+        messagingTemplate.convertAndSend(destination("/add/debt", eventId), debt, getCommons());
+    }
+    public void sendRemovedDebt(UUID eventId, DebtPK debtPK) {
+        Debt debt = new Debt();
+        debt.setId(debtPK);
+        messagingTemplate.convertAndSend(destination("/remove/debt", eventId), debt, getCommons());
+    }
+    public void sendUpdatedDebt(UUID eventId, Debt debt) {
+        messagingTemplate.convertAndSend(destination("/update/debt", eventId), debt, getCommons());
+    }
+
     private static Map<String, Object> getCommons() {
         return Map.of(CONVERSION_HINT_HEADER, View.CommonsView.class);
     }

@@ -5,6 +5,9 @@ import commons.Expense;
 import commons.Participant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import server.database.ExpenseRepository;
 import server.repositories.TestExpenseRepository;
 import server.services.ExpenseService;
@@ -22,12 +25,15 @@ import static org.springframework.test.util.AssertionErrors.assertTrue;
 public class ExpenseServiceTest {
 
     private ExpenseRepository expenseRepo;
+    @Mock
+    private DebtService debtService;
     private ExpenseService sut;
 
     @BeforeEach
     public void setup() {
+        MockitoAnnotations.openMocks(this);
         expenseRepo = new TestExpenseRepository();
-        sut = new ExpenseService(expenseRepo);
+        sut = new ExpenseService(expenseRepo, debtService);
     }
 
     @Test

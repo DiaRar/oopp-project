@@ -22,6 +22,23 @@ public class DebtPK implements Serializable {
         this.payerId = payerId;
         this.debtorId = debtorId;
     }
+
+    public UUID getPayerId() {
+        return payerId;
+    }
+
+    public void setPayerId(UUID payerId) {
+        this.payerId = payerId;
+    }
+
+    public UUID getDebtorId() {
+        return debtorId;
+    }
+
+    public void setDebtorId(UUID debtorId) {
+        this.debtorId = debtorId;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
