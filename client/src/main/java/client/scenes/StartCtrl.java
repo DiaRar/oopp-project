@@ -25,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import org.kordamp.ikonli.feather.Feather;
@@ -60,6 +61,8 @@ public class StartCtrl implements Initializable {
     private final DoubleProperty width;
     @FXML
     public ListView<Event> recentsList;
+    @FXML
+    public BorderPane root;
     private final ServerUtils serverUtils;
     private final ConfigUtils utils;
     private final LanguageUtils languageUtils;
@@ -102,7 +105,6 @@ public class StartCtrl implements Initializable {
             }
             e.consume();
         });
-        download.setGraphic(new FontIcon(Feather.DOWNLOAD));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -120,11 +122,10 @@ public class StartCtrl implements Initializable {
         this.joinExistingEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         // I couldn't find where the bottom label is used, but might be better to look into when Jerzy's changes are merged
         // this.recentEvents.textProperty().bind(languageUtils.getBinding("start.recentlyViewedLabel"));
+        this.root.setTop(mainCtrl.getMenuBar());
     }
-
-    public void setLanguage() {
-        RadioMenuItem item = (RadioMenuItem) language.getSelectedToggle();
-        languageUtils.setLang(item.getId());
+    public BorderPane getRoot() {
+        return root;
     }
     /**
      * opens overview with new event

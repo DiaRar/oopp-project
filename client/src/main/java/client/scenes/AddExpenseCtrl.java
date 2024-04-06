@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.uicomponents.PastDateCell;
 import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.LanguageUtils;
@@ -195,6 +196,7 @@ public class AddExpenseCtrl implements Initializable {
         this.equallySplit.textProperty().bind(languageUtils.getBinding("addExpense.equallyRbtn"));
         this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
         this.addTag.textProperty().bind(languageUtils.getBinding("addExpense.addTag"));
+        this.date.setDayCellFactory(datePicker -> new PastDateCell());
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");

@@ -15,7 +15,11 @@
  */
 package client.scenes;
 
+import atlantafx.base.controls.Tile;
+import atlantafx.base.layout.InputGroup;
+import atlantafx.base.theme.Styles;
 import atlantafx.base.theme.Tweaks;
+import client.uicomponents.ExpenseListCell;
 import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
@@ -23,32 +27,23 @@ import com.google.inject.Inject;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
@@ -57,30 +52,13 @@ public class OverviewCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final LanguageUtils languageUtils;
-    private static final double EXPENSE_EDIT_SIZE = 17;
-    private static final double EXPENSE_MARGIN = 10;
-    private static final Font ARIAL_BOLD = new Font("Arial Bold", 13);
-    private static final double HARDCODED_EXPENSE = 12.0;
-    private static final double TAG_SPACING = 5.0;
     private ObservableList<Expense> expenses;
     private ObservableList<Participant> participants;
-    private Participant currentParticipant;
-    private String currentTag;
     private FilteredList<Expense> filteredExpenses;
-    private ObjectBinding<Predicate<Expense>> fromPredicate;
-    private ObjectBinding<Predicate<Expense>> includingPredicate;
     @FXML
     private Label title;
     @FXML
     private Text participantsText;
-    @FXML
-    private ComboBox<Participant> comboBox;
-    @FXML
-    private Label all;
-    @FXML
-    private Label from;
-    @FXML
-    private Label including;
     @FXML
     private ListView<Expense> list;
     @FXML
@@ -94,20 +72,27 @@ public class OverviewCtrl implements Initializable {
     @FXML
     private Button settleDebts;
     @FXML
-    private ComboBox<String> tagChoice;
-    @FXML
     private Button backButton;
-    private StringProperty fromText;
-    private StringProperty includingText;
-
+    @FXML
+    private Button filterButton;
+    @FXML
+    private Button resetButton;
+    @FXML
+    private BorderPane root;
+    @FXML
+    private Button editParticipant;
+    @FXML
+    private Button addParticipant;
+    @FXML
+    private Button sendMoney;
+    @FXML
+    private InputGroup parentExpenseInput;
     @Inject
     public OverviewCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
         this.languageUtils = languageUtils;
-        this.fromText = new SimpleStringProperty();
-        this.includingText = new SimpleStringProperty();
     }
 
     public void startup() {
@@ -119,17 +104,6 @@ public class OverviewCtrl implements Initializable {
         participantsText.setText(mainCtrl.getEvent().getParticipants().stream().map(Participant::getNickname)
                 .collect(Collectors.joining(", ")));
         list.setItems(filteredExpenses);
-        comboBox.setItems(participants);
-        fromPredicate = Bindings.createObjectBinding(
-                () -> expense -> expense.getPayer().getId().equals(comboBox.getValue().getId()),
-                comboBox.valueProperty()
-        );
-        includingPredicate = Bindings.createObjectBinding(
-                () -> expense -> expense.getDebtors().contains(comboBox.getValue()),
-                comboBox.valueProperty()
-        );
-        all.getParent().getChildrenUnmodifiable().forEach(node -> node.getStyleClass().remove("selected-participant"));
-        all.getStyleClass().add("selected-participant");
     }
 
     public void updateEventName(String eventName) {
@@ -143,37 +117,49 @@ public class OverviewCtrl implements Initializable {
     }
     public void addParticipant(Participant participant) {
         participants.add(participant);
-        mainCtrl.getEvent().addParticipant(participant);
         updateParticipantsText();
+        list.refresh();
     }
     public void removeParticipant(Participant participant) {
+        System.out.println(participant);
         participants.removeIf(removed -> removed.getId().equals(participant.getId()));
-        mainCtrl.getEvent().getParticipants().removeIf(removed -> removed.getId().equals(participant.getId()));
-        updateParticipantsText();
         expenses.removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
-        mainCtrl.getEvent().getExpenses().removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
+        expenses.stream().forEach(expense -> expense.getDebtors().removeIf(participant1 -> participant1.getId().equals(participant.getId())));
+        updateParticipantsText();
+        list.refresh();
     }
     public void updateParticipant(Participant participant) {
+        expenses.forEach(expense -> expense.setDebtors(expense.getDebtors().stream()
+                .map(participant1 ->
+                        participant1.getId().equals(participant.getId()) ? participant : participant1).toList())
+        );
         participants.stream().filter(listParticipant -> participant.getId().equals(listParticipant.getId()))
                 .toList().getFirst().setNickname(participant.getNickname());
-        mainCtrl.getEvent().getParticipants().stream().filter(listParticipant -> participant.getId()
-                .equals(listParticipant.getId())).toList().getFirst().setNickname(participant.getNickname());
         updateParticipantsText();
+        list.refresh();
     }
     public void back() {
         mainCtrl.showStart();
     }
-
-    public void clear() {
-        expenses.clear();
-        expenses = null;
-        participants = null;
-        //TODO fix null pointer exception
-        comboBox.getItems().clear();
+    public int binarySearchDate(List<Expense> expenseList, int l, int r, LocalDateTime x) {
+        int m = l;
+        while(l <= r) {
+            m = (l + r) / 2;
+            if (x.isEqual(expenseList.get(m).getDate())) {
+                return m;
+            }
+            if (x.isAfter(expenseList.get(m).getDate())) {
+                r = m - 1;
+            } else {
+               l = m + 1;
+            }
+        }
+        return m;
     }
     public void addExpense(Expense expense) {
-        expenses.add(expense);
-        mainCtrl.getEvent().getExpenses().add(expense);
+        int index = binarySearchDate(expenses, 0, expenses.size() - 1, expense.getDate());
+        expenses.add(index, expense);
+        mainCtrl.getEvent().getExpenses().add(index, expense);
     }
     public void removeExpense(Expense expense) {
         expenses.removeIf(oExpense -> oExpense.getId().equals(expense.getId()));
@@ -186,45 +172,7 @@ public class OverviewCtrl implements Initializable {
         expenses.set(index, expense);
         mainCtrl.getEvent().getExpenses().set(index, expense);
     }
-    public BorderPane expenseComponent(Expense expense) {
-        BorderPane borderPane = new BorderPane();
-        TextFlow content = new TextFlow();
-        VBox vbox = new VBox();
-        BorderPane.setMargin(vbox, new Insets(0, EXPENSE_MARGIN, 0, EXPENSE_MARGIN));
-        Text name = new Text(expense.getPayer().getNickname());
-        name.getStyleClass().add("bold");
-        Text value = new Text(expense.getAmount().toString()
-                .concat("EUR"));
-        value.getStyleClass().add("bold");
-        Text desc = new Text(expense.getTitle());
-        desc.getStyleClass().add("bold");
-        content.getChildren().addAll(name, new Text(" paid "),
-                value, new Text(" for "), desc);
-        vbox.getChildren().add(content);
-        Text payers = new Text("(" + String.join(",",
-                expense.getDebtors().stream().map(Participant::getNickname).collect(Collectors.joining()))
-                + ")");
-        payers.setStyle("-fx-font-size: 12px;");
-        vbox.getChildren().add(payers);
-        borderPane.setCenter(vbox);
-        borderPane.getStyleClass().add("expense");
-        if (expense.getDate() != null) {
-            Text date = new Text(expense.getDate()
-                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-            date.setTextAlignment(TextAlignment.CENTER);
-            borderPane.setLeft(date);
-            BorderPane.setAlignment(date, Pos.CENTER);
-        }
-        ImageView editImage = new ImageView("../../resources/main/client/images/edit.png");
-        editImage.setFitHeight(EXPENSE_EDIT_SIZE);
-        editImage.setFitWidth(EXPENSE_EDIT_SIZE);
-//        editImage.setOnMouseClicked(e -> {
-//            title.setText(expense.getDescription());
-//        }); // TODO BE CHANGED WITH EDIT
-        borderPane.setRight(editImage);
-        BorderPane.setAlignment(editImage, Pos.CENTER);
-        return borderPane;
-    }
+    public void switchTheme() {}
     public void refresh() {
         switch (config.getLocale().getLanguage()) {
             case "nl":
@@ -238,11 +186,11 @@ public class OverviewCtrl implements Initializable {
                 break;
         }
     }
-    public void choiceChanged() {
-        String name = comboBox.getValue().getNickname();
-        from.setText(fromText.getValue().concat(" ").concat(name));
-        including.setText(includingText.getValue().concat(" ").concat(name));
-    }
+//    public void choiceChanged() {
+//        String name = comboBox.getValue().getNickname();
+//        from.setText(fromText.getValue().concat(" ").concat(name));
+//        including.setText(includingText.getValue().concat(" ").concat(name));
+//    }
     public void select(javafx.event.Event e) {
         Node target = (Node) e.getTarget();
         Node label;
@@ -259,22 +207,22 @@ public class OverviewCtrl implements Initializable {
         select(e);
         filteredExpenses.setPredicate(null);
     }
-    public void selectFrom(javafx.event.Event e) {
-        // TODO: tell user there needs to be a participant
-        if (comboBox.getValue() == null) {
-            return;
-        }
-        select(e);
-        filteredExpenses.predicateProperty().bind(fromPredicate);
-    }
-    public void selectIncluding(javafx.event.Event e) {
-        // TODO: tell user there needs to be a participant
-        if (comboBox.getValue() == null) {
-            return;
-        }
-        select(e);
-        filteredExpenses.predicateProperty().bind(includingPredicate);
-    }
+//    public void selectFrom(javafx.event.Event e) {
+//        // TODO: tell user there needs to be a participant
+//        if (comboBox.getValue() == null) {
+//            return;
+//        }
+//        select(e);
+//        filteredExpenses.predicateProperty().bind(fromPredicate);
+//    }
+//    public void selectIncluding(javafx.event.Event e) {
+//        // TODO: tell user there needs to be a participant
+//        if (comboBox.getValue() == null) {
+//            return;
+//        }
+//        select(e);
+//        filteredExpenses.predicateProperty().bind(includingPredicate);
+//    }
 
     public void addParticipantAction() {
         mainCtrl.callAddParticipantDialog();
@@ -287,14 +235,12 @@ public class OverviewCtrl implements Initializable {
     public void openAddExpense() {
         System.out.println("Add expense");
         mainCtrl.showAddExpense();
-        // TODO pass the current event as parameter (to choose tags and participant from)
     }
 
 
     public void openDebts() {
         System.out.println("Open debts");
         mainCtrl.showDebts();
-        // TODO pass the current event as parameter
     }
 
     public void openInvitation() {
@@ -312,33 +258,42 @@ public class OverviewCtrl implements Initializable {
         this.expensesLabel.textProperty().bind(languageUtils.getBinding("overview.expensesLabel"));
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
         this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
-        this.all.textProperty().bind(languageUtils.getBinding("overview.allLabel"));
-        this.fromText.bind(languageUtils.getBinding("overview.fromLabel"));
-        this.includingText.bind(languageUtils.getBinding("overview.includingLabel"));
         this.participantsLabel.textProperty().bind(languageUtils.getBinding("overview.participantsLabel"));
-        this.comboBox.setCellFactory(param -> getParticipantListCell());
-        this.comboBox.setButtonCell(getParticipantListCell());
-        this.list.setCellFactory(expenseListView -> getExpenseListCell());
+        this.list.setCellFactory(expenseListView -> new ExpenseListCell(participants.size(),
+                (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)), (e) -> {}));
         this.list.getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
+        this.sendInvites.setGraphic(new FontIcon(Feather.SEND));
+        this.sendInvites.setContentDisplay(ContentDisplay.RIGHT);
+        this.sendInvites.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SUCCESS, Styles.ELEVATED_2);
         this.backButton.textProperty().bind(languageUtils.getBinding("overview.backButton"));
-        // TODO add after
-        // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
-
+        this.addExpense.setContentDisplay(ContentDisplay.RIGHT);
+        this.addExpense.setGraphic(new FontIcon(Feather.PLUS_CIRCLE));
+        this.addExpense.getStyleClass().add(Styles.BUTTON_OUTLINED);
+        this.addExpense.prefWidthProperty().bind(this.parentExpenseInput.widthProperty().divide(2));
+        this.sendMoney.prefWidthProperty().bind(this.parentExpenseInput.widthProperty().divide(2));
+        this.sendMoney.setContentDisplay(ContentDisplay.RIGHT);
+        this.sendMoney.setGraphic(new FontIcon(Feather.SEND));
+        this.sendMoney.getStyleClass().addAll(Styles.ACCENT, Styles.BUTTON_OUTLINED);
+        this.filterButton.setGraphic(new FontIcon(Feather.FILTER));
+        this.filterButton.getStyleClass().addAll(Styles.SUCCESS);
+        this.editParticipant.setGraphic(new FontIcon(Feather.EDIT));
+        this.editParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON);
+        this.addParticipant.setGraphic(new FontIcon(Feather.USER_PLUS));
+        this.addParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON);
+//        editParticipant.setImage(new Image());
+//        TODO add after
+//        // this.tagChoice.setItems(server.getTags(mainCtrl.getEvent()));
     }
+    public BorderPane getRoot() {
+        return root;
+    }
+    public Tile generateRecentEvent(Expense expense) {
+        // Event Title
+        Tile eventTile = new Tile(expense.getTitle(), null);
 
-    private ListCell<Expense> getExpenseListCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(Expense item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    setGraphic(expenseComponent(item));
-                }
-            }
-        };
+        // Remove button
+
+        return eventTile;
     }
     private ListCell<Participant> getParticipantListCell() {
         return new ListCell<>() {
@@ -358,25 +313,6 @@ public class OverviewCtrl implements Initializable {
     public String tagComponent(Tag tag) {
 //  TODO add color component
 
-//        Label tc = new Label();
-//        String hex = String.format("#%02x%02x%02x", tag.getColor().getRed(), tag.getColor().getGreen(), tag.getColor().getBlue());
-//        Background bg = new Background(new BackgroundFill(Paint.valueOf(hex),
-//                new CornerRadii(TAG_SPACING, 0, TAG_SPACING, 0, false),
-//                new Insets(0, TAG_SPACING, 0, TAG_SPACING)));
-//        tc.setText(tag.getName());
-//        tc.setFont(ARIAL_BOLD);
         return tag.getName();
     }
-
-    public void filterForTags(javafx.event.Event e) {
-        currentTag = tagChoice.getValue();
-        if (currentTag == null) {
-            return;
-        }
-        select(e);
-        Predicate<Expense> forTags = expense -> expense.getTags().stream().map(Tag::getName).toList()
-                .contains(currentTag);
-        filteredExpenses.setPredicate(forTags);
-    }
-
 }

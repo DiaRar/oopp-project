@@ -17,6 +17,7 @@ package client;
 
 import client.implementations.WSSessionHandler;
 import client.scenes.*;
+import client.uicomponents.CustomMenuBar;
 import client.utils.Config;
 import client.utils.ConfigUtils;
 import client.utils.WebSocketUtils;
@@ -51,6 +52,7 @@ public class InjectorModule implements Module {
         binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
         binder.bind(WSSessionHandler.class).in(Scopes.SINGLETON);
+        binder.bind(CustomMenuBar.class).toInstance(new CustomMenuBar());
     }
 
     private ConfigUtils createConfigUtils() {
