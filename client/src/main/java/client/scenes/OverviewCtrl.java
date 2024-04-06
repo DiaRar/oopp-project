@@ -28,18 +28,16 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Expense;
 import commons.Participant;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -49,7 +47,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
@@ -117,7 +114,7 @@ public class OverviewCtrl implements Initializable {
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
         this.list.setCellFactory(expenseListView -> new ExpenseListCell(participants.size(),
-                (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)), (e) -> {}));
+                (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)), (e) -> { }));
         this.list.getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
         this.sendInvites.setGraphic(new FontIcon(Feather.SEND));
         this.sendInvites.setContentDisplay(ContentDisplay.RIGHT);
@@ -139,8 +136,8 @@ public class OverviewCtrl implements Initializable {
         this.dialog = new Dialog();
         this.modalBox = new ModalBox(this.modal);
         this.modalBox.addContent(this.dialog);
-        this.modalBox.setMinSize(300, 274);
-        this.modalBox.setMaxSize(300, 274);
+        this.modalBox.setMinSize(Dialog.DIALOG_WIDTH, Dialog.DIALOG_HEIGHT);
+        this.modalBox.setMaxSize(Dialog.DIALOG_WIDTH, Dialog.DIALOG_HEIGHT);
         this.filterButton.setOnAction(e -> this.modal.show(this.modalBox));
         this.resetButton.setContentDisplay(ContentDisplay.RIGHT);
         this.resetButton.setGraphic(new FontIcon(Feather.X));
@@ -192,7 +189,8 @@ public class OverviewCtrl implements Initializable {
         System.out.println(participant);
         participants.removeIf(removed -> removed.getId().equals(participant.getId()));
         expenses.removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
-        expenses.stream().forEach(expense -> expense.getDebtors().removeIf(participant1 -> participant1.getId().equals(participant.getId())));
+        expenses.forEach(expense -> expense.getDebtors()
+                .removeIf(participant1 -> participant1.getId().equals(participant.getId())));
         updateParticipantsText();
         list.refresh();
     }
@@ -211,7 +209,7 @@ public class OverviewCtrl implements Initializable {
     }
     public int binarySearchDate(List<Expense> expenseList, int l, int r, LocalDateTime x) {
         int m = l;
-        while(l <= r) {
+        while (l <= r) {
             m = (l + r) / 2;
             if (x.isEqual(expenseList.get(m).getDate())) {
                 return m;

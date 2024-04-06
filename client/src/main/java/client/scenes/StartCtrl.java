@@ -2,7 +2,6 @@ package client.scenes;
 
 import atlantafx.base.controls.Tile;
 import atlantafx.base.theme.Styles;
-import atlantafx.base.theme.Tweaks;
 import atlantafx.base.util.Animations;
 import client.uicomponents.Alerts;
 import client.uicomponents.LanguageComboBox;
@@ -13,20 +12,15 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import jakarta.ws.rs.NotFoundException;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -36,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class StartCtrl implements Initializable {
     private static final int ANIMATION_DURATION = 5_000;
@@ -207,11 +200,7 @@ public class StartCtrl implements Initializable {
         // Remove button
         Button removeButton = new Button("", new FontIcon(Feather.TRASH));
         removeButton.getStyleClass().addAll(Styles.DANGER, Styles.FLAT, Styles.BUTTON_ICON);
-        Button editButton = new Button("", new FontIcon(Feather.EDIT));
-        editButton.getStyleClass().addAll(Styles.ACCENT, Styles.FLAT, Styles.BUTTON_ICON);
-        HBox buttons = new HBox(editButton, removeButton);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-        eventTile.setAction(buttons);
+        eventTile.setAction(removeButton);
         // On click
         removeButton.setOnAction(e -> {
             utils.removeRecent(event.getId());

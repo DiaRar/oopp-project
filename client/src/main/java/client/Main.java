@@ -17,10 +17,8 @@ package client;
 
 import atlantafx.base.theme.PrimerLight;
 import client.scenes.*;
-import client.uicomponents.Dialog;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 

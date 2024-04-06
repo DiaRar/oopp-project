@@ -2,10 +2,10 @@ package client.scenes;
 
 import atlantafx.base.theme.Theme;
 import client.uicomponents.CustomMenuBar;
-import client.uicomponents.Dialog;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import client.utils.WebSocketUtils;
+import com.google.inject.Inject;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import com.google.inject.Inject;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;

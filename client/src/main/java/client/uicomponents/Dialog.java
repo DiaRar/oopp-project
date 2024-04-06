@@ -1,7 +1,6 @@
 package client.uicomponents;
 
 import atlantafx.base.theme.Styles;
-import client.Main;
 import client.utils.LanguageUtils;
 import commons.Expense;
 import commons.Participant;
@@ -11,20 +10,17 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class Dialog extends VBox {
+    public static final double DIALOG_WIDTH = 300;
+    public static final double DIALOG_HEIGHT = 274;
     @FXML
     private ComboBox<Participant> payer;
     @FXML
@@ -71,8 +67,8 @@ public class Dialog extends VBox {
     public Dialog() {
         super();
 //        setSpacing(10);
-        setMinSize(300, 274);
-        setMaxSize(300, 274);
+        setMinSize(DIALOG_WIDTH, DIALOG_HEIGHT);
+        setMaxSize(DIALOG_WIDTH, DIALOG_HEIGHT);
         setStyle("-fx-background-color: -color-bg-default;");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/components/Dialog.fxml"));
         fxmlLoader.setRoot(this);
@@ -160,14 +156,14 @@ public class Dialog extends VBox {
         );
         tagPredicate = Bindings.createObjectBinding(
                 () -> expense -> {
-                    if(tags.getValue() != null)
+                    if (tags.getValue() != null)
                         return expense.getTags().contains(tags.getValue());
                     return true;
                 }, tags.valueProperty()
         );
         datePredicate = Bindings.createObjectBinding(
                 () -> expense -> {
-                    if(date.getValue() == null)
+                    if (date.getValue() == null)
                         return true;
                     if (period.getValue() == null) {
                         return true;

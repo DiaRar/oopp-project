@@ -5,23 +5,20 @@ import client.scenes.MainCtrl;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Singleton;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import commons.Event;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 @Singleton
 public class CustomMenuBar extends MenuBar {
+    private static final double FLAG_WIDTH = 48;
+    private static final double FLAG_HEIGHT = 36;
     private ToggleGroup language;
     private ToggleGroup theme;
     private Menu languages;
@@ -66,8 +63,8 @@ public class CustomMenuBar extends MenuBar {
         );
         greatBrittain.setPreserveRatio(true);
         greatBrittain.setSmooth(true);
-        greatBrittain.setFitWidth(48);
-        greatBrittain.setFitHeight(36);
+        greatBrittain.setFitWidth(FLAG_WIDTH);
+        greatBrittain.setFitHeight(FLAG_HEIGHT);
         RadioMenuItem english = new RadioMenuItem("English", greatBrittain);
         english.setToggleGroup(language);
         english.setId("en");
@@ -75,8 +72,8 @@ public class CustomMenuBar extends MenuBar {
         ImageView goofyLanguageCountry = new ImageView(
                 Objects.requireNonNull(loader.getResource("client/flags/Netherlands.png")).toString()
         );
-        goofyLanguageCountry.setFitWidth(48);
-        goofyLanguageCountry.setFitHeight(36);
+        goofyLanguageCountry.setFitWidth(FLAG_WIDTH);
+        goofyLanguageCountry.setFitHeight(FLAG_HEIGHT);
         goofyLanguageCountry.setPreserveRatio(true);
         goofyLanguageCountry.setSmooth(true);
         RadioMenuItem dutch = new RadioMenuItem("Dutch", goofyLanguageCountry

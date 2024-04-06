@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import server.services.ParticipantsService;
 import server.services.WebSocketUpdateService;
 
-import java.sql.SQLException;
 import java.util.*;
 
 @RestController

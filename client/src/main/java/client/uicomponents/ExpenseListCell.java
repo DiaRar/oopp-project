@@ -20,7 +20,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ExpenseListCell extends ListCell<Expense> {
@@ -65,7 +64,6 @@ public class ExpenseListCell extends ListCell<Expense> {
                     .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             date.setTextAlignment(TextAlignment.CENTER);
             borderPane.setLeft(date);
-            borderPane.getLeft().prefWidth(300);
             BorderPane.setAlignment(date, Pos.CENTER);
         }
 
