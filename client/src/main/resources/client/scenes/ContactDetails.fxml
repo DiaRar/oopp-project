@@ -38,7 +38,7 @@
                   <Button fx:id="addParticipantButton" alignment="CENTER" mnemonicParsing="false" onAction="#confirmAction" text="Add Participant" />
                </children>
                <padding>
-                  <Insets top="5.0" />
+                  <Insets bottom="15.0" top="5.0" />
                </padding>
             </HBox>
          </children>
