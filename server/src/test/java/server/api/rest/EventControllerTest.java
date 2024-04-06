@@ -1,7 +1,6 @@
 package server.api.rest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,17 +8,12 @@ import org.junit.jupiter.api.Test;
 
 import commons.Event;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import server.api.rest.EventController;
-import server.api.ws.WebSocketConfig;
 import server.repositories.TestEventRepository;
 import server.services.EventService;
 import server.services.WebSocketUpdateService;
+import server.services.WebSocketUpdateServiceTest;
 
 public class EventControllerTest {
     private int id;
@@ -71,6 +65,21 @@ public class EventControllerTest {
         Event updated = eventController.update(event.getId(), toUpdateWith).getBody();
         toUpdateWith.setId(event.getId());
         assertEquals(updated, toUpdateWith);
+    }
+
+    @Test
+    public void getByIdBasicTest() {
+        Event event = eventController.create(getEvent("test")).getBody();
+        Event event1 = eventController.getByIdBasic(event.getId()).getBody();
+        assertEquals(event, event1);
+    }
+
+    @Test
+    public void DeleteSimpleTest() {
+        Event event = eventController.create(getEvent("damn")).getBody();
+        assertDoesNotThrow(() -> {
+            eventController.update(event.getId());
+        });
     }
 
     private static Event getEvent(String s) {
