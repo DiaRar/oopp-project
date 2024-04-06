@@ -2,6 +2,7 @@ package client.uicomponents;
 
 import atlantafx.base.theme.Styles;
 import client.Main;
+import client.utils.LanguageUtils;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
@@ -42,14 +43,31 @@ public class Dialog extends VBox {
     private Button resetTags;
     @FXML
     private Button resetDate;
-
+    @FXML
+    private Label filterLabel;
+    @FXML
+    private Label payerLabel;
+    @FXML
+    private Label paidForLabel;
+    @FXML
+    private Label tagLabel;
+    @FXML
+    private Label dateLabel;
     private ObjectBinding<Predicate<Expense>> predicate;
     private ObjectBinding<Boolean> isEmpty;
     private ObjectBinding<Predicate<Expense>> payerPredicate;
     private ObjectBinding<Predicate<Expense>> paidForPredicate;
     private ObjectBinding<Predicate<Expense>> tagPredicate;
     private ObjectBinding<Predicate<Expense>> datePredicate;
-
+    private LanguageUtils languageUtils;
+    public void bind(LanguageUtils languageUtils) {
+        this.languageUtils = languageUtils;
+        filterLabel.textProperty().bind(languageUtils.getBinding("overview.dialog.filter"));
+        payerLabel.textProperty().bind(languageUtils.getBinding("overview.dialog.payer"));
+        paidForLabel.textProperty().bind(languageUtils.getBinding("overview.dialog.paidFor"));
+        tagLabel.textProperty().bind(languageUtils.getBinding("overview.dialog.tag"));
+        dateLabel.textProperty().bind(languageUtils.getBinding("overview.dialog.date"));
+    }
     public Dialog() {
         super();
 //        setSpacing(10);
@@ -93,10 +111,12 @@ public class Dialog extends VBox {
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
+                    textProperty().unbind();
                     setText(null);
                     setGraphic(null);
                 } else {
-                    setText(item ? "After" : "Before" );
+                    textProperty().bind(item ? languageUtils.getBinding("overview.dialog.after") :
+                            languageUtils.getBinding("overview.dialog.before"));
                 }
             }
         };
@@ -165,9 +185,9 @@ public class Dialog extends VBox {
                 payerPredicate, payerPredicate, tagPredicate, datePredicate);
         isEmpty = Bindings.createObjectBinding(
                 () -> payer.getValue() != null || paidFor.getValue() != null || tags.getValue() != null
-                || period.getValue() != null || date.getValue() != null,
+                || period.getValue() != null || (date.getValue() != null && period.getValue() != null),
                 payer.valueProperty(), paidFor.valueProperty(),
-                tags.valueProperty(), period.valueProperty(), date.valueProperty());
+                tags.valueProperty(), date.valueProperty());
     }
     public void resetPayer() {
         payer.setValue(null);

@@ -114,7 +114,6 @@ public class OverviewCtrl implements Initializable {
         this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
         this.participantsLabel.textProperty().bind(languageUtils.getBinding("overview.participantsLabel"));
         this.sendMoney.textProperty().bind(languageUtils.getBinding("overview.send"));
-        this.filterButton.textProperty().bind(languageUtils.getBinding("overview.filter"));
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
         this.list.setCellFactory(expenseListView -> new ExpenseListCell(participants.size(),
@@ -152,6 +151,7 @@ public class OverviewCtrl implements Initializable {
                 this.resetButton.getStyleClass().remove(Styles.DANGER);
             }
         });
+        this.dialog.bind(languageUtils);
         this.resetButton.setOnAction(e -> {
             this.dialog.resetPayer();
             this.dialog.resetPaidFor();

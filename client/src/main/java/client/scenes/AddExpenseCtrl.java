@@ -197,6 +197,8 @@ public class AddExpenseCtrl implements Initializable {
         this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
         this.addTag.textProperty().bind(languageUtils.getBinding("addExpense.addTag"));
         this.date.setDayCellFactory(datePicker -> new PastDateCell());
+        this.debtorsList.managedProperty().bind(this.debtorsList.visibleProperty());
+        this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
