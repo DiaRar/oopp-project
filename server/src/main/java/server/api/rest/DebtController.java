@@ -43,6 +43,7 @@ public class DebtController {
     }
 
     @PostMapping(path = {"", "/"})
+    @JsonView(View.SettleView.class)
     public ResponseEntity<Debt> post(@PathVariable("eventId") UUID eventId,
                                      @RequestBody Debt debt) {
         try {
@@ -53,6 +54,7 @@ public class DebtController {
         }
     }
 
+    // Avoid using, instead use /settle
     @PutMapping("/{debtId}")
     public ResponseEntity<Debt> put(@PathVariable("eventId") UUID eventId,
                                     @PathVariable("debtId") DebtPK debtId,
