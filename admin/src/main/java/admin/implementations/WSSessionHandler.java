@@ -26,9 +26,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                overviewCtrl.fillEvents();
-                // TODO actualy update
-                //overviewCtrl.addEvent((Event) payload);
+                overviewCtrl.addEvent((Event) payload);
             }
         });
         session.subscribe("/changes/delete/event", new StompFrameHandler() {
@@ -39,9 +37,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                overviewCtrl.fillEvents();
-                // TODO actualy update
-                //overviewCtrl.removeEvent((UUID) payload);
+                overviewCtrl.removeEvent((UUID) payload);
             }
         });
         session.subscribe("/changes/update/event", new StompFrameHandler() {
@@ -52,9 +48,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                overviewCtrl.fillEvents();
-                // TODO actualy update
-                //overviewCtrl.updateEvent((Event) payload);
+                overviewCtrl.updateEvent((Event) payload);
             }
         });
     }
