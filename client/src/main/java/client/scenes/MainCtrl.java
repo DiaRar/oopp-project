@@ -234,10 +234,10 @@ public class MainCtrl {
 
     public void showAddTags() {
         saveDimensions();
-        primaryStage.setTitle("Add Tag");
-        primaryStage.setScene(addTagScene);
+        openDialog("Add Tags", addTagScene);
         addTagScene.setOnKeyPressed(e -> addTagCtrl.keyPressed(e));
         addTagCtrl.setParentEvent(event);
+        addTagCtrl.addMode();
     }
 
     public Event getEvent() {
