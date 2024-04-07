@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -37,11 +38,14 @@ public class Event {
      */
     public Event(String name) {
         this.name = name;
+        this.participants = new ArrayList<>();
     }
     /**
      * Constructs an empty Event object.
      */
-    public Event() {}
+    public Event() {
+        this.participants = new ArrayList<>();
+    }
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
