@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import server.services.ParticipantsService;
 import server.services.WebSocketUpdateService;
+import server.services.WebSocketUpdateServiceTest;
 
 import java.util.ArrayList;
 import java.util.List;

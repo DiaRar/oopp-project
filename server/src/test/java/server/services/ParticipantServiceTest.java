@@ -3,7 +3,6 @@ package server.services;
 import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import server.database.ParticipantRepository;
-
-import commons.Participant;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import server.services.ParticipantsService;
-import server.services.WebSocketUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;

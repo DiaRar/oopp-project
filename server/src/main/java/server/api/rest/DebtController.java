@@ -2,9 +2,11 @@ package server.api.rest;
 
 import commons.Debt;
 import commons.primary_keys.DebtPK;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.DebtService;
+import server.services.WebSocketUpdateService;
 
 import java.util.UUID;
 
@@ -13,9 +15,11 @@ import java.util.UUID;
 public class DebtController {
 
     private final DebtService debtService;
+    private final WebSocketUpdateService updateService;
 
-    public DebtController(DebtService debtService) {
+    public DebtController(DebtService debtService, WebSocketUpdateService updateService) {
         this.debtService = debtService;
+        this.updateService = updateService;
     }
 
     @GetMapping("/{debtId}")
@@ -32,7 +36,7 @@ public class DebtController {
     public ResponseEntity<Debt> post(@PathVariable("eventId") UUID eventId,
                                      @RequestBody Debt debt) {
         try {
-            Debt saved = debtService.add(debt);
+            Debt saved = debtService.add(eventId, debt);
             return ResponseEntity.ok(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -44,7 +48,7 @@ public class DebtController {
                                     @PathVariable("debtId") DebtPK debtId,
                                     @RequestBody Debt debt) {
         try {
-            Debt updated = debtService.update(debtId, debt);
+            Debt updated = debtService.update(eventId, debtId, debt);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -52,14 +56,25 @@ public class DebtController {
     }
 
     @DeleteMapping("/{debtId}")
-    public ResponseEntity<Debt> delete(@PathVariable("eventId") UUID eventId,
+    public ResponseEntity<Void> delete(@PathVariable("eventId") UUID eventId,
                                        @PathVariable("debtId") DebtPK debtId) {
-        try {
-            Debt deleted = debtService.delete(debtId);
-            return ResponseEntity.ok(deleted);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        debtService.delete(debtId);
+        updateService.sendRemovedDebt(eventId, debtId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recalculate")
+    @Transactional
+    public ResponseEntity<Void> recalculate(@PathVariable("eventId") UUID eventId) {
+        debtService.recalculate(eventId);
+        return ResponseEntity.ok().build();
+    }
+    
+    @PostMapping("/settle/{payerId}/{debtorId}")
+    public ResponseEntity<Void> settle(@PathVariable("eventId") UUID eventId, @PathVariable("payerId") UUID payerId,
+                                       @PathVariable("debtorId") UUID debtorId, @RequestBody Double amount) {
+        debtService.settle(eventId, payerId, debtorId, amount);
+        return ResponseEntity.ok().build();
     }
 
 }

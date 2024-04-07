@@ -3,31 +3,39 @@ package server.services;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import server.database.ExpenseRepository;
 import server.repositories.TestExpenseRepository;
 import server.services.ExpenseService;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.util.AssertionErrors.assertFalse;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 public class ExpenseServiceTest {
 
     private ExpenseRepository expenseRepo;
+    @Mock
+    private DebtService debtService;
     private ExpenseService sut;
 
     @BeforeEach
     public void setup() {
+        MockitoAnnotations.openMocks(this);
         expenseRepo = new TestExpenseRepository();
-        sut = new ExpenseService(expenseRepo);
+        sut = new ExpenseService(expenseRepo, debtService);
     }
 
     @Test
@@ -98,6 +106,26 @@ public class ExpenseServiceTest {
         // Check that list of debtors is updated
         assertTrue("Debtors contain Josh", updated.getDebtors().contains(josh));
     }
+    @Test
+    public void testUpdateSuccessful2() {
+        Event e1 = getEvent("Event 1");
+        Participant josh = getParticipant(e1, "Josh", "j@email.com");
+        Participant owe = getParticipant(e1, "Owe", "owemoney@email.com");
+        Expense expense = new Expense(20.0, "Expense Update", LocalDateTime.of(2024, Month.MARCH, 17, 14, 0),
+                josh, List.of(owe));
+        expense = sut.save(e1.getId(), expense);
+        Expense newExpense = new Expense(12.0, null, LocalDateTime.of(2024, Month.MARCH, 18, 12, 0),
+                josh, List.of(josh, owe));
+        Expense updated = sut.update(e1.getId(), expense.getId(), newExpense);
+        // Check that amount got updated
+        assertEquals(12.0, updated.getAmount());
+        // Check that title is unchanged
+        assertEquals("Expense Update", updated.getTitle());
+        // Check that date is updated
+        assertEquals(LocalDateTime.of(2024, Month.MARCH, 18, 12, 0), updated.getDate());
+        // Check that list of debtors is updated
+        assertTrue("Debtors contain Josh", updated.getDebtors().contains(josh));
+    }
 
     @Test
     public void testDeleteSuccessful() {
@@ -113,6 +141,43 @@ public class ExpenseServiceTest {
         sut.delete(expense.getId());
         // Check that expense got removed
         assertFalse("The list of expenses should not contain 'expense'", sut.getAll(e1.getId()).contains(expense));
+    }
+
+    @Test
+    public void testDeleteFail() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            sut.delete(null);
+        });
+    }
+    @Test
+    public void testAddFail1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            sut.save(null, new Expense(1.0, "test", LocalDateTime.now(), null, null));
+        });
+    }
+    @Test
+    public void testAddFail2() {
+        Event e1 = new Event();
+        assertThrows(IllegalArgumentException.class, () -> {
+            sut.save(null, new Expense(1.0, "test", LocalDateTime.now(), getParticipant(e1, "a", "b"), null));
+        });
+    }
+    @Test
+    public void testAddFail3() {
+        Event e1 = new Event();
+        Collection<Participant> collection = new ArrayList<>();
+        collection.add(getParticipant(e1, "a", "b"));
+        Expense expense = new Expense(1.0,"test", LocalDateTime.now(), getParticipant(e1, "c", "c"),collection);
+        expense.setId(UUID.randomUUID());
+        assertThrows(IllegalArgumentException.class, () -> {
+            sut.save(e1.getId(), expense);
+        });
+    }
+    @Test
+    public void getByIdFailTest() {
+        assertThrows(EntityNotFoundException.class, () -> {
+            sut.getById(null);
+        });
     }
 
     private static Event getEvent(String s) {

@@ -2,6 +2,7 @@ package server.repositories;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -268,6 +269,12 @@ public class TestEventRepository implements EventRepository {
 
     @Override
     public Integer deleteEventById(UUID id) {
-        return null;
+        call("deleteById");
+        List<Event> temp = events.stream().filter(x -> x.getId().equals(id)).toList();
+        int deletedRows = temp.size();
+        for (Event event : temp) {
+            events.remove(event);
+        }
+        return deletedRows;
     }
 }

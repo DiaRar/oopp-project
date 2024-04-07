@@ -74,8 +74,6 @@ public class DebtsCtrl implements Initializable {
 
         // TODO add event name to title of the page
         // TODO: Fix string binding
-        title.setText("Open Debts - " + debts.get(0).getEvent().getName());
-
     }
 
     public BorderPane debtComponent(Debt debt) {

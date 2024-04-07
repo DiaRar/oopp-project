@@ -36,6 +36,12 @@ import java.util.UUID;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.Debt;
+import commons.Event;
+import commons.Expense;
+import commons.Participant;
+import jakarta.ws.rs.core.Response;
+
 
 public class ServerUtils {
 
@@ -189,9 +195,9 @@ public class ServerUtils {
         }
 	}
 
-	public void deleteParticipant(UUID eventId, UUID id) {
+	public Response deleteParticipant(UUID eventId, UUID id) {
 		try {
-			ClientBuilder.newClient(new ClientConfig())
+			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
 					.path("/api/events/{eventId}/participants/{id}")
 					.resolveTemplate("eventId", eventId)
@@ -200,6 +206,7 @@ public class ServerUtils {
 					.delete();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
+			return null;
 		}
 	}
 
@@ -327,6 +334,21 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+	public Response deleteExpense(UUID eventID, UUID expenseId) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/expenses/{expenseId}")
+					.resolveTemplate("eventId", eventID)
+					.resolveTemplate("expenseId", expenseId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

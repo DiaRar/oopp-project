@@ -15,12 +15,10 @@
  */
 package client;
 
+import client.implementations.WSSessionHandler;
 import client.scenes.*;
-import client.utils.Config;
-import client.utils.ConfigUtils;
-import client.utils.WebSocketUtils;
-import client.utils.LanguageUtils;
-import client.utils.ServerUtils;
+import client.uicomponents.CustomMenuBar;
+import client.utils.*;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -49,6 +47,8 @@ public class InjectorModule implements Module {
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
         binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WSSessionHandler.class).in(Scopes.SINGLETON);
+        binder.bind(CustomMenuBar.class).toInstance(new CustomMenuBar());
     }
 
     private ConfigUtils createConfigUtils() {

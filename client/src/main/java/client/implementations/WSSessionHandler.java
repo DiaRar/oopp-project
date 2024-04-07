@@ -1,6 +1,8 @@
 package client.implementations;
 
 import client.scenes.MainCtrl;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
@@ -14,14 +16,17 @@ import java.lang.reflect.Type;
 
 
 public class WSSessionHandler extends StompSessionHandlerAdapter {
-    private MainCtrl mainCtrl;
-    public WSSessionHandler(MainCtrl mainCtrl) {
-        super();
+    private Provider<MainCtrl> mainCtrl;
+    @Inject
+    public WSSessionHandler(Provider<MainCtrl> mainCtrl) {
         this.mainCtrl = mainCtrl;
+    }
+    public WSSessionHandler() {
+        super();
     }
     public void participantText() {}
     public String source(String path) {
-        return "/changes" + path + "/" + mainCtrl.getEvent().getId().toString();
+        return "/changes" + path + "/" + mainCtrl.get().getEvent().getId().toString();
     }
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
@@ -33,7 +38,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Event event = (Event) payload;
-                Platform.runLater(() -> mainCtrl.eventNameChange(event));
+                Platform.runLater(() -> mainCtrl.get().eventNameChange(event));
             }
         });
         session.subscribe(source("/add/participant"), new StompFrameHandler() {
@@ -44,7 +49,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Participant participant = (Participant) payload;
-                Platform.runLater(() -> mainCtrl.addParticipant(participant));
+                Platform.runLater(() -> mainCtrl.get().addParticipant(participant));
             }
         });
         session.subscribe(source("/remove/participant"), new StompFrameHandler() {
@@ -55,7 +60,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Participant participant = (Participant) payload;
-                Platform.runLater(() -> mainCtrl.removeParticipant(participant));
+                Platform.runLater(() -> mainCtrl.get().removeParticipant(participant));
             }
         });
         session.subscribe(source("/update/participant"), new StompFrameHandler() {
@@ -66,7 +71,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Participant participant = (Participant) payload;
-                Platform.runLater(() -> mainCtrl.updateParticipant(participant));
+                Platform.runLater(() -> mainCtrl.get().updateParticipant(participant));
             }
         });
         session.subscribe(source("/add/expense"), new StompFrameHandler() {
@@ -77,7 +82,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.addExpense(expense));
+                Platform.runLater(() -> mainCtrl.get().addExpense(expense));
             }
         });
         session.subscribe(source("/remove/expense"), new StompFrameHandler() {
@@ -88,7 +93,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.removeExpense(expense));
+                Platform.runLater(() -> mainCtrl.get().removeExpense(expense));
             }
         });
         session.subscribe(source("/update/expense"), new StompFrameHandler() {
@@ -99,7 +104,7 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.updateExpense(expense));
+                Platform.runLater(() -> mainCtrl.get().updateExpense(expense));
             }
         });
     }
