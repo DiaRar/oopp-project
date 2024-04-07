@@ -5,7 +5,9 @@ import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
@@ -21,6 +23,8 @@ public class StatisticsCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
 
+    private ObservableList<PieChart.Data> data;
+    private ObservableIntegerValue sum;
 
     @FXML
     private Label amount;
@@ -38,12 +42,24 @@ public class StatisticsCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
     }
 
     public void startup() {
         title.setText("Statistics of event: " + mainCtrl.getEvent().getName());
         amount.setText("" + getSum() + "$");
-        chart.setData(FXCollections.observableArrayList(getData()));
+        data = FXCollections.observableArrayList(getData());
+        chart.setData(data);
+        server.registerForUpdates(mainCtrl.getEvent().getId(), e -> {
+            if (e.getTags() == null || e.getTags().size() == 0) {
+                data.add(new PieChart.Data("Other", e.getAmount()));
+            } else {
+                for (Tag x : e.getTags()) {
+                    data.add(new PieChart.Data(x.getName(), e.getAmount()));
+                }
+            }
+            amount.setText("" + getSum() + "$");
+        });
     }
 
     public void back() {

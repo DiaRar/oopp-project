@@ -23,6 +23,9 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import client.uicomponents.Alerts;
 import com.google.inject.Inject;
@@ -39,12 +42,16 @@ import org.glassfish.jersey.client.ClientConfig;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 public class ServerUtils {
 
 	private final String server;
 	private final Config config;
+
+	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 	@Inject
 	public ServerUtils(Config config) throws IOException {
 		this.config = config;
@@ -279,4 +286,27 @@ public class ServerUtils {
 			return null;
 		}
 	}
+
+	public void registerForUpdates(UUID eventId, Consumer<Expense> consumer) {
+		EXECUTOR.submit(() -> {
+			while (!Thread.interrupted()) {
+				var response = ClientBuilder.newClient(new ClientConfig())
+						.target(server)
+						.path("/api/events/{eventId}/expenses/updates")
+						.resolveTemplate("eventId", eventId)
+						.request(APPLICATION_JSON)
+						.accept(APPLICATION_JSON)
+						.get(Response.class);
+				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+					continue;
+				}
+				var expense = response.readEntity(Expense.class);
+				consumer.accept(expense);
+			}
+		});
+	}
+	public void stop() {
+		EXECUTOR.shutdownNow();
+	}
+
 }
