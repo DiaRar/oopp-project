@@ -121,7 +121,7 @@ public class AddExpenseCtrl implements Initializable {
         Participant pay = mainCtrl.getEvent().getParticipants().stream()
                 .filter(p -> p.equals(payer.getValue()))
                 .toList()
-                .getFirst();
+                .get(0);
         Collection<Participant> debt;
         if (equallySplit.isSelected()) {
             debt = mainCtrl.getEvent().getParticipants();

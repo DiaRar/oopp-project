@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,6 +58,26 @@ class TagTest {
         assertTrue(tag1.toString().contains("food"));
         // String should contain RGB values
         assertTrue(tag1.toString().contains("255"));
+    }
+
+    @Test
+    public void getterSetterTest() {
+        Tag tag = new Tag("test", Color.BLACK, null, new Event());
+        UUID id = UUID.randomUUID();
+        tag.setId(id);
+        assertEquals(id, tag.getId());
+        List<Expense> expenseList = new ArrayList<>();
+        Expense expense = new Expense();
+        expenseList.add(expense);
+        tag.setExpenses(expenseList);
+        assertEquals(expenseList, tag.getExpenses());
+        Event event = new Event("test");
+        tag.setEvent(event);
+        assertEquals(tag.getEvent(), event);
+        tag.setName("name");
+        assertEquals("name", tag.getName());
+        tag.setColor(Color.BLUE);
+        assertEquals(Color.BLUE, tag.getColor());
     }
 
 }
