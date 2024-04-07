@@ -43,6 +43,37 @@ public class DebtService {
     }
 
     public Debt add(UUID eventId, Debt debt) {
+        if (compareAmounts(debt.getAmount(), 0.0) < 0) {
+            throw new IllegalArgumentException("Cannot add debt with negative amount.");
+        }
+        if (getOptionalById(debt.getId()).isPresent()) {
+            throw new IllegalArgumentException("Cannot add already existing debt.");
+        }
+        Event event = new Event();
+        Debt debtorToPayer = new Debt(debt.getDebtor(), debt.getPayer(), debt.getAmount(), event);
+
+        // Adds the debtor to payer with positive amount
+        addOneDirectional(eventId, debtorToPayer);
+        // Adds the actual debt
+        debt.setAmount(-debt.getAmount());
+        Debt returnVal = addOneDirectional(eventId, debt);
+
+        Debt cloneSaved = clone(returnVal);
+        cloneSaved.setAmount(-cloneSaved.getAmount());
+        return cloneSaved;
+    }
+
+    private Debt clone(Debt debt) {
+        Debt clone = new Debt();
+        clone.setId(debt.getId());
+        clone.setPayer(debt.getPayer());
+        clone.setDebtor(debt.getDebtor());
+        clone.setAmount(debt.getAmount());
+        clone.setEvent(debt.getEvent());
+        return clone;
+    }
+
+    private Debt addOneDirectional(UUID eventId, Debt debt) {
         Event event = new Event();
         event.setId(eventId);
         debt.setEvent(event);
@@ -67,6 +98,8 @@ public class DebtService {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
+        DebtPK reverseDebt = new DebtPK(id.getDebtorId(), id.getPayerId());
+        debtRepo.deleteDebtById(reverseDebt);
         Integer deletedRows = debtRepo.deleteDebtById(id);
         if (deletedRows != 1) {
             throw new EntityNotFoundException("Could not find the debt");
@@ -123,16 +156,16 @@ public class DebtService {
                 debtorPair.setDebt(0.0);
                 payerPair.setDebt(payerAmount - debtorAmount);
                 // Payer to Debtor
-                add(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -debtorAmount, event));
+                addOneDirectional(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -debtorAmount, event));
                 // Debtor to Payer
-                add(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), debtorAmount, event));
+                addOneDirectional(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), debtorAmount, event));
             } else {
                 payerPair.setDebt(0.0);
                 debtorPair.setDebt(debtorAmount - payerAmount);
                 // Payer to Debtor
-                add(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -payerAmount, event));
+                addOneDirectional(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -payerAmount, event));
                 // Debtor to Payer
-                add(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), payerAmount, event));
+                addOneDirectional(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), payerAmount, event));
             }
 
             // Go to next payer/debtor pair
