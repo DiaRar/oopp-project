@@ -92,4 +92,14 @@ public class ExpensesControllerTest {
            expensesController.delete(event.getId(), expense.getId());
         });
     }
+
+    @Test
+    public void getUpdatesTest() {
+        Event event = new Event();
+        Expense expense = new Expense();
+        when(expenseService.save(event.getId(),expense)).thenReturn(expense);
+        var result = expensesController.getUpdates();
+        expensesController.post(event.getId(),expense);
+        assertEquals(((ResponseEntity)result.getResult()).getBody(),expense);
+    }
 }
