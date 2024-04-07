@@ -26,8 +26,9 @@ public class ExpenseListCell extends ListCell<Expense> {
     private static final double EXPENSE_MARGIN = 10;
     private int participantsSize;
     private Function<UUID, EventHandler<ActionEvent>> onRemove;
-    private EventHandler<ActionEvent> onEdit;
-    public ExpenseListCell(int participantsSize, Function<UUID, EventHandler<ActionEvent>> onRemove, EventHandler<ActionEvent> onEdit) {
+    private Function<Expense, EventHandler<ActionEvent>> onEdit;
+    public ExpenseListCell(int participantsSize, Function<UUID, EventHandler<ActionEvent>> onRemove,
+                           Function<Expense, EventHandler<ActionEvent>> onEdit) {
         this.participantsSize = participantsSize;
         this.onRemove = onRemove;
         this.onEdit = onEdit;
@@ -75,7 +76,7 @@ public class ExpenseListCell extends ListCell<Expense> {
         buttons.setAlignment(Pos.CENTER_RIGHT);
         // On click
         removeButton.setOnAction(onRemove.apply(expense.getId()));
-        editButton.setOnAction(onEdit);
+        editButton.setOnAction(onEdit.apply(expense));
         borderPane.setRight(buttons);
         return borderPane;
     }
