@@ -46,3 +46,4 @@ out/
 recents.csv
 
 config.properties
+client/src/main/resources/config/config.properties

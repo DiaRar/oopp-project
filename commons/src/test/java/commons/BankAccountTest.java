@@ -47,4 +47,15 @@ public class BankAccountTest {
         assertTrue(string.contains("IBAN1"));
         assertTrue(string.contains("BIC1"));
     }
+
+    @Test
+    public void getterSetterTest() {
+        BankAccount bankAccount = new BankAccount();
+        String iban = "112";
+        bankAccount.setIban(iban);
+        assertEquals(iban, bankAccount.getIban());
+        String bic = "bic";
+        bankAccount.setBic(bic);
+        assertEquals(bic, bankAccount.getBic());
+    }
 }
