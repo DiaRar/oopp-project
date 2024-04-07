@@ -114,7 +114,8 @@ public class OverviewCtrl implements Initializable {
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
         this.list.setCellFactory(expenseListView -> new ExpenseListCell(participants.size(),
-                (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)), (e) -> { }));
+                (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)),
+                (expense -> event -> mainCtrl.showEditExpense(expense))));
         this.list.getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
         this.sendInvites.setGraphic(new FontIcon(Feather.SEND));
         this.sendInvites.setContentDisplay(ContentDisplay.RIGHT);

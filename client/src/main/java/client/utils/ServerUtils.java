@@ -279,4 +279,19 @@ public class ServerUtils {
 			return null;
 		}
 	}
+	public Expense updateExpense(UUID eventId, UUID expenseId, Expense expense) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/expenses/{expenseId}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("expenseId", expenseId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
 }
