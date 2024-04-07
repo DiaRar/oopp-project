@@ -20,7 +20,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.awt.*;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -102,7 +101,6 @@ public class AddExpenseCtrl implements Initializable {
         equallySplit.setSelected(false);
         partialSplit.setSelected(false);
         if (debtorsList != null) {
-            debtorsList.getItems().clear();
             debtorsList.setVisible(false);
         }
         if (selectedDebtors != null) {
@@ -132,15 +130,18 @@ public class AddExpenseCtrl implements Initializable {
                     .filter(p -> selectedDebtors.getItems().contains(p))
                     .toList();
         }
-
+        Expense expense;
         if (tag.getSelectionModel().isEmpty()) {
-            Expense expense = new Expense(amt, desc, time, pay, debt);
-            server.addExpense(mainCtrl.getEvent().getId(), expense);
+            expense = new Expense(amt, desc, time, pay, debt);
         } else {
             Collection<Tag> tg = mainCtrl.getEvent().getTags().stream()
                     .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t))
                     .collect(Collectors.toList());
-            Expense expense = new Expense(amt, desc, time, pay, debt, tg);
+            expense = new Expense(amt, desc, time, pay, debt, tg);
+        }
+        if (editMode) {
+            server.updateExpense(mainCtrl.getEvent().getId(), toUpdate.getId(), expense);
+        } else {
             server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
         cancel();
@@ -305,9 +306,9 @@ public class AddExpenseCtrl implements Initializable {
             debtorsList.setVisible(true);
             selectedDebtors.setVisible(true);
             debtorsList.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
-            selectedDebtors.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants().stream()
+            selectedDebtors.getItems().setAll(mainCtrl.getEvent().getParticipants().stream()
                     .filter(part -> toUpdate.getDebtors().contains(part))
-                    .toList()));
+                    .toList());
         }
     }
 }
