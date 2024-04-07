@@ -10,8 +10,10 @@ import java.util.UUID;
 
 import admin.uicomponents.Alerts;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.RequestEntity;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -71,6 +73,32 @@ public class ServerUtils {
                     .delete();
         } catch (Exception ex) {
             handleConnectionException(ex);
+        }
+    }
+
+    public String getExportResult() {
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/json/export")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<String>(){});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void importDatabase(String json) {
+        try {
+            ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/json/import")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .post(Entity.json(json));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
