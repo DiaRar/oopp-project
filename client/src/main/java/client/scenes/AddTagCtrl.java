@@ -57,10 +57,10 @@ public class AddTagCtrl implements Initializable {
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        this.title.textProperty().bind(languageUtils.getBinding("addTag.title"));
+        this.title.textProperty().bind(languageUtils.getBinding("addTag.addTitle"));
         this.name.textProperty().bind(languageUtils.getBinding("addTag.name"));
         this.color.textProperty().bind(languageUtils.getBinding("addTag.color"));
-        this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.saveBtn"));
+        this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.addBtn"));
         this.cancelBtn.textProperty().bind(languageUtils.getBinding("addTag.cancelBtn"));
         this.deleteBtn.textProperty().bind(languageUtils.getBinding("addTag.deleteBtn"));
 
@@ -80,10 +80,14 @@ public class AddTagCtrl implements Initializable {
     }
 
     public void cancel() {
+        clearFields();
+        mainCtrl.closeDialog();
+    }
+
+    private void clearFields() {
         tags.getSelectionModel().clearSelection();
         nameField.clear();
         colorField.setValue(Color.WHITE);
-        mainCtrl.showAddExpense();
     }
 
     public void save() {
@@ -107,7 +111,9 @@ public class AddTagCtrl implements Initializable {
     }
 
     public void tagSelected() {
-        selectedTag = tags.getValue();
+        selectedTag = tags.getSelectionModel().getSelectedItem();
+        if (selectedTag == null) return;
+        editMode(selectedTag);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -135,5 +141,22 @@ public class AddTagCtrl implements Initializable {
     public void setParentEvent(Event event) {
         this.parentEvent = event;
         this.tagsList.setAll(parentEvent.getTags());
+    }
+
+    public void editMode(Tag tag) {
+        this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.saveBtn"));
+        this.title.textProperty().bind(languageUtils.getBinding("addTag.editTitle"));
+
+        nameField.setText(tag.getName());
+        var col = tag.getColor();
+        colorField.setValue(new Color(col.getRed(), col.getGreen(),
+                col.getBlue(), col.getAlpha()));
+        System.out.println("red: " + col.getRed() + " green: " + col.getGreen() + " blue: " + col.getBlue() + " alpha: " + col.getAlpha());
+    }
+
+    public void addMode() {
+        this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.addBtn"));
+        this.title.textProperty().bind(languageUtils.getBinding("addTag.addTitle"));
+        clearFields();
     }
 }
