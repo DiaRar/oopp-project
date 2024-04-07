@@ -116,28 +116,15 @@ public class ExpenseService {
 
     private void updateDebtsByAmount(Participant payer, Collection<Participant> debtors, Double debtedAmount, Event event) {
         for (Participant debtor : debtors) {
-            // Update debts from payer to debtor
             Debt payerToDebtor = new Debt(payer, debtor, 0.0, event);
             Optional<Debt> fromRepo = debtService.getOptionalById(payerToDebtor.getId());
             if (fromRepo.isPresent()) {
                 Double currentAmount = fromRepo.get().getAmount();
-                payerToDebtor.setAmount(currentAmount - debtedAmount);
+                payerToDebtor.setAmount(currentAmount + debtedAmount);
                 debtService.update(event.getId(), payerToDebtor.getId(), payerToDebtor);
             } else {
-                payerToDebtor.setAmount(-debtedAmount);
+                payerToDebtor.setAmount(debtedAmount);
                 debtService.add(event.getId(), payerToDebtor);
-            }
-
-            // Update debts from debtor to payer
-            Debt debtorToPayer = new Debt(debtor, payer, 0.0, event);
-            fromRepo = debtService.getOptionalById(debtorToPayer.getId());
-            if (fromRepo.isPresent()) {
-                Double currentAmount = fromRepo.get().getAmount();
-                debtorToPayer.setAmount(currentAmount + debtedAmount);
-                debtService.update(event.getId(), debtorToPayer.getId(), debtorToPayer);
-            } else {
-                debtorToPayer.setAmount(debtedAmount);
-                debtService.add(event.getId(), debtorToPayer);
             }
         }
     }

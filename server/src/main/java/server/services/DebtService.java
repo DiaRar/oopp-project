@@ -23,7 +23,13 @@ public class DebtService {
     }
 
     public Optional<Debt> getOptionalById(DebtPK id) {
-        return debtRepo.findById(id);
+        Optional<Debt> od = debtRepo.findById(id);
+        if (od.isEmpty()) {
+            return od;
+        }
+        Debt newDebt = od.get();
+        newDebt.setAmount(-newDebt.getAmount());
+        return Optional.of(newDebt);
     }
 
     public Debt getById(DebtPK id) {
@@ -62,7 +68,7 @@ public class DebtService {
         if (compareAmounts(debt.getAmount(), 0.0) < 0) {
             throw new IllegalArgumentException("Cannot add debt with negative amount.");
         }
-        if (getOptionalById(debt.getId()).isPresent()) {
+        if (debtRepo.existsById(debt.getId())) {
             throw new IllegalArgumentException("Cannot add already existing debt.");
         }
         Event event = new Event();
