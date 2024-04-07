@@ -33,7 +33,7 @@ public class Debt {
     private Participant debtor;
     @ManyToOne(optional = false)
     private Event event;
-    protected Debt() {}
+    public Debt() {}
     // Added another constructor, as I am unsure which one to use yet.
     // TODO: choose the constructor for Debt
     public Debt(UUID payerId, UUID debtorId, Double amount, Event event) {
@@ -63,6 +63,11 @@ public class Debt {
     public Event getEvent() {
         return event;
     }
+
+    public DebtPK getId() {
+        return id;
+    }
+
     // Setters
     public void setId(DebtPK id) {
         this.id = id;
@@ -71,9 +76,11 @@ public class Debt {
         this.amount = amount;
     }
     public void setPayer(Participant payer) {
+        this.id.setPayerId(payer.getId());
         this.payer = payer;
     }
     public void setDebtor(Participant debtor) {
+        this.id.setDebtorId(debtor.getId());
         this.debtor = debtor;
     }
     public void setEvent(Event event) {

@@ -1,13 +1,18 @@
 package server.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import commons.Event;
 
+import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.EventRepository;
 import server.repositories.TestEventRepository;
 
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,6 +65,40 @@ public class EventServiceTest {
         temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
         assertEquals(temp3, eventService.getById(temp.getId()));
+    }
+
+    @Test
+    public void deleteSucceedTest() {
+        Event event1 = eventService.add(new Event("test1"));
+        assertSame(1, eventService.delete(event1.getId()));
+        assertThrows(ResponseStatusException.class, () -> {
+           eventService.getById(event1.getId());
+        });
+    }
+
+    @Test
+    public void deleteFailTest() {
+        Event event1 = eventService.add(new Event("test7"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            eventService.delete(null);
+        });
+    }
+
+    @Test
+    public void addFailNameTest() {
+        Event event = new Event(null);
+        assertThrows(IllegalArgumentException.class, () -> {
+           eventService.add(event);
+        });
+    }
+
+    @Test
+    public void addFailIdTest() {
+        Event event = new Event("test");
+        event.setId(UUID.randomUUID());
+        assertThrows(IllegalArgumentException.class, () -> {
+            eventService.add(event);
+        });
     }
 //
 //    @Test

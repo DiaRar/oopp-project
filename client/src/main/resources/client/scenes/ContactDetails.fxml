@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="310.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ContactDetailsCtrl">
+<BorderPane minHeight="100.0" minWidth="100.0" prefHeight="375.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ContactDetailsCtrl">
    <center>
-      <VBox prefHeight="327.0" prefWidth="580.0" spacing="5.0" BorderPane.alignment="CENTER">
+      <VBox minHeight="100.0" minWidth="100.0" prefHeight="327.0" prefWidth="580.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -32,13 +32,13 @@
             <TextField fx:id="ibanField" />
             <Label fx:id="bicLabel" text="BIC" />
             <TextField fx:id="bicField" />
-            <HBox alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="580.0" spacing="10.0">
+            <HBox fx:id="actionBtnHBox" alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="580.0" spacing="10.0">
                <children>
                   <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="addParticipantButton" alignment="CENTER" mnemonicParsing="false" onAction="#confirmAction" text="Add Participant" />
                </children>
                <padding>
-                  <Insets top="5.0" />
+                  <Insets bottom="15.0" top="5.0" />
                </padding>
             </HBox>
          </children>

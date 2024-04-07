@@ -3,14 +3,16 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
 import com.google.inject.Inject;
+import commons.Expense;
+import commons.Tag;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 
@@ -20,15 +22,12 @@ public class StatisticsCtrl implements Initializable {
     private ConfigUtils utils;
 
 
-    //TO REMOVE TEST
-    private final double test = 10;
-    //^^^^^^^^^^^^^^^^^^^
-
     @FXML
     private Label amount;
     @FXML
     private PieChart chart;
-
+    @FXML
+    private Label title;
 
     @Inject
     public StatisticsCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
@@ -39,14 +38,12 @@ public class StatisticsCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        amount.setText("40$");
-        ObservableList<PieChart.Data> data = FXCollections.observableArrayList(
-                new PieChart.Data("DATA1", test),
-                new PieChart.Data("DATA2", test),
-                new PieChart.Data("DATA3", test),
-                new PieChart.Data("DATA4", test)
-        );
-        chart.setData(data);
+    }
+
+    public void startup() {
+        title.setText("Statistics of event: " + mainCtrl.getEvent().getName());
+        amount.setText("" + getSum() + "$");
+        chart.setData(FXCollections.observableArrayList(getData()));
     }
 
     public void back() {
@@ -63,4 +60,38 @@ public class StatisticsCtrl implements Initializable {
         }
     }
 
+    private ArrayList<PieChart.Data> getData() {
+        ArrayList<PieChart.Data> data = new ArrayList<>();
+        HashMap<Tag, Double> map = new HashMap<>();
+        Tag other = new Tag("Other", new Color(0));
+        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+            if (x.getTags() == null || x.getTags().size() == 0) {
+                if (!map.containsKey(other)) {
+                    map.put(other, x.getAmount());
+                } else {
+                    map.replace(other, map.get(other) + x.getAmount());
+                }
+                continue;
+            };
+            for (Tag y : x.getTags()) {
+                if (map.containsKey(y)) {
+                    map.replace(y, map.get(y) + x.getAmount());
+                } else {
+                    map.put(y, x.getAmount());
+                }
+            }
+        }
+        for (Tag x : map.keySet()) {
+            data.add(new PieChart.Data(x.getName(), map.get(x)));
+        }
+        return data;
+    }
+
+    private double getSum() {
+        double sum = 0;
+        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+            sum = sum + x.getAmount();
+        }
+        return sum;
+    }
 }

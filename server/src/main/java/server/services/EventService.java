@@ -14,7 +14,6 @@ import java.util.UUID;
 @Service
 public class EventService {
     private final EventRepository eventRepository;
-
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
@@ -54,12 +53,13 @@ public class EventService {
         eventRepository.flush();
         return repoEvent;
     }
-    public void delete(UUID id) throws EntityNotFoundException, IllegalArgumentException {
+    public Integer delete(UUID id) throws EntityNotFoundException, IllegalArgumentException {
         if (id == null)
             throw new IllegalArgumentException("Id cannot be null!");
         Integer deletedRows = eventRepository.deleteEventById(id);
         if (deletedRows != 1) {
             throw new EntityNotFoundException("Could not find the repo");
         }
+        return deletedRows;
     }
 }

@@ -1,16 +1,23 @@
 package client.scenes;
 
+import atlantafx.base.theme.Theme;
+import client.uicomponents.CustomMenuBar;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
+import client.utils.WebSocketUtils;
+import com.google.inject.Inject;
 import commons.Event;
+import commons.Expense;
+import commons.Participant;
+import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import com.google.inject.Inject;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class MainCtrl {
     private Stage primaryStage;
@@ -42,20 +49,27 @@ public class MainCtrl {
 
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
+    private final WebSocketUtils webSocketUtils;
+
+    private AddTagCtrl addTagCtrl;
+    private Scene addTagScene;
 
     private double screenWidth;
     private double screenHeight;
+    private CustomMenuBar menuBar;
 
     @Inject
-    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils) {
+    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils, CustomMenuBar menuBar) {
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
+        this.webSocketUtils = webSocketUtils;
+        this.menuBar = menuBar;
     }
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
                      Pair<AddExpenseCtrl, Parent> addExpense, Pair<StatisticsCtrl, Parent> statistics,
                      Pair<InvitationCtrl, Parent> invitation, Pair<ContactDetailsCtrl, Parent> contactDetails,
-                     Pair<DebtsCtrl, Parent> debts) {
+                     Pair<DebtsCtrl, Parent> debts, Pair<AddTagCtrl, Parent> tags) {
         this.primaryStage = primaryStage;
         this.startScene = new Scene(start.getValue());
         this.startCtrl = start.getKey();
@@ -77,38 +91,82 @@ public class MainCtrl {
         this.statisticsCtrl = statistics.getKey();
         this.statisticsScene = new Scene(statistics.getValue());
 
+        this.addTagCtrl = tags.getKey();
+        this.addTagScene = new Scene(tags.getValue());
+
+        this.menuBar.setAction((e) -> setLanguage(menuBar.getSelectedToggleId()));
+        this.menuBar.selectToggleById(languageUtils.getLang());
+
         showStart();
         primaryStage.show();
     }
-
+    public CustomMenuBar getMenuBar() {
+        return menuBar;
+    }
     public void showStart() {
         saveDimensions();
+        startCtrl.getRoot().setTop(menuBar);
+        menuBar.hideEdit();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
-        startCtrl.refreshRecents();
         if (event != null) restoreDimensions();
     }
 
     public void showOverview() {
         saveDimensions();
+        overviewCtrl.getRoot().setTop(menuBar);
+        menuBar.showEdit();
         primaryStage.setTitle("Event Overview");
         primaryStage.setScene(overviewScene);
         restoreDimensions();
     }
 
     public void showOverviewStart() {
+        try {
+            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws");
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         saveDimensions();
         showOverview();
-        overviewCtrl.clear();
         overviewCtrl.startup();
         restoreDimensions();
     }
-
+    public void eventNameChange(Event event) {
+        overviewCtrl.updateEventName(event.getName());
+    }
+    public void addParticipant(Participant participant) {
+        event.addParticipant(participant);
+        overviewCtrl.addParticipant(participant);
+    }
+    public void removeParticipant(Participant participant) {
+        event.getParticipants().removeIf(removed -> removed.getId().equals(participant.getId()));
+        event.getExpenses().removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
+        overviewCtrl.removeParticipant(participant);
+    }
+    public void updateParticipant(Participant participant) {
+        event.getParticipants().stream().filter(listParticipant -> participant.getId()
+                .equals(listParticipant.getId())).toList().getFirst().setNickname(participant.getNickname());
+        overviewCtrl.updateParticipant(participant);
+    }
+    public void switchTheme(Theme theme) {
+        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
+    }
+    public void addExpense(Expense expense) {
+        overviewCtrl.addExpense(expense);
+    }
+    public void removeExpense(Expense expense) {
+        overviewCtrl.removeExpense(expense);
+    }
+    public void updateExpense(Expense expense) {
+        overviewCtrl.updateExpense(expense);
+    }
     public void showAddExpense() {
         saveDimensions();
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+        addExpenseCtrl.refresh();
         restoreDimensions();
     }
 
@@ -152,6 +210,7 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Invite People");
         primaryStage.setScene(invitationScene);
+        invitationCtrl.setFields();
         invitationScene.setOnKeyPressed(e -> invitationCtrl.keyPressed(e));
         restoreDimensions();
     }
@@ -160,8 +219,16 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Statistics");
         primaryStage.setScene(statisticsScene);
+        statisticsCtrl.startup();
         statisticsScene.setOnKeyPressed(e -> statisticsCtrl.keyPressed(e));
         restoreDimensions();
+    }
+
+    public void showAddTags() {
+        saveDimensions();
+        primaryStage.setTitle("Add Tag");
+        primaryStage.setScene(addTagScene);
+        addTagScene.setOnKeyPressed(e -> addTagCtrl.keyPressed(e));
     }
 
     public Event getEvent() {
@@ -186,5 +253,17 @@ public class MainCtrl {
     public LanguageUtils getLanguageUtils() {
         return this.languageUtils;
     }
+    public void setLanguage(String id) {
+        languageUtils.setLang(id);
+    }
+//    public void showDialog() {
+//        primaryStage.setScene(filterScene);
+//    }
+//    public Dialog getFilterDialog() {
+//        return filter;
+//    }
+//    public Scene getFilterScene() {
+//        return filterScene;
+//    }
 }
 

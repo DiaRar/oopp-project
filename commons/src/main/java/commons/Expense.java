@@ -25,7 +25,7 @@ public class Expense {
     private Event event;
     private Collection<Participant> debtors;
     private Collection<Tag> tags;
-    protected Expense() {};
+    public Expense() {};
 
     public Expense(Double amount, String title, LocalDateTime date,
                    Participant payer, Collection<Participant> debtors) {

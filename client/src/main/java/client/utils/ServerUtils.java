@@ -28,10 +28,12 @@ import client.uicomponents.Alerts;
 import com.google.inject.Inject;
 import commons.Debt;
 import commons.Event;
+import commons.Expense;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -110,6 +112,16 @@ public class ServerUtils {
 		}
 	}
 
+	public List<Expense> getExpenses(UUID eventId) {
+		return ClientBuilder.newClient(new ClientConfig())
+				.target(server)
+				.path("/api/events/{eventId}/expenses")
+				.resolveTemplate("eventId", eventId)
+				.request(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.get(new GenericType<List<Expense>>() {});
+	}
+
 	public Event updateEvent(UUID id, Event event) {
 		try {
 		return ClientBuilder.newClient(new ClientConfig())
@@ -181,6 +193,21 @@ public class ServerUtils {
         }
 	}
 
+	public Response deleteParticipant(UUID eventId, UUID id) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/participants/{id}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("id", id)
+					.request()
+					.delete();
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
 	public List<Debt> getDebts(Event event) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
@@ -218,6 +245,35 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.delete(Debt.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Expense addExpense(UUID eventID, Expense expense) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventID + "/expenses/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+	public Response deleteExpense(UUID eventID, UUID expenseId) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/expenses/{expenseId}")
+					.resolveTemplate("eventId", eventID)
+					.resolveTemplate("expenseId", expenseId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

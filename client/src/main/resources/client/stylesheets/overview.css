@@ -7,18 +7,9 @@
     -fx-border-radius: 1em;
 }
 
-.bg {
-    -fx-background-color: white;
-}
-.expense {
-    -fx-padding: 0 20 0 20;
-}
 .btn:hover, .selected-participant {
     -fx-background-color: black;
     -fx-text-fill: white;
-}
-.expense:hover {
-    -fx-background-color: #ddd;
 }
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
@@ -28,7 +19,6 @@
     -fx-border-radius :2.0em;
 }
 
-
 .scroll-bar:horizontal .increment-button ,
 .scroll-bar:horizontal .decrement-button {
     -fx-background-color :transparent;
@@ -36,7 +26,7 @@
     -fx-padding :0.0 0.0 10.0 0.0;
 
 }
-.scroll-pane > .viewport {
+.list-view > .viewport {
     -fx-background-color: transparent;
 }
 
@@ -70,8 +60,4 @@
     -fx-background-color : linear-gradient(from 0% 0% to 100% 100%, #ff930f, #fff95b);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
-}
-.root {
-    -fx-font-size: 13px;
-    -fx-font-family: "Arial";
 }

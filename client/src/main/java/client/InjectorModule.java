@@ -15,7 +15,10 @@
  */
 package client;
 
+import client.implementations.WSSessionHandler;
 import client.scenes.*;
+import client.uicomponents.CustomMenuBar;
+import client.utils.*;
 import client.uicomponents.Alerts;
 import client.utils.Config;
 import client.utils.ConfigUtils;
@@ -41,10 +44,16 @@ public class InjectorModule implements Module {
         binder.bind(ContactDetailsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(InvitationCtrl.class).in(Scopes.SINGLETON);
         binder.bind(StatisticsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WebSocketUtils.class).in(Scopes.SINGLETON);
         binder.bind(ConfigUtils.class).toInstance(createConfigUtils());
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
         binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
+        binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WSSessionHandler.class).in(Scopes.SINGLETON);
+        binder.bind(CustomMenuBar.class).toInstance(new CustomMenuBar());
     }
 
     private ConfigUtils createConfigUtils() {
