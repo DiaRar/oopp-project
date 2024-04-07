@@ -83,9 +83,10 @@ public class Dialog extends VBox {
         init();
     }
 
-    public void start(ObservableList<Participant> participants) {
+    public void start(ObservableList<Participant> participants, ObservableList<Tag> tagsList) {
         payer.setItems(participants);
         paidFor.setItems(participants);
+        tags.setItems(tagsList);
     }
     private ListCell<Participant> getParticipantListCell() {
         return new ListCell<>() {
@@ -117,6 +118,21 @@ public class Dialog extends VBox {
             }
         };
     }
+    private ListCell<Tag> getTagListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Tag item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getName());
+                    setGraphic(null);
+                }
+            }
+        };
+    }
 
     public void init() {
         resetPayer.setOnAction(e -> resetPayer());
@@ -136,6 +152,8 @@ public class Dialog extends VBox {
         payer.setButtonCell(getParticipantListCell());
         paidFor.setCellFactory(participantListView -> getParticipantListCell());
         paidFor.setButtonCell(getParticipantListCell());
+        tags.setCellFactory(tagListView -> getTagListCell());
+        tags.setButtonCell(getTagListCell());
         period.getItems().add(Boolean.FALSE);
         period.getItems().add(Boolean.TRUE);
         period.setButtonCell(getPeriodListView());
@@ -156,7 +174,7 @@ public class Dialog extends VBox {
         );
         tagPredicate = Bindings.createObjectBinding(
                 () -> expense -> {
-                    if (tags.getValue() != null)
+                    if (tags.getValue() != null && expense.getTags() != null)
                         return expense.getTags().contains(tags.getValue());
                     return true;
                 }, tags.valueProperty()

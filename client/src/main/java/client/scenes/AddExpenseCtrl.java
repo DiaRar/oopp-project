@@ -36,7 +36,7 @@ public class AddExpenseCtrl implements Initializable {
     private LanguageUtils languageUtils;
     private Config config;
     @FXML
-    private ComboBox<String> payer;
+    private ComboBox<Participant> payer;
     @FXML
     private TextField description;
     @FXML
@@ -46,15 +46,15 @@ public class AddExpenseCtrl implements Initializable {
     @FXML
     private DatePicker date;
     @FXML
-    private ComboBox<String> tag;
+    private ComboBox<Tag> tag;
     @FXML
     private RadioButton equallySplit;
     @FXML
     private RadioButton partialSplit;
     @FXML
-    private ListView<String> debtorsList;
+    private ListView<Participant> debtorsList;
     @FXML
-    private ListView<String> selectedDebtors;
+    private ListView<Participant> selectedDebtors;
     @FXML
     private Button add;
     @FXML
@@ -119,7 +119,7 @@ public class AddExpenseCtrl implements Initializable {
         String desc = description.getText();
         LocalDateTime time = date.getValue().atStartOfDay();
         Participant pay = mainCtrl.getEvent().getParticipants().stream()
-                .filter(p -> p.getNickname().equals(payer.getValue()))
+                .filter(p -> p.equals(payer.getValue()))
                 .toList()
                 .getFirst();
         Collection<Participant> debt;
@@ -127,7 +127,7 @@ public class AddExpenseCtrl implements Initializable {
             debt = mainCtrl.getEvent().getParticipants();
         } else {
             debt = mainCtrl.getEvent().getParticipants().stream()
-                    .filter(p -> selectedDebtors.getItems().contains(p.getNickname()))
+                    .filter(p -> selectedDebtors.getItems().contains(p))
                     .toList();
         }
 
@@ -136,7 +136,7 @@ public class AddExpenseCtrl implements Initializable {
             server.addExpense(mainCtrl.getEvent().getId(), expense);
         } else {
             Collection<Tag> tg = mainCtrl.getEvent().getTags().stream()
-                    .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t.getName()))
+                    .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t))
                     .collect(Collectors.toList());
             Expense expense = new Expense(amt, desc, time, pay, debt, tg);
             server.addExpense(mainCtrl.getEvent().getId(), expense);
@@ -209,26 +209,49 @@ public class AddExpenseCtrl implements Initializable {
         }
     }
 
+    private ListCell<Participant> getParticipantListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Participant item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getNickname());
+                }
+            }
+        };
+    }
+    private ListCell<Tag> getTagListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Tag item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getName());
+                    setGraphic(null);
+                }
+            }
+        };
+    }
+
     public void fillDebtors() {
-        if (mainCtrl.getEvent() == null) return;
-        debtorsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        List<Participant> participants = mainCtrl.getEvent().getParticipants();
-        if (participants.isEmpty()) return;
-        List<String> names = participants.stream()
-                .map(Participant::getNickname)
-                .collect(Collectors.toList());
-        debtorsList.setItems(FXCollections.observableList(names));
+        debtorsList.setCellFactory(participantListView -> getParticipantListCell());
+        selectedDebtors.setCellFactory(participantListView -> getParticipantListCell());
     }
 
     public void fillPayers() {
-        if (mainCtrl.getEvent() == null) return;
-        payer.setItems(FXCollections.observableArrayList(
-                mainCtrl.getEvent().getParticipants().stream().map(Participant::getNickname).toList()));
+        payer.setCellFactory(participantListView -> getParticipantListCell());
+        payer.setButtonCell(getParticipantListCell());
     }
 
     public void selectDebtor() {
-        List<String> alreadySelected = new ArrayList<>(selectedDebtors.getItems());
-        String selected = debtorsList.getSelectionModel().getSelectedItem();
+        List<Participant> alreadySelected = new ArrayList<>(selectedDebtors.getItems());
+        Participant selected = debtorsList.getSelectionModel().getSelectedItem();
         if (alreadySelected.contains(selected)) {
             alreadySelected.remove(selected);
         } else {
@@ -244,14 +267,8 @@ public class AddExpenseCtrl implements Initializable {
     }
 
     public void setTags() {
-        List<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("Food", Color.orange));
-        tags.add(new Tag("Ticket", Color.GREEN));
-        tags.add(new Tag("Transport", Color.BLUE));
-        tag.setItems(FXCollections.observableArrayList(tags.stream()
-                .map(Tag::getName).toList()));
-        // TODO replace mock tags with tags from the current event
-        // TODO use the tag's color in the UI
+        tag.setCellFactory(tagListView -> getTagListCell());
+        tag.setButtonCell(getTagListCell());
     }
 
     public void refresh() {
@@ -259,6 +276,9 @@ public class AddExpenseCtrl implements Initializable {
         setTags();
         fillPayers();
         fillDebtors();
+        tag.setItems(FXCollections.observableArrayList(mainCtrl.getEvent().getTags()));
+        payer.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
+        debtorsList.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
     }
 
     public void openAddTags() {

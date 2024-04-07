@@ -164,7 +164,7 @@ public class OverviewCtrl implements Initializable {
         expenses = FXCollections.observableArrayList(mainCtrl.getEvent().getExpenses());
         participants = FXCollections.observableArrayList(mainCtrl.getEvent().getParticipants());
         tags = FXCollections.observableArrayList(mainCtrl.getEvent().getTags());
-        dialog.start(participants);
+        dialog.start(participants, tags);
         filteredExpenses = new FilteredList<>(expenses);
         filteredExpenses.predicateProperty().bind(dialog.getPredicate());
         //TODO: make a listview instead of vbox and link it to the filtered list
@@ -269,22 +269,6 @@ public class OverviewCtrl implements Initializable {
     public void openStatistics() {
         System.out.println("Statistics");
         mainCtrl.showStatistics();
-    }
-
-    private ListCell<Tag> getTagListCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(Tag item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    setText(item.getName());
-                    setGraphic(null);
-                }
-            }
-        };
     }
 
     public BorderPane getRoot() {
