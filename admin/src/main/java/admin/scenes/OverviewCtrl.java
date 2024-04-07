@@ -7,17 +7,9 @@ import commons.Event;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -33,6 +25,8 @@ public class OverviewCtrl {
     }
 
     public void fillEvents() {
+        final int secondsInAMinute = 60;
+
         List<Event> events = serverUtils.getEvents();
         ObservableList<Event> eventList = FXCollections.observableArrayList(events);
         tableView.setItems(eventList);
@@ -72,7 +66,7 @@ public class OverviewCtrl {
                 } else {
                     Duration duration = Duration.between(item, LocalDateTime.now());
                     long hours = duration.toHours();
-                    long minutes = duration.toMinutes() % 60;
+                    long minutes = duration.toMinutes() % secondsInAMinute;
                     setText(hours + "h " + minutes + "m ago");
                 }
             }
