@@ -106,6 +106,7 @@ public class MainCtrl {
     public void showStart() {
         saveDimensions();
         startCtrl.getRoot().setTop(menuBar);
+        startCtrl.refreshRecents();
         menuBar.hideEdit();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
