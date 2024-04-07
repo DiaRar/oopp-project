@@ -6,6 +6,7 @@ import admin.scenes.OverviewCtrl;
 import admin.uicomponents.Alerts;
 import admin.utils.Config;
 import admin.utils.ServerUtils;
+import admin.utils.WebSocketUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -24,6 +25,7 @@ public class InjectorModule implements Module {
         binder.bind(OverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.SINGLETON);
+        binder.bind(WebSocketUtils.class).in(Scopes.SINGLETON);
     }
 
     private Config createConfig() {

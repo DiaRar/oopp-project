@@ -1,78 +1,144 @@
 package admin.scenes;
 
+import admin.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Event;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class OverviewCtrl {
-    private static final double FLOW_PANE_MARGIN = 5;
+    public ServerUtils serverUtils;
     @FXML
     public ListView<Event> listView;
+    @Inject
+    public OverviewCtrl(ServerUtils serverUtils) {
+        this.serverUtils = serverUtils;
+    }
+    public void getItems() {
+        List<Event> events = serverUtils.getEvents();
+        for (Event event : events) {
+            System.out.println(event);
+        }
+    }
 
-    public void refreshOverview() {
-        List<Event> recentEventsList = createMockEvents();
-        ObservableList<Event> events = FXCollections.observableArrayList(recentEventsList);
-        listView.setItems(events);
+    public void fillEvents() {
+        List<Event> events = serverUtils.getEvents();
+        Platform.runLater(() -> {
+            var eventsList = FXCollections.observableArrayList(events);
+            listView.setItems(eventsList);
 
-        listView.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(Event item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    BorderPane borderPane = generateEventWithRemoveButton(item);
-                    setGraphic(borderPane);
+            listView.setCellFactory(param -> new ListCell<>() {
+                @Override
+                protected void updateItem(Event item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        var tile = generateEventTitle(item);
+                        setGraphic(tile);
+                    }
                 }
-            }
+            });
         });
     }
 
-    private BorderPane generateEventWithRemoveButton(Event event) {
-        BorderPane borderPane = new BorderPane();
+    public void addEvent(Event event) {
+        listView.getItems().add(event);
+    }
 
-        // Event Title
-        Text eventTitle = new Text(event.getName());
-        TextFlow content = new TextFlow(eventTitle);
-        HBox description = new HBox(content);
-        HBox.setMargin(description, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
+    public void removeEvent(UUID eventID) {
+        listView.getItems().removeIf(event -> event.getId().equals(eventID));
+    }
 
-        // Remove button
+    public void updateEvent(Event event) {
+        System.out.println("Event: " + event.getName() + " changed");
+    }
+
+    public GridPane generateEventTitle(Event event) {
+        // Constants for grid layout parameters
+        final int COLUMN_EVENT_NAME_LABEL = 0;
+        final int COLUMN_EVENT_NAME_VALUE = 1;
+        final int COLUMN_EVENT_ID_LABEL = 2;
+        final int COLUMN_EVENT_ID_VALUE = 3;
+        final int COLUMN_CREATION_DATE_LABEL = 0;
+        final int COLUMN_CREATION_DATE_VALUE = 1;
+        final int COLUMN_LAST_ACTION_DATE_LABEL = 2;
+        final int COLUMN_LAST_ACTION_DATE_VALUE = 3;
+        final int COLUMN_REMOVE_BUTTON = 4;
+
+        final Insets PADDING_INSETS = new Insets(10);
+        final int HORIZONTAL_GAP = 10;
+        final int VERTICAL_GAP = 5;
+        final int FONT_SIZE = 14; // Font size constant
+
+        // Create a GridPane to hold the event titles
+        GridPane eventGrid = new GridPane();
+        eventGrid.setAlignment(Pos.CENTER_LEFT);
+        eventGrid.setPadding(PADDING_INSETS);
+        eventGrid.setHgap(HORIZONTAL_GAP);
+        eventGrid.setVgap(VERTICAL_GAP);
+
+        // Create labels for event name, ID, creation date, last action date
+        Label eventNameLabel = new Label("Event Name:");
+        eventNameLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
+        eventNameLabel.setTextFill(Color.BLUE);
+
+        Label eventNameValue = new Label(event.getName());
+        eventNameValue.setFont(Font.font("Arial", FONT_SIZE));
+
+        Label eventIdLabel = new Label("Event ID:");
+        eventIdLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
+        eventIdLabel.setTextFill(Color.BLUE);
+
+        Label eventIdValue = new Label(event.getId().toString());
+        eventIdValue.setFont(Font.font("Arial", FONT_SIZE));
+
+        Label creationDateLabel = new Label("Creation Date:");
+        creationDateLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
+        creationDateLabel.setTextFill(Color.BLUE);
+
+        Label creationDateValue = new Label("MM/DD/YYYY"); // Placeholder for creation date
+        creationDateValue.setFont(Font.font("Arial", FONT_SIZE));
+
+        Label lastActionDateLabel = new Label("Last Action Date:");
+        lastActionDateLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
+        lastActionDateLabel.setTextFill(Color.BLUE);
+
+        Label lastActionDateValue = new Label("MM/DD/YYYY"); // Placeholder for last action date
+        lastActionDateValue.setFont(Font.font("Arial", FONT_SIZE));
+
+        // Create remove button
         Button removeButton = new Button("Remove");
         removeButton.setOnAction(e -> {
-            //TODO implement
+            serverUtils.deleteEvent(event.getId());
         });
 
-        // Combine event title and remove button
-        VBox eventBox = new VBox(description, removeButton);
-        borderPane.setCenter(eventBox);
+        // Add labels and remove button to the GridPane
+        eventGrid.add(eventNameLabel, COLUMN_EVENT_NAME_LABEL, 0);
+        eventGrid.add(eventNameValue, COLUMN_EVENT_NAME_VALUE, 0);
+        eventGrid.add(eventIdLabel, COLUMN_EVENT_ID_LABEL, 0);
+        eventGrid.add(eventIdValue, COLUMN_EVENT_ID_VALUE, 0);
+        eventGrid.add(creationDateLabel, COLUMN_CREATION_DATE_LABEL, 1);
+        eventGrid.add(creationDateValue, COLUMN_CREATION_DATE_VALUE, 1);
+        eventGrid.add(lastActionDateLabel, COLUMN_LAST_ACTION_DATE_LABEL, 1);
+        eventGrid.add(lastActionDateValue, COLUMN_LAST_ACTION_DATE_VALUE, 1);
+        eventGrid.add(removeButton, COLUMN_REMOVE_BUTTON, 0);
 
-        return borderPane;
-    }
-
-    //TODO REMOVE!!!
-    private List<Event> createMockEvents() {
-        List<Event> mockEvents = new ArrayList<>();
-
-        // Adding mock events to the list
-        mockEvents.add(new Event("Mock Event 1"));
-        mockEvents.add(new Event("Mock Event 2"));
-        // Add more mock events as needed
-
-        return mockEvents;
+        return eventGrid;
     }
 }

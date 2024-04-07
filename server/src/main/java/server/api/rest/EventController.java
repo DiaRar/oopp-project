@@ -50,6 +50,7 @@ public class EventController {
     @JsonView(View.CommonsView.class)
     public ResponseEntity<Event> create(@RequestBody Event event) {
         Event saved = eventService.add(event);
+        updateService.sendNewEvent(event);
         return ResponseEntity.ok(saved);
     }
 
@@ -60,6 +61,7 @@ public class EventController {
             throws EntityNotFoundException, IllegalArgumentException, NullPointerException {
         Event updated = eventService.update(id, event);
         updateService.sendUpdatedEvent(updated);
+        updateService.sendUpdateEvent(updated);
         return ResponseEntity.ok(updated);
     }
     @DeleteMapping("/{id}")
@@ -67,6 +69,7 @@ public class EventController {
     public ResponseEntity<Void> update(@PathVariable("id") UUID id)
             throws EntityNotFoundException, IllegalArgumentException {
         eventService.delete(id);
+        updateService.deleteEvent(id);
         return ResponseEntity.ok().build();
     }
 }

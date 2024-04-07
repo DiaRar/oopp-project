@@ -1,11 +1,16 @@
 package admin.utils;
 
 import com.google.inject.Inject;
+import commons.Event;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
 import admin.uicomponents.Alerts;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -42,4 +47,30 @@ public class ServerUtils {
         }
     }
 
+    public List<Event> getEvents() {
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/events/")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<List<Event>>() {});
+        } catch (Exception ex) {
+            handleConnectionException(ex);
+            return null;
+        }
+    }
+
+    public void deleteEvent(UUID id) {
+        try {
+            ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/events/" + id.toString())
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .delete();
+        } catch (Exception ex) {
+            handleConnectionException(ex);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package server.services;
 
 import commons.Event;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,6 +54,8 @@ public class EventService {
         eventRepository.flush();
         return repoEvent;
     }
+
+    @Transactional
     public Integer delete(UUID id) throws EntityNotFoundException, IllegalArgumentException {
         if (id == null)
             throw new IllegalArgumentException("Id cannot be null!");
