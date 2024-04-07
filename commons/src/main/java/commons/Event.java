@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +29,8 @@ public class Event {
     private Collection<Tag> tags;
     private List<Participant> participants;
     private Collection<Debt> debts;
+    private LocalDateTime creationDate;
+    private LocalDateTime lastActDate;
 
     /**
      * Constructs an Event object with specified name and UUID.
@@ -57,6 +59,20 @@ public class Event {
     @Size(max = View.MAX_STRING, message = "Event name is at most 255 characters")
     public String getName() {
         return name;
+    }
+    @Basic
+    @Column(name = "creation_date")
+    @JsonView(View.CommonsView.class)
+    @NotNull
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+    @Basic
+    @Column(name = "last_activity_date")
+    @JsonView(View.CommonsView.class)
+    @NotNull
+    public LocalDateTime getLastActivityDate() {
+        return lastActDate;
     }
     // Relationships
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
@@ -102,6 +118,12 @@ public class Event {
     }
     public void addParticipant(Participant participant) {
         this.participants.add(participant);
+    }
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+    public void setLastActivityDate(LocalDateTime lastActivityDate) {
+        this.lastActDate = lastActivityDate;
     }
     /**
      * Indicates whether some other object is equal to this one.

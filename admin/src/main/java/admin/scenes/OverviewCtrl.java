@@ -17,6 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,7 +88,9 @@ public class OverviewCtrl {
         final Insets PADDING_INSETS = new Insets(10);
         final int HORIZONTAL_GAP = 10;
         final int VERTICAL_GAP = 5;
-        final int FONT_SIZE = 14; // Font size constant
+        final int FONT_SIZE = 14;
+        final int SECONDS_IN_MINUTE = 60;
+
 
         // Create a GridPane to hold the event titles
         GridPane eventGrid = new GridPane();
@@ -112,14 +118,23 @@ public class OverviewCtrl {
         creationDateLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
         creationDateLabel.setTextFill(Color.BLUE);
 
-        Label creationDateValue = new Label("MM/DD/YYYY"); // Placeholder for creation date
+        // Format the creation date to show only the date
+        LocalDate creationLocalDate = event.getCreationDate().toLocalDate();
+        String creationDateString = creationLocalDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        Label creationDateValue = new Label(creationDateString);
         creationDateValue.setFont(Font.font("Arial", FONT_SIZE));
 
-        Label lastActionDateLabel = new Label("Last Action Date:");
+        Label lastActionDateLabel = new Label("Last Action:");
         lastActionDateLabel.setFont(Font.font("Arial", FontWeight.BOLD, FONT_SIZE));
         lastActionDateLabel.setTextFill(Color.BLUE);
 
-        Label lastActionDateValue = new Label("MM/DD/YYYY"); // Placeholder for last action date
+        // Calculate the elapsed time since the last action
+        LocalDateTime lastActionDateTime = event.getLastActivityDate();
+        Duration timeElapsed = Duration.between(lastActionDateTime, LocalDateTime.now());
+        long hours = timeElapsed.toHours();
+        long minutes = timeElapsed.toMinutes() % SECONDS_IN_MINUTE;
+        String elapsedTimeString = hours + " hours and " + minutes + " minutes ago";
+        Label lastActionDateValue = new Label(elapsedTimeString);
         lastActionDateValue.setFont(Font.font("Arial", FONT_SIZE));
 
         // Create remove button
