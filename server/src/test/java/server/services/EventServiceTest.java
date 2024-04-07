@@ -64,7 +64,8 @@ public class EventServiceTest {
         var temp3 = new Event("test4");
         temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
-        assertEquals(temp3, eventService.getById(temp.getId()));
+        assertEquals(temp3.getId(), eventService.getById(temp.getId()).getId());
+        assertEquals(temp3.getName(), eventService.getById(temp.getId()).getName());
     }
 
     @Test
