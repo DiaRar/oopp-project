@@ -43,7 +43,6 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 
 public class ServerUtils {

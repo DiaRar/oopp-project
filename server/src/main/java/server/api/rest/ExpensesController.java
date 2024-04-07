@@ -7,7 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -43,7 +42,7 @@ public class ExpensesController {
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
         Expense saved = expenseService.save(eventId, expense);
-        listners.forEach((k,v) -> v.accept(expense));
+        listners.forEach((k, v) -> v.accept(expense));
         updateService.sendAddedExpense(eventId, saved);
         return ResponseEntity.ok(saved);
     }
@@ -76,10 +75,11 @@ public class ExpensesController {
         return ResponseEntity.ok().build();
     }
 
+    private final long timeout = 5000L;
     @GetMapping("/updates")
     public DeferredResult<ResponseEntity<Expense>> getUpdates() {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        var result = new DeferredResult<ResponseEntity<Expense>>(5000L, noContent);
+        var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
         var key = new Object();
         listners.put(key, e -> {
             result.setResult(ResponseEntity.ok(e));
