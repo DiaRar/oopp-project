@@ -49,18 +49,25 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        Path path = Paths.get("./client/src/main/resources/config/recents.csv");
-        utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
+        utils.setRecentsFile(new File(normalizePath("./client/src/main/resources/config/recents.csv")));
         return utils;
     }
 
     private Config createConfig() {
         try {
-            return Config.read(new File("./client/src/main/resources/config/config.properties"));
+            return Config.read(new File(normalizePath("./client/src/main/resources/config/config.properties")));
         } catch (IOException e) {
             Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
         }
     }
 
+    private String normalizePath(String strPath) {
+        Path path = Paths.get(strPath);
+        String absolutePath = path.toAbsolutePath().normalize().toString();
+        if (absolutePath.contains("\\client\\client\\")) {
+            absolutePath = absolutePath.replaceFirst("\\\\client\\\\client\\\\", "\\\\client\\\\");
+        }
+        return absolutePath;
+    }
 }

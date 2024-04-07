@@ -12,6 +12,8 @@ import com.google.inject.Scopes;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class InjectorModule implements Module {
 
@@ -26,10 +28,19 @@ public class InjectorModule implements Module {
 
     private Config createConfig() {
         try {
-            return Config.read(new File("./admin/src/main/resources/config/config.properties"));
+            return Config.read(new File(normalizePath("./admin/src/main/resources/config/config.properties")));
         } catch (IOException e) {
             Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
         }
+    }
+
+    private String normalizePath(String strPath) {
+        Path path = Paths.get(strPath);
+        String absolutePath = path.toAbsolutePath().normalize().toString();
+        if (absolutePath.contains("\\admin\\admin\\")) {
+            absolutePath = absolutePath.replaceFirst("\\\\admin\\\\admin\\\\", "\\\\client\\\\");
+        }
+        return absolutePath;
     }
 }
