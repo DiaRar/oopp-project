@@ -20,23 +20,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-
-import java.awt.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -60,8 +49,6 @@ public class StartCtrl implements Initializable {
     public Button joinButton;
     @FXML
     public ToggleGroup language;
-    @FXML
-    public MenuItem download;
     private final LanguageComboBox languageComboBox;
     private final DoubleProperty width;
     @FXML
@@ -127,6 +114,8 @@ public class StartCtrl implements Initializable {
         this.joinExistingEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         this.createField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.name"));
         this.joinField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.invite"));
+        this.createNewEvent.getStyleClass().add("bold");
+        this.joinExistingEvent.getStyleClass().add("bold");
          this.root.setTop(mainCtrl.getMenuBar());
         mainCtrl.getMenuBar().bind(languageUtils, mainCtrl, serverUtils);
     }
@@ -145,9 +134,9 @@ public class StartCtrl implements Initializable {
         }
         Event retEvent = serverUtils.addEvent(event);
         if (retEvent == null) return;
-        serverUtils.addTag(retEvent.getId(), new Tag("Food", Color.orange));
-        serverUtils.addTag(retEvent.getId(), new Tag("Ticket", Color.GREEN));
-        serverUtils.addTag(retEvent.getId(), new Tag("Transport", Color.BLUE));
+        serverUtils.addTag(retEvent.getId(), new Tag("Food", "#888888"));
+        serverUtils.addTag(retEvent.getId(), new Tag("Ticket", "#00ff00"));
+            serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#00000ff"));
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();

@@ -25,15 +25,14 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
-    private LanguageUtils languageUtils;
-    private Config config;
+    private final LanguageUtils languageUtils;
+    private final Config config;
     @FXML
     private ComboBox<Participant> payer;
     @FXML
@@ -100,13 +99,7 @@ public class AddExpenseCtrl implements Initializable {
         tag.getSelectionModel().clearSelection();
         equallySplit.setSelected(false);
         partialSplit.setSelected(false);
-        if (debtorsList != null) {
-            debtorsList.setVisible(false);
-        }
-        if (selectedDebtors != null) {
-            selectedDebtors.getItems().clear();
-            selectedDebtors.setVisible(false);
-        }
+        selectedDebtors.getItems().clear();
     }
     public void ok() {
         // TODO Check if we have to create or update an expense (currently only creating)
@@ -118,10 +111,7 @@ public class AddExpenseCtrl implements Initializable {
         double amt = Double.parseDouble(amount.getText());
         String desc = description.getText();
         LocalDateTime time = date.getValue().atStartOfDay();
-        Participant pay = mainCtrl.getEvent().getParticipants().stream()
-                .filter(p -> p.equals(payer.getValue()))
-                .toList()
-                .get(0);
+        Participant pay = payer.getValue();
         Collection<Participant> debt;
         if (equallySplit.isSelected()) {
             debt = mainCtrl.getEvent().getParticipants();
@@ -134,16 +124,15 @@ public class AddExpenseCtrl implements Initializable {
         if (tag.getSelectionModel().isEmpty()) {
             expense = new Expense(amt, desc, time, pay, debt);
         } else {
-            Collection<Tag> tg = mainCtrl.getEvent().getTags().stream()
-                    .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t))
-                    .collect(Collectors.toList());
-            expense = new Expense(amt, desc, time, pay, debt, tg);
+            expense = new Expense(amt, desc, time, pay, debt, tag.getValue());
+            server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
         if (editMode) {
             server.updateExpense(mainCtrl.getEvent().getId(), toUpdate.getId(), expense);
         } else {
             server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
+
         cancel();
     }
 
@@ -156,16 +145,6 @@ public class AddExpenseCtrl implements Initializable {
         if (!equallySplit.isSelected() && !partialSplit.isSelected()) return "debtors";
         if (partialSplit.isSelected() && selectedDebtors.getItems().isEmpty()) return "debtors";
         return "valid";
-    }
-
-    public void showDebtors() {
-        if (partialSplit.isSelected()) {
-            debtorsList.setVisible(true);
-            selectedDebtors.setVisible(true);
-        } else {
-            debtorsList.setVisible(false);
-            selectedDebtors.setVisible(false);
-        }
     }
 
     public void keyPressed(KeyEvent e) {
@@ -205,6 +184,9 @@ public class AddExpenseCtrl implements Initializable {
         this.date.setDayCellFactory(datePicker -> new PastDateCell());
         this.debtorsList.managedProperty().bind(this.debtorsList.visibleProperty());
         this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
+        this.debtorsList.visibleProperty().bind(partialSplit.selectedProperty());
+        this.selectedDebtors.visibleProperty().bind(partialSplit.selectedProperty());
+
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -230,13 +212,6 @@ public class AddExpenseCtrl implements Initializable {
         if (e != null && (e.getCode()) == KeyCode.ENTER) {
             selectDebtor();
         }
-    }
-
-    public void setItems() {
-        clearFields();
-        payer.setItems(FXCollections.observableArrayList(mainCtrl.getEvent().getParticipants()));
-        tag.setItems(FXCollections.observableArrayList(mainCtrl.getEvent().getTags()));
-        debtorsList.setItems(FXCollections.observableArrayList(mainCtrl.getEvent().getParticipants()));
     }
 
     public void openAddTags() {
@@ -276,7 +251,6 @@ public class AddExpenseCtrl implements Initializable {
     public void addMode() {
         this.editMode = false;
         clearFields();
-        setItems();
         this.add.textProperty().bind(languageUtils.getBinding("addExpense.addBtn"));
         this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.addExpenseLabel"));
     }
@@ -285,7 +259,6 @@ public class AddExpenseCtrl implements Initializable {
         this.editMode = true;
         this.toUpdate = expense;
         clearFields();
-        setItems();
         this.add.textProperty().bind(languageUtils.getBinding("addExpense.editBtn"));
         this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.editExpenseLabel"));
 
@@ -293,22 +266,22 @@ public class AddExpenseCtrl implements Initializable {
         description.setText(toUpdate.getTitle());
         amount.setText(String.valueOf(toUpdate.getAmount()));
         date.setValue(toUpdate.getDate().toLocalDate());
-        if (toUpdate.getTags() != null) {
-            tag.getSelectionModel().select(toUpdate.getTags().stream().findFirst().isPresent() ?
-                    toUpdate.getTags().stream().findFirst().get() : null);
+        if (toUpdate.getTag() != null) {
+            tag.getSelectionModel().select(toUpdate.getTag());
         }
-        if (toUpdate.getDebtors().containsAll(mainCtrl.getEvent().getParticipants())) {
+        if (toUpdate.getDebtors().containsAll(mainCtrl.getParticipantList())) {
             equallySplit.setSelected(true);
             partialSplit.setSelected(false);
         } else {
             equallySplit.setSelected(false);
             partialSplit.setSelected(true);
-            debtorsList.setVisible(true);
-            selectedDebtors.setVisible(true);
-            debtorsList.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
-            selectedDebtors.getItems().setAll(mainCtrl.getEvent().getParticipants().stream()
-                    .filter(part -> toUpdate.getDebtors().contains(part))
-                    .toList());
+            selectedDebtors.getItems().addAll(toUpdate.getDebtors());
         }
+    }
+
+    public void startup() {
+        tag.setItems(mainCtrl.getTagList());
+        payer.setItems(mainCtrl.getParticipantList());
+        debtorsList.setItems(mainCtrl.getParticipantList());
     }
 }

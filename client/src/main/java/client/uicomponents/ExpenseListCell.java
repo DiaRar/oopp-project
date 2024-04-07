@@ -12,26 +12,33 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.awt.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Currency;
 import java.util.UUID;
 import java.util.function.Function;
 
 public class ExpenseListCell extends ListCell<Expense> {
+    private final static int MAX_COLOR = 255;
+    private final static Insets PADDING_TAG = new Insets(3.0, 3.0, 3.0, 3.0);
     private static final double EXPENSE_MARGIN = 10;
-    private int participantsSize;
-    private Function<UUID, EventHandler<ActionEvent>> onRemove;
-    private Function<Expense, EventHandler<ActionEvent>> onEdit;
+    private final int participantsSize;
+    private final Function<UUID, EventHandler<ActionEvent>> onRemove;
+    private final Function<Expense, EventHandler<ActionEvent>> onEdit;
+    private final Function<Expense, EventHandler<ActionEvent>> tagSelect;
     public ExpenseListCell(int participantsSize, Function<UUID, EventHandler<ActionEvent>> onRemove,
-                           Function<Expense, EventHandler<ActionEvent>> onEdit) {
+                           Function<Expense, EventHandler<ActionEvent>> onEdit, Function<Expense, EventHandler<ActionEvent>> tagSelect) {
         this.participantsSize = participantsSize;
         this.onRemove = onRemove;
         this.onEdit = onEdit;
+        this.tagSelect = tagSelect;
     }
 
     public BorderPane expenseComponent(Expense expense) {
@@ -40,12 +47,9 @@ public class ExpenseListCell extends ListCell<Expense> {
         VBox vbox = new VBox();
         BorderPane.setMargin(vbox, new Insets(0, EXPENSE_MARGIN, 0, EXPENSE_MARGIN));
         Text name = new Text(expense.getPayer().getNickname());
-        name.getStyleClass().add(Styles.TEXT_BOLD);
         Text value = new Text(expense.getAmount().toString()
-                .concat("EUR"));
-        value.getStyleClass().add(Styles.TEXT_BOLD);
+                .concat(Currency.getInstance("EUR").getSymbol()));
         Text desc = new Text(expense.getTitle());
-        desc.getStyleClass().add(Styles.TEXT_BOLD);
         content.getChildren().addAll(name, new Text(" paid "),
                 value, new Text(" for "), desc);
         vbox.getChildren().add(content);
@@ -56,7 +60,6 @@ public class ExpenseListCell extends ListCell<Expense> {
                                 expense.getDebtors().stream().map(Participant::getNickname).toList()
                         ) + ")");
         payers.getStyleClass().add(Styles.TEXT_SMALL);
-        payers.setStyle("-fx-font-size: 12px;");
         vbox.getChildren().add(payers);
         borderPane.setCenter(vbox);
         borderPane.getStyleClass().add("expense");
@@ -77,6 +80,21 @@ public class ExpenseListCell extends ListCell<Expense> {
         // On click
         removeButton.setOnAction(onRemove.apply(expense.getId()));
         editButton.setOnAction(onEdit.apply(expense));
+        if (expense.getTag() != null) {
+            Button tag = new Button(expense.getTag().getName());
+            tag.setPadding(PADDING_TAG);
+            tag.getStyleClass().addAll(Styles.TEXT_SUBTLE, Styles.ELEVATED_1);
+            String colorHex = expense.getTag().getColor();
+            Color color = Color.web(expense.getTag().getColor());
+            Color complementColor = color.invert();
+            String complement = String.format("#%02x%02x%02x",
+                    ((int)(complementColor.getRed() * MAX_COLOR)),
+                    ((int)(complementColor.getGreen() * MAX_COLOR)),
+                    ((int)(complementColor.getBlue() * MAX_COLOR)));
+            tag.setStyle("-fx-text-fill: " + complement + "; -fx-background-color: " + colorHex + ";");
+            tag.setOnAction(tagSelect.apply(expense));
+            buttons.getChildren().addFirst(tag);
+        }
         borderPane.setRight(buttons);
         return borderPane;
     }

@@ -28,7 +28,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Expense;
 import commons.Participant;
-import javafx.collections.FXCollections;
+import commons.Tag;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -43,8 +43,6 @@ import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -55,8 +53,7 @@ public class OverviewCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final LanguageUtils languageUtils;
-    private ObservableList<Expense> expenses;
-    private ObservableList<Participant> participants;
+    private ObservableList<Tag> tags;
     private FilteredList<Expense> filteredExpenses;
     @FXML
     private Label title;
@@ -114,9 +111,10 @@ public class OverviewCtrl implements Initializable {
         this.sendMoney.textProperty().bind(languageUtils.getBinding("overview.send"));
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
-        this.list.setCellFactory(expenseListView -> new ExpenseListCell(participants.size(),
+        this.list.setCellFactory(expenseListView -> new ExpenseListCell(mainCtrl.getParticipantList().size(),
                 (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)),
-                (expense -> event -> mainCtrl.showEditExpense(expense))));
+                expense -> event -> mainCtrl.showEditExpense(expense),
+                expense -> event -> list.getSelectionModel().select(expense)));
         this.list.getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
         this.sendInvites.setGraphic(new FontIcon(Feather.SEND));
         this.sendInvites.setContentDisplay(ContentDisplay.RIGHT);
@@ -143,6 +141,9 @@ public class OverviewCtrl implements Initializable {
         this.filterButton.setOnAction(e -> this.modal.show(this.modalBox));
         this.resetButton.setContentDisplay(ContentDisplay.RIGHT);
         this.resetButton.setGraphic(new FontIcon(Feather.X));
+        this.title.getStyleClass().addAll("bold", "big");
+        this.participantsLabel.getStyleClass().add("bold");
+        this.expensesLabel.getStyleClass().add("bold");
         this.dialog.isEmptyProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue && !oldValue) {
                 this.resetButton.getStyleClass().add(Styles.DANGER);
@@ -161,10 +162,8 @@ public class OverviewCtrl implements Initializable {
 //        System.out.println(dialogCtrl.toString());
     }
     public void startup() {
-        expenses = FXCollections.observableArrayList(mainCtrl.getEvent().getExpenses());
-        participants = FXCollections.observableArrayList(mainCtrl.getEvent().getParticipants());
-        dialog.start(participants);
-        filteredExpenses = new FilteredList<>(expenses);
+        dialog.start(mainCtrl.getParticipantList(), mainCtrl.getTagList());
+        filteredExpenses = new FilteredList<>(mainCtrl.getExpenseList());
         filteredExpenses.predicateProperty().bind(dialog.getPredicate());
         //TODO: make a listview instead of vbox and link it to the filtered list
         title.setText(mainCtrl.getEvent().getName());
@@ -179,66 +178,15 @@ public class OverviewCtrl implements Initializable {
     }
     public void updateParticipantsText() {
         StringJoiner stringJoiner = new StringJoiner(", ");
-        participants.forEach(participant -> stringJoiner.add(participant.getNickname()));
+        mainCtrl.getParticipantList().forEach(participant -> stringJoiner.add(participant.getNickname()));
         participantsText.setText(stringJoiner.toString());
     }
-    public void addParticipant(Participant participant) {
-        participants.add(participant);
-        updateParticipantsText();
-        list.refresh();
-    }
-    public void removeParticipant(Participant participant) {
-        System.out.println(participant);
-        participants.removeIf(removed -> removed.getId().equals(participant.getId()));
-        expenses.removeIf(expense -> expense.getPayer().getId().equals(participant.getId()));
-        expenses.forEach(expense -> expense.getDebtors()
-                .removeIf(participant1 -> participant1.getId().equals(participant.getId())));
-        updateParticipantsText();
-        list.refresh();
-    }
-    public void updateParticipant(Participant participant) {
-        expenses.forEach(expense -> expense.setDebtors(expense.getDebtors().stream()
-                .map(participant1 ->
-                        participant1.getId().equals(participant.getId()) ? participant : participant1).toList())
-        );
-        participants.stream().filter(listParticipant -> participant.getId().equals(listParticipant.getId()))
-                .toList().getFirst().setNickname(participant.getNickname());
+    public void refreshParticipant(Participant participant) {
         updateParticipantsText();
         list.refresh();
     }
     public void back() {
         mainCtrl.showStart();
-    }
-    public int binarySearchDate(List<Expense> expenseList, int l, int r, LocalDateTime x) {
-        int m = l;
-        while (l <= r) {
-            m = (l + r) / 2;
-            if (x.isEqual(expenseList.get(m).getDate())) {
-                return m;
-            }
-            if (x.isAfter(expenseList.get(m).getDate())) {
-                r = m - 1;
-            } else {
-               l = m + 1;
-            }
-        }
-        return m;
-    }
-    public void addExpense(Expense expense) {
-        int index = binarySearchDate(expenses, 0, expenses.size() - 1, expense.getDate());
-        expenses.add(index, expense);
-        mainCtrl.getEvent().getExpenses().add(index, expense);
-    }
-    public void removeExpense(Expense expense) {
-        expenses.removeIf(oExpense -> oExpense.getId().equals(expense.getId()));
-        mainCtrl.getEvent().getExpenses().removeIf(oExpense -> oExpense.getId().equals(expense.getId()));
-    }
-    public void updateExpense(Expense expense) {
-        int index = expenses
-                .stream().map(Expense::getId)
-                .toList().indexOf(expense.getId());
-        expenses.set(index, expense);
-        mainCtrl.getEvent().getExpenses().set(index, expense);
     }
 
     public void addParticipantAction() {
@@ -250,23 +198,19 @@ public class OverviewCtrl implements Initializable {
     }
 
     public void openAddExpense() {
-        System.out.println("Add expense");
         mainCtrl.showAddExpense();
     }
 
 
     public void openDebts() {
-        System.out.println("Open debts");
         mainCtrl.showDebts();
     }
 
     public void openInvitation() {
-        System.out.println("Invite people");
         mainCtrl.showInvitation();
     }
 
     public void openStatistics() {
-        System.out.println("Statistics");
         mainCtrl.showStatistics();
     }
     public BorderPane getRoot() {

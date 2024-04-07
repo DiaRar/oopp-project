@@ -47,15 +47,15 @@ public class WebSocketUpdateService {
     }
     public void sendAddedExpense(UUID eventId, Expense expense) {
         messagingTemplate.convertAndSend(destination("/add/expense",
-                eventId), expense, getCommons());
+                eventId), expense, getOverview());
     }
     public void sendRemovedExpense(UUID eventId, UUID id) {
         Expense expense = new Expense();
         expense.setId(id);
-        messagingTemplate.convertAndSend(destination("/remove/expense", eventId), expense, getCommons());
+        messagingTemplate.convertAndSend(destination("/remove/expense", eventId), expense, getOverview());
     }
     public void sendUpdatedExpense(UUID eventId, Expense expense) {
-        messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getCommons());
+        messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getOverview());
     }
 
     public void sendAddedDebt(UUID eventId, Debt debt) {
@@ -72,5 +72,8 @@ public class WebSocketUpdateService {
 
     private static Map<String, Object> getCommons() {
         return Map.of(CONVERSION_HINT_HEADER, View.CommonsView.class);
+    }
+    private static Map<String, Object> getOverview() {
+        return Map.of(CONVERSION_HINT_HEADER, View.OverviewView.class);
     }
 }

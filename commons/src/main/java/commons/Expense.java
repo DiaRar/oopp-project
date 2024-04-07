@@ -24,7 +24,7 @@ public class Expense {
     private Participant payer;
     private Event event;
     private Collection<Participant> debtors;
-    private Collection<Tag> tags;
+    private Tag tag;
     public Expense() {};
 
     public Expense(Double amount, String title, LocalDateTime date,
@@ -37,13 +37,13 @@ public class Expense {
     }
 
     public Expense(Double amount, String title, LocalDateTime date,
-                   Participant payer, Collection<Participant> debtors, Collection<Tag> tags) {
+                   Participant payer, Collection<Participant> debtors, Tag tag) {
         this.amount = amount;
         this.title = title;
         this.date = date;
         this.payer = payer;
         this.debtors = debtors;
-        this.tags = tags;
+        this.tag = tag;
     }
     // Attributes
     @Id
@@ -88,9 +88,10 @@ public class Expense {
     public Event getEvent() {
         return event;
     }
-    @ManyToMany
-    public Collection<Tag> getTags() {
-        return tags;
+    @ManyToOne
+    @JsonView(View.OverviewView.class)
+    public Tag getTag() {
+        return tag;
     }
     // Setters
     public void setId(UUID id) {
@@ -115,8 +116,8 @@ public class Expense {
     public void setDebtors(Collection<Participant> debtors) {
         this.debtors = debtors;
     }
-    public void setTags(Collection<Tag> tags) {
-        this.tags = tags;
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
     // Equals, hashCode, and toString
     @Override

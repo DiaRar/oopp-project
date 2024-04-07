@@ -63,9 +63,9 @@ public class StatisticsCtrl implements Initializable {
     private ArrayList<PieChart.Data> getData() {
         ArrayList<PieChart.Data> data = new ArrayList<>();
         HashMap<Tag, Double> map = new HashMap<>();
-        Tag other = new Tag("Other", new Color(0));
+        Tag other = new Tag("Other", "#000000");
         for (Expense x : mainCtrl.getEvent().getExpenses()) {
-            if (x.getTags() == null || x.getTags().size() == 0) {
+            if (x.getTag() == null) {
                 if (!map.containsKey(other)) {
                     map.put(other, x.getAmount());
                 } else {
@@ -73,12 +73,11 @@ public class StatisticsCtrl implements Initializable {
                 }
                 continue;
             };
-            for (Tag y : x.getTags()) {
-                if (map.containsKey(y)) {
-                    map.replace(y, map.get(y) + x.getAmount());
-                } else {
-                    map.put(y, x.getAmount());
-                }
+            Tag y = x.getTag();
+            if (map.containsKey(y)) {
+                map.replace(y, map.get(y) + x.getAmount());
+            } else {
+                map.put(y, x.getAmount());
             }
         }
         for (Tag x : map.keySet()) {

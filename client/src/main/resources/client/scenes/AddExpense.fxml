@@ -35,12 +35,12 @@
             <Label fx:id="howToSplit" layoutX="33.0" layoutY="235.0" prefHeight="18.0" prefWidth="79.0" text="How to split?" />
             <Label fx:id="expenseType" layoutX="254.0" layoutY="235.0" minWidth="79.0" prefHeight="18.0" prefWidth="79.0" text="Expense type" />
             <ComboBox fx:id="tag" layoutX="254.0" layoutY="263.0" prefHeight="26.0" prefWidth="126.0" promptText="Tag" />
-            <RadioButton fx:id="equallySplit" layoutX="33.0" layoutY="256.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="198.0" text="Equally (between everybody)">
+            <RadioButton fx:id="equallySplit" layoutX="33.0" layoutY="256.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="198.0" text="Equally (between everybody)">
                <toggleGroup>
                   <ToggleGroup fx:id="split" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="partialSplit" layoutX="33.0" layoutY="278.0" mnemonicParsing="false" onAction="#showDebtors" prefHeight="18.0" prefWidth="138.0" text="Only some people" toggleGroup="$split" />
+            <RadioButton fx:id="partialSplit" layoutX="33.0" layoutY="278.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="138.0" text="Only some people" toggleGroup="$split" />
             <ListView fx:id="debtorsList" layoutX="33.0" layoutY="316.0" onKeyPressed="#keyPressedDebtors" onMouseClicked="#selectDebtor" prefHeight="202.0" prefWidth="103.0" visible="false" />
             <ListView fx:id="selectedDebtors" disable="true" layoutX="141.0" layoutY="315.0" prefHeight="202.0" prefWidth="103.0" visible="false" />
             <Button fx:id="addTag" layoutX="294.0" layoutY="303.0" mnemonicParsing="false" onAction="#openAddTags" text="Add/Edit Tag" />

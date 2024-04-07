@@ -18,17 +18,17 @@ public class Tag {
 
     private UUID id;
     private String name;
-    private Color color;
+    private String color;
     private Event event;
     private Collection<Expense> expenses;
 
     protected Tag() {
     }
-    public Tag(String name, Color color) {
+    public Tag(String name, String color) {
         this.name = name;
         this.color = color;
     }
-    public Tag(String name, Color color, Collection<Expense> expenses, Event event) {
+    public Tag(String name, String color, Collection<Expense> expenses, Event event) {
         this.name = name;
         this.color = color;
         this.expenses = expenses;
@@ -50,11 +50,11 @@ public class Tag {
     @Basic
     @Column(name = "color")
     @JsonView(View.CommonsView.class)
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
     // Relationships
-    @ManyToMany(mappedBy = "tags")
+    @OneToMany(mappedBy = "tag")
     public Collection<Expense> getExpenses() {
         return expenses;
     }
@@ -69,7 +69,7 @@ public class Tag {
     public void setName(String name) {
         this.name = name;
     }
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
     public void setExpenses(Collection<Expense> expenses) {
