@@ -45,13 +45,14 @@ public class DebtControllerTest {
     @Test
     public void getByIdTest() {
         when(debtService.getById(debt.getId())).thenReturn(debt);
-        assertEquals(debt, debtController.get(event.getId(), debt.getId()).getBody());
+        assertEquals(debt, debtController.get(event.getId(), debt.getId().getPayerId(), debt.getId().getDebtorId()).getBody());
     }
 
     @Test
     public void getByIdFailTest() {
         when(debtService.getById(debt.getId())).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), debtController.get(event.getId(), debt.getId()));
+        assertEquals(ResponseEntity.badRequest().build(), debtController.get(event.getId(),
+                debt.getId().getPayerId(), debt.getId().getDebtorId()));
     }
 
     @Test

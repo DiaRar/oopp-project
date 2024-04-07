@@ -27,11 +27,7 @@ public class DebtService {
     }
 
     public Debt getById(DebtPK id) {
-        Optional<Debt> od = debtRepo.findById(id);
-        if (od.isEmpty()) {
-            throw new EntityNotFoundException("Did not find the specified debt.");
-        }
-        Debt clone = clone(od.get());
+        Debt clone = clone(getByIdInner(id));
         clone.setAmount(-clone.getAmount());
         return clone;
     }
@@ -40,6 +36,18 @@ public class DebtService {
         Collection<Debt> eventDebts = debtRepo.findDebtsByEventId(eventId);
         return eventDebts.stream().filter(d -> d.getAmount() < 0.0)
                 .map(d -> new Debt(d.getPayer(), d.getDebtor(), -d.getAmount(), d.getEvent())).toList();
+    }
+
+    private Collection<Debt> getByEventIdInner(UUID eventId) {
+        return debtRepo.findDebtsByEventId(eventId);
+    }
+
+    private Debt getByIdInner(DebtPK id) {
+        Optional<Debt> od = debtRepo.findById(id);
+        if (od.isEmpty()) {
+            throw new EntityNotFoundException("Did not find the specified debt.");
+        }
+        return od.get();
     }
 
     public Collection<Debt> getByPayerId(UUID id) {
@@ -183,8 +191,8 @@ public class DebtService {
     }
 
     public Debt settle(UUID eventId, UUID payerId, UUID debtorId, Double amount) {
-        Debt payerToDebtor = getById(new DebtPK(payerId, debtorId));
-        Debt debtorToPayer = getById(new DebtPK(debtorId, payerId));
+        Debt payerToDebtor = getByIdInner(new DebtPK(payerId, debtorId));
+        Debt debtorToPayer = getByIdInner(new DebtPK(debtorId, payerId));
         if (!payerToDebtor.getEvent().getId().equals(eventId)) {
             throw new IllegalArgumentException("Event and Debt mismatch!");
         }
