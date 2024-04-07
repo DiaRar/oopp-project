@@ -31,7 +31,15 @@ public class DebtService {
         if (od.isEmpty()) {
             throw new EntityNotFoundException("Did not find the specified debt.");
         }
-        return od.get();
+        Debt clone = clone(od.get());
+        clone.setAmount(-clone.getAmount());
+        return clone;
+    }
+
+    public Collection<Debt> getByEventId(UUID eventId) {
+        Collection<Debt> eventDebts = debtRepo.findDebtsByEventId(eventId);
+        return eventDebts.stream().filter(d -> d.getAmount() < 0.0)
+                .map(d -> new Debt(d.getPayer(), d.getDebtor(), -d.getAmount(), d.getEvent())).toList();
     }
 
     public Collection<Debt> getByPayerId(UUID id) {

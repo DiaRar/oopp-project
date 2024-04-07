@@ -1,13 +1,16 @@
 package server.api.rest;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import commons.Debt;
 import commons.primary_keys.DebtPK;
+import commons.views.View;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.DebtService;
 import server.services.WebSocketUpdateService;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @RestController
@@ -22,11 +25,18 @@ public class DebtController {
         this.updateService = updateService;
     }
 
-    @GetMapping("/{debtId}")
+    @GetMapping(path = {"", "/"})
+    @JsonView(View.SettleView.class)
+    public ResponseEntity<Collection<Debt>> getAll(@PathVariable("eventId") UUID eventId) {
+        return ResponseEntity.ok(debtService.getByEventId(eventId));
+    }
+
+    @GetMapping("/{payerId}/{debtorId}")
+    @JsonView(View.SettleView.class)
     public ResponseEntity<Debt> get(@PathVariable("eventId") UUID eventId,
-                                    @PathVariable("debtId") DebtPK debtId) {
+                                    @PathVariable("payerId") UUID payerId, @PathVariable("debtorId") UUID debtorId) {
         try {
-            return ResponseEntity.ok(debtService.getById(debtId));
+            return ResponseEntity.ok(debtService.getById(new DebtPK(payerId, debtorId)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
