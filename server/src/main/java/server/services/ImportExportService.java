@@ -8,20 +8,35 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.beans.DebtBean;
-import server.beans.EventBean;
-import server.beans.ExpenseBean;
-import server.beans.ParticipantBean;
+import server.beans.*;
 
 import java.util.*;
 
 @Component
 public class ImportExportService {
+    private EventService eventService;
+    private DebtService debtService;
+    private ExpenseService expenseService;
+    private ParticipantsService participantsService;
+    private TagService tagService;
+    @Autowired
+    public ImportExportService(EventService eventService,
+                               DebtService debtService,
+                               ExpenseService expenseService,
+                               ParticipantsService participantsService,
+                               TagService tagService) {
+        this.eventService = eventService;
+        this.debtService = debtService;
+        this.expenseService = expenseService;
+        this.participantsService = participantsService;
+        this.tagService = tagService;
+    }
+
     @PersistenceContext
     private EntityManager entityManager;
     public void importData(String jsonData) {
-
     }
 
     @Transactional
@@ -32,14 +47,14 @@ public class ImportExportService {
 
         // Retrieve data from tables
         List<BankAccount> bankAccounts = session.createNativeQuery("SELECT * FROM BANK_ACCOUNT", BankAccount.class).getResultList();
-        List<Event> events = session.createNativeQuery("SELECT * FROM EVENT", Event.class).getResultList();
-        List<Debt> debts = session.createNativeQuery("SELECT * FROM DEBT", Debt.class).getResultList();
-        List<Expense> expenses = session.createNativeQuery("SELECT * FROM EXPENSE", Expense.class).getResultList();
-        List<Participant> participants = session.createNativeQuery("SELECT * FROM PARTICIPANT", Participant.class).getResultList();
-        List<Tag> tags = session.createNativeQuery("SELECT * FROM TAG", Tag.class).getResultList();
+        List<Event> events = eventService.getAll();
+        List<Debt> debts = debtService.getAll();
+        List<Expense> expenses = expenseService.getAllActuallyThisTime();
+        List<Participant> participants = participantsService.getAll();
+        List<Tag> tags = tagService.getAll();
 
 
-        // put all the relevant data into beans this replaces the objects with thier id's to stop circulair calling
+        // put all the relevant data into beans this replaces the objects with their id's to stop circular calling
         List<EventBean> eventBeans = events.stream().map(e -> new EventBean(e.getId(),
                 e.getName(), e.getCreationDate(), e.getLastActivityDate())).toList();
         List<ExpenseBean> expenseBeans = expenses.stream().map(e -> new ExpenseBean(e.getId(), e.getAmount(),
@@ -49,17 +64,10 @@ public class ImportExportService {
         List<DebtBean> debtBeans = debts.stream().map(d -> new DebtBean(d.getId().getDebtorId(),
                 d.getId().getPayerId(), d.getAmount(), d.getEvent().getId())).toList();
 
-        // Create a Map to hold all lists
-        Map<String, List<?>> dataMap = new HashMap<>();
-        dataMap.put("bankAccounts", bankAccounts);
-        dataMap.put("events", eventBeans);
-        dataMap.put("debts", debtBeans);
-        dataMap.put("expenses", expenseBeans);
-        dataMap.put("participants", participantBeans);
-        dataMap.put("tags", tags);
+        var data = new ImportExportData(bankAccounts, eventBeans, debtBeans, expenseBeans, participantBeans, tags);
 
         try {
-            return objectMapper.writeValueAsString(dataMap);
+            return objectMapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

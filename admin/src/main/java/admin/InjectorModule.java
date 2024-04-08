@@ -30,7 +30,8 @@ public class InjectorModule implements Module {
 
     private Config createConfig() {
         try {
-            return Config.read(new File(normalizePath("./admin/src/main/resources/config/config.properties")));
+            var dir = "./admin/src/main/resources/";
+            return Config.read(new File(normalizePath(dir  + "config/config.properties")), normalizePath(dir + "JsonDumps"));
         } catch (IOException e) {
             Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
@@ -41,7 +42,7 @@ public class InjectorModule implements Module {
         Path path = Paths.get(strPath);
         String absolutePath = path.toAbsolutePath().normalize().toString();
         if (absolutePath.contains("\\admin\\admin\\")) {
-            absolutePath = absolutePath.replaceFirst("\\\\admin\\\\admin\\\\", "\\\\client\\\\");
+            absolutePath = absolutePath.replaceFirst("\\\\admin\\\\admin\\\\", "\\\\admin\\\\");
         }
         return absolutePath;
     }

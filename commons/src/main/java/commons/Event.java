@@ -44,6 +44,14 @@ public class Event {
      * Constructs an empty Event object.
      */
     public Event() {}
+
+    public Event(UUID id, String name, LocalDateTime creationDate, LocalDateTime lastActivityDate) {
+        this.id = id;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.lastActDate = lastActivityDate;
+    }
+
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

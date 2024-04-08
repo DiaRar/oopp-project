@@ -23,8 +23,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="Json dump download" GridPane.columnIndex="4" />
-            <Button mnemonicParsing="false" text="upload json dump" GridPane.columnIndex="5" />
+            <Button mnemonicParsing="false" onAction="#download" text="Json dump download" GridPane.columnIndex="4" />
+            <Button fx:id="upload" mnemonicParsing="false" onAction="#upload" text="upload json dump" GridPane.columnIndex="5" />
          </children>
       </GridPane>
    </top>

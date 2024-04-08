@@ -8,7 +8,7 @@ public class EventBean {
     private UUID id;
     private String name;
     private LocalDateTime creationDate;
-    private LocalDateTime lastActDate;
+    private LocalDateTime lastActivityDate;
 
     public EventBean() {
     }
@@ -17,7 +17,7 @@ public class EventBean {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
-        this.lastActDate = lastActDate;
+        this.lastActivityDate = lastActDate;
     }
 
     public UUID getId() {
@@ -33,6 +33,6 @@ public class EventBean {
     }
 
     public LocalDateTime getLastActivityDate() {
-        return lastActDate;
+        return lastActivityDate;
     }
 }

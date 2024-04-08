@@ -9,6 +9,10 @@ public class ParticipantBean {
     private String bankIBAN;
     private UUID eventId;
 
+    public ParticipantBean() {
+
+    }
+
     public ParticipantBean(UUID id, String email, String nickname, String bankIBAN, UUID eventId) {
         this.id = id;
         this.email = email;

@@ -51,6 +51,13 @@ public class Debt {
     public Debt(Double amount) {
         this.amount = amount;
     }
+
+    public Debt(DebtPK debtPK, double amount, Event event) {
+        this.id = debtPK;
+        this.amount = amount;
+        this.event = event;
+    }
+
     public Double getAmount() {
         return amount;
     }

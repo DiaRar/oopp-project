@@ -36,6 +36,10 @@ public class ExpenseService {
         return expenseRepo.findExpenseByEventId(eventId);
     }
 
+    public List<Expense> getAllActuallyThisTime() {
+        return expenseRepo.findAll();
+    }
+
     public Expense getById(UUID expenseId) throws EntityNotFoundException {
         Optional<Expense> oExpense = expenseRepo.findById(expenseId);
         if (oExpense.isEmpty()) {

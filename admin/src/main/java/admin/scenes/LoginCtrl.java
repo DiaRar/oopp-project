@@ -38,7 +38,6 @@ public class LoginCtrl implements Initializable {
 
         mainCtrl.showOverview();
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         passwordField.setOnKeyPressed(e -> {

@@ -11,6 +11,10 @@ public class ExpenseBean {
     private UUID eventId;
     private UUID payerId;
 
+    public ExpenseBean() {
+
+    }
+
     public ExpenseBean(UUID id, double amount, String title, LocalDateTime date, UUID eventId, UUID payerId) {
         this.id = id;
         this.amount = amount;

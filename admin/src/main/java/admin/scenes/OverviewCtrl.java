@@ -1,6 +1,7 @@
 package admin.scenes;
 
 import admin.uicomponents.RemoveButtonCell;
+import admin.utils.Config;
 import admin.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
@@ -9,6 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,12 +21,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class OverviewCtrl {
-    public ServerUtils serverUtils;
+    private ServerUtils serverUtils;
+    private Config config;
     @FXML
-    public TableView<Event> tableView;
+    private TableView<Event> tableView;
     @Inject
-    public OverviewCtrl(ServerUtils serverUtils) {
+    public OverviewCtrl(ServerUtils serverUtils, Config config) {
         this.serverUtils = serverUtils;
+        this.config = config;
     }
 
     public void fillEvents() {
@@ -76,6 +83,24 @@ public class OverviewCtrl {
         removeColumn.setCellFactory(param -> new RemoveButtonCell(tableView));
 
         tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn);
+    }
+
+    public void download() {
+        var json = serverUtils.getExportResult();
+        var file = new File(config.getJsonPath(), "export.json");
+        if (file.exists()) file.delete();
+
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //TODO open explorer or notify the user where the file has been sorted
+    }
+
+    public void upload() {
+        System.out.println("upload");
     }
 
     public void addEvent(Event event) {

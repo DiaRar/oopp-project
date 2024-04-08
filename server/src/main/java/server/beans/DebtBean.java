@@ -8,6 +8,10 @@ public class DebtBean {
     private double amount;
     private UUID eventId;
 
+    public DebtBean() {
+
+    }
+
     public DebtBean(UUID debtorId, UUID payerId, double amount, UUID eventId) {
         this.debtorId = debtorId;
         this.payerId = payerId;
