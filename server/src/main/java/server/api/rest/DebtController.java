@@ -53,8 +53,7 @@ public class DebtController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    // Avoid using, instead use /settle
+    
     @PutMapping("/{debtId}")
     public ResponseEntity<Debt> put(@PathVariable("eventId") UUID eventId,
                                     @PathVariable("debtId") DebtPK debtId,

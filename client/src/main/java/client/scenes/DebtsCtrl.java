@@ -44,7 +44,6 @@ public class DebtsCtrl implements Initializable {
     private Label title;
     @FXML
     private VBox debtsList;
-    private Event event;
 
     private StringProperty settleButton;
     private StringProperty remindButton;
@@ -65,8 +64,8 @@ public class DebtsCtrl implements Initializable {
 
     public void refresh() {
         // TODO instead of the hardcoded data we should use:
-        // List<Debt> debts = server.getDebts(event);
-        List<Debt> debts = mockData();
+        List<Debt> debts = server.getDebts(mainCtrl.getEvent());
+//        List<Debt> debts = mockData();
 
         List<BorderPane> collection = debts.stream().map(this::debtComponent).toList();
         debtsList.getChildren().clear();
@@ -113,7 +112,7 @@ public class DebtsCtrl implements Initializable {
         HBox.setMargin(reminder, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
         settled.setOnAction(e ->
-                settleDebt(event.getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
+                settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
         reminder.setOnAction(e ->
                 remind(debt.getDebtor(), debt));
 

@@ -82,7 +82,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().addExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().addExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
             }
         });
         session.subscribe(source("/remove/expense"), new StompFrameHandler() {
@@ -93,7 +96,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().removeExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().removeExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
             }
         });
         session.subscribe(source("/update/expense"), new StompFrameHandler() {
@@ -104,7 +110,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().updateExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().updateExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
             }
         });
     }
