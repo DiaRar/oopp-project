@@ -53,6 +53,15 @@ public class Debt {
     public Debt(Double amount) {
         this.amount = amount;
     }
+
+    public Debt(DebtPK debtPK, double amount, Event event, Participant payer, Participant debtor) {
+        this.id = debtPK;
+        this.amount = amount;
+        this.event = event;
+        this.payer = payer;
+        this.debtor = debtor;
+    }
+
     public Double getAmount() {
         return amount;
     }

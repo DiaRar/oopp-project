@@ -25,6 +25,9 @@ public class DebtService {
     public Optional<Debt> getOptionalById(DebtPK id) {
         return debtRepo.findById(id);
     }
+    public List<Debt> getAll() {
+        return debtRepo.findAll();
+    }
 
     public Debt getById(DebtPK id) {
         Optional<Debt> od = debtRepo.findById(id);

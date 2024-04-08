@@ -19,6 +19,11 @@ import client.implementations.WSSessionHandler;
 import client.scenes.*;
 import client.uicomponents.CustomMenuBar;
 import client.utils.*;
+import client.uicomponents.Alerts;
+import client.utils.Config;
+import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
+import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -53,18 +58,25 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        Path path = Paths.get("./client/src/main/resources/config/recents.csv");
-        utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
+        utils.setRecentsFile(new File(normalizePath("./client/src/main/resources/config/recents.csv")));
         return utils;
     }
 
     private Config createConfig() {
         try {
-            return Config.read(new File("./client/src/main/resources/config/config.properties"));
+            return Config.read(new File(normalizePath("./client/src/main/resources/config/config.properties")));
         } catch (IOException e) {
-            // TODO: Add alert box to say config was not set up
+            Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
         }
     }
 
+    private String normalizePath(String strPath) {
+        Path path = Paths.get(strPath);
+        String absolutePath = path.toAbsolutePath().normalize().toString();
+        if (absolutePath.contains("\\client\\client\\")) {
+            absolutePath = absolutePath.replaceFirst("\\\\client\\\\client\\\\", "\\\\client\\\\");
+        }
+        return absolutePath;
+    }
 }

@@ -32,6 +32,9 @@ public class ParticipantsService {
         return oPa.get();
 
     }
+    public List<Participant> getAll() {
+        return participantRepository.findAll();
+    }
     public Participant updateParticipant(UUID eventId, UUID id, Participant participant)
             throws IllegalArgumentException, EntityNotFoundException {
         Participant repoParticipant = getById(id);

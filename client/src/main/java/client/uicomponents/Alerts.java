@@ -32,4 +32,12 @@ public class Alerts {
         alertUser(AlertType.ERROR, "Connection Refused", "Oops! Unable to connect to the server.",
                 "The server may be offline or unreachable. Please try again later.");
     }
+
+    public static void configNotSetUpAlert() {
+        alertUser(AlertType.ERROR, "Configuration Not Set Up",
+                "Oops! Configuration not found or invalid.",
+                "The configuration file is not set up properly or could not be found at the specified path:\n" +
+                        "/client/src/main/resources/config/config.properties\n" +
+                        "Please ensure that the configuration file exists and is correctly configured.");
+    }
 }
