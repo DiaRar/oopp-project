@@ -117,7 +117,7 @@ public class ExpenseService {
     private void updateDebtsByAmount(Participant payer, Collection<Participant> debtors, Double debtedAmount, Event event) {
         for (Participant debtor : debtors) {
             Debt payerToDebtor = new Debt(payer, debtor, 0.0, event);
-            if (payer == debtor) continue;
+            if (Objects.equals(payer, debtor) || (payer.getId() != null && payer.getId().equals(debtor.getId()))) continue;
             Optional<Debt> fromRepo = debtService.getOptionalById(payerToDebtor.getId());
             if (fromRepo.isPresent()) {
                 Double currentAmount = fromRepo.get().getAmount();

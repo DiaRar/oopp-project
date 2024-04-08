@@ -75,7 +75,7 @@ public class DebtService {
             throw new IllegalArgumentException("Cannot add already existing debt.");
         }
         if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
-            throw new IllegalArgumentException("Cannot add debt to from participant to itself.");
+            throw new IllegalArgumentException("Cannot add debt from participant to itself.");
         }
         Event event = new Event();
         Debt debtorToPayer = new Debt(debt.getDebtor(), debt.getPayer(), debt.getAmount(), event);
@@ -118,7 +118,7 @@ public class DebtService {
             throw new IllegalArgumentException("Cannot update without amount.");
         }
         if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
-            throw new IllegalArgumentException("Cannot add debt to from participant to itself.");
+            throw new IllegalArgumentException("Cannot add debt from participant to itself.");
         }
         Optional<Debt> odtp = debtRepo.findById(new DebtPK(id.getDebtorId(), id.getPayerId()));
         Debt debtorToPayer;

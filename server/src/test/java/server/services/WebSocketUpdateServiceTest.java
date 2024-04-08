@@ -82,22 +82,6 @@ public class WebSocketUpdateServiceTest {
         });
     }
 
-//    @Test
-//    public void sendAddedDebtTest() {
-//        Debt debt = new Debt();
-//        assertDoesNotThrow( () -> {
-//            webSocketUpdateService.sendAddedDebt(UUID.randomUUID(), debt);
-//        });
-//    }
-//
-//    @Test
-//    public void sendRemovedDebtTest() {
-//        DebtPK debtPK = new DebtPK(UUID.randomUUID(), UUID.randomUUID());
-//        assertDoesNotThrow( () -> {
-//            webSocketUpdateService.sendRemovedDebt(UUID.randomUUID(), debtPK);
-//        });
-//    }
-
     @Test
     public void sendUpdatedDebt() {
         Debt debt = new Debt();
