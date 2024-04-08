@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.*;
