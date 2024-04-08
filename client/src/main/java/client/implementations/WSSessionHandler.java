@@ -3,6 +3,7 @@ package client.implementations;
 import client.scenes.MainCtrl;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import commons.Debt;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
@@ -114,6 +115,18 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
                     mainCtrl.get().updateExpense(expense);
                     mainCtrl.get().getDebtsCtrl().refresh();
                 });
+            }
+        });
+
+        session.subscribe(source("update/debt"), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Debt.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Platform.runLater(() -> mainCtrl.get().getDebtsCtrl().refresh());
             }
         });
     }

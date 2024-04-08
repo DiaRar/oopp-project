@@ -48,18 +48,20 @@ public class DebtController {
                                      @RequestBody Debt debt) {
         try {
             Debt saved = debtService.add(eventId, debt);
+            updateService.sendUpdatedDebt(eventId);
             return ResponseEntity.ok(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     @PutMapping("/{debtId}")
     public ResponseEntity<Debt> put(@PathVariable("eventId") UUID eventId,
                                     @PathVariable("debtId") DebtPK debtId,
                                     @RequestBody Debt debt) {
         try {
             Debt updated = debtService.update(eventId, debtId, debt);
+            updateService.sendUpdatedDebt(eventId);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -70,7 +72,7 @@ public class DebtController {
     public ResponseEntity<Void> delete(@PathVariable("eventId") UUID eventId,
                                        @PathVariable("debtId") DebtPK debtId) {
         debtService.delete(debtId);
-        updateService.sendRemovedDebt(eventId, debtId);
+        updateService.sendUpdatedDebt(eventId);
         return ResponseEntity.ok().build();
     }
 
@@ -78,6 +80,7 @@ public class DebtController {
     @Transactional
     public ResponseEntity<Void> recalculate(@PathVariable("eventId") UUID eventId) {
         debtService.recalculate(eventId);
+        updateService.sendUpdatedDebt(eventId);
         return ResponseEntity.ok().build();
     }
     
@@ -85,6 +88,7 @@ public class DebtController {
     public ResponseEntity<Void> settle(@PathVariable("eventId") UUID eventId, @PathVariable("payerId") UUID payerId,
                                        @PathVariable("debtorId") UUID debtorId, @RequestBody Double amount) {
         debtService.settle(eventId, payerId, debtorId, amount);
+        updateService.sendUpdatedDebt(eventId);
         return ResponseEntity.ok().build();
     }
 
