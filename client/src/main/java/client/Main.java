@@ -47,5 +47,8 @@ public class Main extends Application {
         var mc = INJECTOR.getInstance(MainCtrl.class);
         mc.init(primaryStage, startScreen, overview, addExpense, statistics,
                 invitation, contactDetails, debts, tags);
+        primaryStage.setOnCloseRequest(e -> {
+            mc.stop();
+        });
     }
 }

@@ -5,7 +5,9 @@ import client.utils.ConfigUtils;
 import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
@@ -21,6 +23,8 @@ public class StatisticsCtrl implements Initializable {
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
 
+    private ObservableList<PieChart.Data> data;
+    private double sum;
 
     @FXML
     private Label amount;
@@ -38,12 +42,44 @@ public class StatisticsCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
     }
 
     public void startup() {
         title.setText("Statistics of event: " + mainCtrl.getEvent().getName());
-        amount.setText("" + getSum() + "$");
-        chart.setData(FXCollections.observableArrayList(getData()));
+        sum = getSum();
+        amount.setText("" + sum + "$");
+        data = FXCollections.observableArrayList(getData());
+        chart.setData(data);
+        server.registerForUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
+            if (e.getTags() == null || e.getTags().size() == 0) {
+                boolean b = true;
+                for (int i = 0; i < data.size(); i++) {
+                    if (data.get(i).getName().equals("Other")) {
+                        double temp = e.getAmount() + data.get(i).getPieValue();
+                        data.remove(i);
+                        data.add(new PieChart.Data("Other", temp));
+                        b = false;
+                    }
+                }
+                if (b) data.add(new PieChart.Data("Other", e.getAmount()));
+            } else {
+                for (Tag x : e.getTags()) {
+                    boolean b = true;
+                    for (int i = 0; i < data.size(); i++) {
+                        if (data.get(i).getName().equals(x.getName())) {
+                            double temp = e.getAmount() + data.get(i).getPieValue();
+                            data.remove(i);
+                            data.add(new PieChart.Data(x.getName(), temp));
+                            b = false;
+                        }
+                    }
+                    if (b) data.add(new PieChart.Data(x.getName(), e.getAmount()));
+                }
+            }
+            sum = sum + e.getAmount();
+            amount.setText("" + sum + "$");
+        }));
     }
 
     public void back() {

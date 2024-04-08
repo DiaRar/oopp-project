@@ -258,6 +258,9 @@ public class MainCtrl {
         primaryStage.setHeight(screenHeight);
     }
 
+    public void stop() {
+        serverUtils.stop();
+    }
     public LanguageUtils getLanguageUtils() {
         return this.languageUtils;
     }
