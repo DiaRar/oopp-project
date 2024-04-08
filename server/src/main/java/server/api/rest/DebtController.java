@@ -69,6 +69,7 @@ public class DebtController {
     }
 
     @DeleteMapping("/{debtId}")
+    @Transactional
     public ResponseEntity<Void> delete(@PathVariable("eventId") UUID eventId,
                                        @PathVariable("debtId") DebtPK debtId) {
         debtService.delete(debtId);

@@ -16,6 +16,7 @@
 package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Response;
+import org.checkerframework.checker.units.qual.C;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -222,29 +224,16 @@ public class ServerUtils {
 		}
 	}
 
-	public Debt updateDebt(Event event, DebtPK debtPK, Debt newDebt) {
+	public Double settleDebt(UUID eventId, DebtPK debtPK, Double amount) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
-					.path("/api/events/" + event.getId() + "/debts/" + debtPK)
+					.path("/api/events/{eventId}/debts/settle/{payerId}/{debtorId}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("payerId", debtPK.getPayerId())
+					.resolveTemplate("debtorId", debtPK.getDebtorId())
 					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
-		} catch (Exception ex) {
-			handleConnectionException(ex);
-			return null;
-		}
-	}
-
-	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
-		try {
-			return ClientBuilder
-					.newClient(new ClientConfig())
-					.target(server)
-					.path("/api/events/" + eventId + "/debts/" + debtId)
-					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.delete(Debt.class);
+					.post(Entity.entity(amount, APPLICATION_JSON), Double.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

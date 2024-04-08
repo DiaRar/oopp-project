@@ -1,10 +1,8 @@
 package server.services;
 
-import commons.Debt;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
-import commons.primary_keys.DebtPK;
 import commons.views.View;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

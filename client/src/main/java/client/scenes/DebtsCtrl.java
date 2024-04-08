@@ -50,6 +50,8 @@ public class DebtsCtrl implements Initializable {
     private StringProperty owesLabel;
     private StringProperty toLabel;
 
+    private List<Debt> debtList;
+
     @Inject
     public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
@@ -64,10 +66,10 @@ public class DebtsCtrl implements Initializable {
 
     public void refresh() {
         // TODO instead of the hardcoded data we should use:
-        List<Debt> debts = server.getDebts(mainCtrl.getEvent());
+        debtList = server.getDebts(mainCtrl.getEvent());
 //        List<Debt> debts = mockData();
 
-        List<BorderPane> collection = debts.stream().map(this::debtComponent).toList();
+        List<BorderPane> collection = debtList.stream().map(this::debtComponent).toList();
         debtsList.getChildren().clear();
         debtsList.getChildren().addAll(collection);
 
@@ -163,7 +165,8 @@ public class DebtsCtrl implements Initializable {
     }
 
     public void settleDebt(UUID eventId, DebtPK debtId) {
-        server.deleteDebt(eventId, debtId);
+        Debt settled = debtList.stream().filter(d -> debtId.equals(d.getId())).findFirst().get();
+        server.settleDebt(eventId, debtId, settled.getAmount());
         refresh();
     }
 
