@@ -167,7 +167,15 @@ public class MainCtrl {
         primaryStage.setTitle("Add Expense");
         primaryStage.setScene(addExpenseScene);
         addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
-        addExpenseCtrl.refresh();
+        addExpenseCtrl.addMode();
+        restoreDimensions();
+    }
+    public void showEditExpense(Expense expense) {
+        saveDimensions();
+        primaryStage.setTitle("Edit Expense");
+        primaryStage.setScene(addExpenseScene);
+        addExpenseScene.setOnKeyPressed(e -> addExpenseCtrl.keyPressed(e));
+        addExpenseCtrl.editMode(expense);
         restoreDimensions();
     }
 

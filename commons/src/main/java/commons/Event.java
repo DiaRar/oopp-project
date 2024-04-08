@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -39,11 +41,15 @@ public class Event {
      */
     public Event(String name) {
         this.name = name;
+        this.participants = new ArrayList<>();
     }
     /**
      * Constructs an empty Event object.
      */
-    public Event() {}
+    public Event() {
+        // TODO there should be no logic in constructors @Jerzy
+        this.participants = new ArrayList<>();
+    }
 
     public Event(UUID id, String name, LocalDateTime creationDate, LocalDateTime lastActivityDate) {
         this.id = id;
@@ -51,6 +57,7 @@ public class Event {
         this.creationDate = creationDate;
         this.lastActDate = lastActivityDate;
     }
+
 
     // Attributes
     @Id

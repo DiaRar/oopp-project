@@ -33,7 +33,9 @@ public class Debt {
     private Participant debtor;
     @ManyToOne(optional = false)
     private Event event;
-    public Debt() {}
+    public Debt() {
+        this.id = new DebtPK(null, null);
+    }
     // Added another constructor, as I am unsure which one to use yet.
     // TODO: choose the constructor for Debt
     public Debt(UUID payerId, UUID debtorId, Double amount, Event event) {

@@ -75,7 +75,7 @@ public class Config {
 
     public void save() throws FileNotFoundException {
         try {
-            OutputStream outputStream = new FileOutputStream(new File("client/src/main/resources/config/config.properties"));
+            OutputStream outputStream = new FileOutputStream(new File("./client/src/main/resources/config/config.properties"));
             Properties properties = new Properties();
             properties.setProperty("server", server);
             properties.setProperty("language", locale.getLanguage());
