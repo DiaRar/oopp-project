@@ -37,7 +37,6 @@ import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Response;
-import javafx.application.Platform;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
