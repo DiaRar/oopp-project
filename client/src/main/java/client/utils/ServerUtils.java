@@ -37,6 +37,7 @@ import commons.primary_keys.DebtPK;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Response;
+import javafx.application.Platform;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -288,21 +289,21 @@ public class ServerUtils {
 
 	public void registerForUpdates(UUID eventId, Consumer<Expense> consumer) {
 		EXECUTOR.submit(() -> {
-			while (!Thread.interrupted()) {
-				var response = ClientBuilder.newClient(new ClientConfig())
-						.target(server)
-						.path("/api/events/{eventId}/expenses/updates")
-						.resolveTemplate("eventId", eventId)
-						.request(APPLICATION_JSON)
-						.accept(APPLICATION_JSON)
-						.get(Response.class);
-				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
-					continue;
+				while (!Thread.interrupted()) {
+					var response = ClientBuilder.newClient(new ClientConfig())
+							.target(server)
+							.path("/api/events/{eventId}/expenses/updates")
+							.resolveTemplate("eventId", eventId)
+							.request(APPLICATION_JSON)
+							.accept(APPLICATION_JSON)
+							.get(Response.class);
+					if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+						continue;
+					}
+					var expense = response.readEntity(Expense.class);
+					consumer.accept(expense);
 				}
-				var expense = response.readEntity(Expense.class);
-				consumer.accept(expense);
-			}
-		});
+			});
 	}
 	public void stop() {
 		EXECUTOR.shutdownNow();
