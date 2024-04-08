@@ -136,7 +136,7 @@ public class StartCtrl implements Initializable {
         if (retEvent == null) return;
         serverUtils.addTag(retEvent.getId(), new Tag("Food", "#888888"));
         serverUtils.addTag(retEvent.getId(), new Tag("Ticket", "#00ff00"));
-            serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#00000ff"));
+            serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#0000ff"));
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();

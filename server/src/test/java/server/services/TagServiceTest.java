@@ -3,7 +3,6 @@ package server.services;
 import commons.Event;
 import commons.Tag;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.action.internal.EntityActionVetoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,7 +13,6 @@ import server.database.TagRepository;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

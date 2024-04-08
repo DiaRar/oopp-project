@@ -12,9 +12,6 @@ import commons.Tag;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -23,7 +20,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
-import java.util.List;
 import java.util.*;
 
 public class AddExpenseCtrl implements Initializable {
@@ -114,9 +110,9 @@ public class AddExpenseCtrl implements Initializable {
         Participant pay = payer.getValue();
         Collection<Participant> debt;
         if (equallySplit.isSelected()) {
-            debt = mainCtrl.getEvent().getParticipants();
+            debt = mainCtrl.getParticipantList();
         } else {
-            debt = mainCtrl.getEvent().getParticipants().stream()
+            debt = mainCtrl.getParticipantList().stream()
                     .filter(p -> selectedDebtors.getItems().contains(p))
                     .toList();
         }
@@ -125,7 +121,6 @@ public class AddExpenseCtrl implements Initializable {
             expense = new Expense(amt, desc, time, pay, debt);
         } else {
             expense = new Expense(amt, desc, time, pay, debt, tag.getValue());
-            server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
         if (editMode) {
             server.updateExpense(mainCtrl.getEvent().getId(), toUpdate.getId(), expense);

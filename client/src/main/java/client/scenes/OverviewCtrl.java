@@ -111,7 +111,7 @@ public class OverviewCtrl implements Initializable {
         this.sendMoney.textProperty().bind(languageUtils.getBinding("overview.send"));
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
-        this.list.setCellFactory(expenseListView -> new ExpenseListCell(mainCtrl.getParticipantList().size(),
+        this.list.setCellFactory(expenseListView -> new ExpenseListCell(mainCtrl.getParticipantList(),
                 (uuid -> event -> server.deleteExpense(mainCtrl.getEvent().getId(), uuid)),
                 expense -> event -> mainCtrl.showEditExpense(expense),
                 expense -> event -> list.getSelectionModel().select(expense)));
@@ -183,6 +183,8 @@ public class OverviewCtrl implements Initializable {
     }
     public void refreshParticipant(Participant participant) {
         updateParticipantsText();
+    }
+    public void refreshExpenseList() {
         list.refresh();
     }
     public void back() {

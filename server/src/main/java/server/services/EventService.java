@@ -42,7 +42,7 @@ public class EventService {
         isValidEvent(event);
         if (event.getId() != null)
             throw new IllegalArgumentException("Id is auto-generated, should not be given as parameter");
-        return eventRepository.save(event);
+        return eventRepository.saveAndFlush(event);
     }
 
     public Event update(UUID id, Event event) throws EntityNotFoundException,

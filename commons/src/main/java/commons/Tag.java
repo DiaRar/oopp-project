@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.*;
@@ -7,7 +8,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public class Tag {
     private Event event;
     private Collection<Expense> expenses;
 
-    protected Tag() {
+    public Tag() {
     }
     public Tag(String name, String color) {
         this.name = name;
@@ -55,10 +55,12 @@ public class Tag {
     }
     // Relationships
     @OneToMany(mappedBy = "tag")
+    @JsonView(View.StatisticsView.class)
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     public Event getEvent() {
         return event;
     }

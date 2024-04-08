@@ -1,19 +1,15 @@
 package server.api.rest;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-
+import commons.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import commons.Event;
-
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import server.repositories.TestEventRepository;
 import server.services.EventService;
 import server.services.WebSocketUpdateService;
-import server.services.WebSocketUpdateServiceTest;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EventControllerTest {
     private int id;
@@ -78,7 +74,7 @@ public class EventControllerTest {
     public void DeleteSimpleTest() {
         Event event = eventController.create(getEvent("damn")).getBody();
         assertDoesNotThrow(() -> {
-            eventController.update(event.getId());
+            eventController.delete(event.getId());
         });
     }
 

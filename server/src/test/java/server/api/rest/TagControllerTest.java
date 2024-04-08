@@ -11,14 +11,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import server.services.TagService;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class TagControllerTest {
@@ -34,7 +31,7 @@ public class TagControllerTest {
         MockitoAnnotations.openMocks(this);
         event = new Event();
         event.setId(UUID.fromString("4b975f92-d65a-4a0f-91de-8849d6fc9928"));
-        tag = new Tag("test", Color.BLACK);
+        tag = new Tag("test", "#000000");
         tag.setEvent(event);
         tag.setId(UUID.fromString("4b975f92-d65a-4a0f-91de-8849d6fc9929"));
     }
@@ -79,23 +76,23 @@ public class TagControllerTest {
     @Test
     public void putTagTest() {
         when(tagService.update(tag.getId(), tag)).thenReturn(tag);
-        assertEquals(tag, tagController.putTag(tag.getId(), tag).getBody());
+        assertEquals(tag, tagController.putTag(event.getId(), tag.getId(), tag).getBody());
     }
 
     @Test
     public void putTagFailTest() {
         when(tagService.update(tag.getId(), tag)).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.putTag(tag.getId(), tag));
+        assertEquals(ResponseEntity.badRequest().build(), tagController.putTag(event.getId(), tag.getId(), tag));
     }
 
     @Test
     public void deleteTagTest() {
-        assertEquals(ResponseEntity.ok().build(), tagController.deleteTag(tag.getId()));
+        assertEquals(ResponseEntity.ok().build(), tagController.deleteTag(event.getId(), tag.getId()));
     }
 
     @Test
     public void deleteTagFail() {
         when(tagService.delete(tag.getId())).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.deleteTag(tag.getId()));
+        assertEquals(ResponseEntity.badRequest().build(), tagController.deleteTag(event.getId(), tag.getId()));
     }
 }

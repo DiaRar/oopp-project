@@ -1,7 +1,10 @@
 package client.utils;
 
 import java.io.*;
-import java.util.*;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Properties;
 
 public class Config {
     private Locale locale;

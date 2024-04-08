@@ -35,7 +35,7 @@ public class ExpensesController {
     }
 
     @PostMapping(path = {"", "/"})
-    @JsonView(View.CommonsView.class)
+    @JsonView(View.ExpenseView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
@@ -45,18 +45,19 @@ public class ExpensesController {
     }
 
     @GetMapping("/{expenseId}")
-    @JsonView(View.CommonsView.class)
+    @JsonView(View.ExpenseView.class)
     // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
     public ResponseEntity<Expense> getById(@PathVariable UUID expenseId) throws EntityNotFoundException {
         return ResponseEntity.ok(expenseService.getById(expenseId));
     }
 
     @PutMapping("/{expenseId}")
-    @JsonView(View.OverviewView.class)
+    @JsonView(View.ExpenseView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> update(@PathVariable UUID eventId, @PathVariable UUID expenseId,
                                           @RequestBody Expense expense)
             throws EntityNotFoundException, IllegalArgumentException {
+        System.out.println(expense);
         Expense updated = expenseService.update(eventId, expenseId, expense);
         updateService.sendUpdatedExpense(eventId, updated);
         return ResponseEntity.ok(updated);

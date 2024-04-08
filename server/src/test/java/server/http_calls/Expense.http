@@ -18,7 +18,7 @@ Content-Type: application/json
   ]
 }
 ### GET all EXPENSES of an EVENT
-GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/
+GET http://localhost:8080/api/events/7235cd83-9f1a-4bdb-9363-7345ea5cf1ad/expenses/
 Accept: application/json
 
 ### GET EXPENSE by ID
@@ -28,20 +28,22 @@ GET http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expens
 DELETE http://localhost:8080/api/events/2031f0e0-4b1f-42d6-8550-c2f0d023e323/expenses/16052803-249b-498e-bef1-10f882fcf160
 
 ### ADD an expense to an event
-PUT http://localhost:8080/api/events/8feb8cc5-b40a-428a-85fc-a4f8ffd14cca/expenses/30276186-ced2-4d6b-ab22-536aff7b11cf
+PUT http://localhost:8080/api/events/7235cd83-9f1a-4bdb-9363-7345ea5cf1ad/expenses/fcc9fe83-d2e2-447f-97bd-50bee09ba993
 Content-Type: application/json
 
 {
-  "title": "wow20",
-  "amount": 2.0,
+  "id": "fcc9fe83-d2e2-447f-97bd-50bee09ba993",
+  "amount": 12.0,
+  "title": "abcee",
+  "date": "2024-04-04T00:00:00",
   "payer": {
-    "id": "2d03bca6-1f9c-4ab9-9ee0-05ea621dc532",
-    "nickname": "diaco"
+    "id": "4f0466eb-742e-4f23-be9f-208e1015ec20",
+    "nickname": "Rares"
   },
   "debtors": [
     {
-      "id": "e3ec153a-e2ec-4b7e-b970-8046f2729e4f",
-      "nickname": "diaco"
+      "id": "4f0466eb-742e-4f23-be9f-208e1015ec20",
+      "nickname": "Rares"
     }
   ]
 }

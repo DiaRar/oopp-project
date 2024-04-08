@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.*;
@@ -64,7 +65,8 @@ public class Participant {
     public BankAccount getBankAccount() {
         return bankAccount;
     }
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     public Event getEvent() {
         return event;
     }

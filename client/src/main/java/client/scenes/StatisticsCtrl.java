@@ -1,20 +1,21 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import client.utils.ConfigUtils;
+import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
 import javafx.collections.FXCollections;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
-import java.awt.*;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 public class StatisticsCtrl implements Initializable {
     private final ServerUtils server;

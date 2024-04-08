@@ -180,6 +180,7 @@ public class MainCtrl {
         participantList.stream().filter(listParticipant -> participant.getId().equals(listParticipant.getId()))
                 .toList().getFirst().setNickname(participant.getNickname());
         overviewCtrl.refreshParticipant(participant);
+        overviewCtrl.refreshExpenseList();
     }
     public void switchTheme(Theme theme) {
         Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
@@ -196,6 +197,22 @@ public class MainCtrl {
                 .stream().map(Expense::getId)
                 .toList().indexOf(expense.getId());
         expenseList.set(index, expense);
+        System.out.println(expense);
+        overviewCtrl.refreshExpenseList();
+    }
+    public void addTag(Tag tag) {
+        tagList.add(tag);
+    }
+    public void removeTag(Tag tag) {
+        tagList.removeIf(oTag -> oTag.getId().equals(tag.getId()));
+    }
+    public void updateTag(Tag tag) {
+        expenseList.stream().filter(expense -> expense.getTag().equals(tag)).forEach(expense -> expense.setTag(tag));
+        int index = tagList
+                .stream().map(Tag::getId)
+                .toList().indexOf(tag.getId());
+        tagList.set(index, tag);
+        overviewCtrl.refreshExpenseList();
     }
     public void showAddExpense() {
         saveDimensions();
@@ -278,10 +295,10 @@ public class MainCtrl {
     }
 
     public void setEvent(UUID uuid) {
+        if (this.event != null && this.event.getId().equals(uuid)) return;
         expenseList.clear();
         participantList.clear();
         tagList.clear();
-        if (this.event != null && this.event.getId().equals(uuid)) return;
         this.event = serverUtils.getEvent(uuid);
         expenseList.addAll(event.getExpenses());
         participantList.addAll(event.getParticipants());

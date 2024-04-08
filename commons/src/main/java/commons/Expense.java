@@ -1,7 +1,6 @@
 package commons;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.*;
@@ -14,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 public class Expense {
@@ -84,14 +85,16 @@ public class Expense {
     public Collection<Participant> getDebtors() {
         return debtors;
     }
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    public Event getEvent() {
-        return event;
-    }
-    @ManyToOne
-    @JsonView(View.OverviewView.class)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonView(View.ExpenseView.class)
     public Tag getTag() {
         return tag;
+    }
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
+    public Event getEvent() {
+        return event;
     }
     // Setters
     public void setId(UUID id) {

@@ -15,9 +15,9 @@
  */
 package server.database;
 
+import commons.Expense;
 import commons.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
-import commons.Expense;
 
 import java.util.Collection;
 import java.util.UUID;
