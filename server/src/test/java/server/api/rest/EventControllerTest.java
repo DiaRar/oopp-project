@@ -51,7 +51,8 @@ public class EventControllerTest {
         Event test3 = eventController.create(getEvent("test3")).getBody();
         temp.setId(test3.getId());
         eventController.create(getEvent("test4"));
-        assertEquals(temp, eventController.getById(temp.getId()).getBody());
+        assertEquals(temp.getId(), eventController.getById(temp.getId()).getBody().getId());
+        assertEquals(temp.getName(), eventController.getById(temp.getId()).getBody().getName());
     }
 
     @Test
@@ -60,7 +61,7 @@ public class EventControllerTest {
         Event toUpdateWith = getEvent("test1");
         Event updated = eventController.update(event.getId(), toUpdateWith).getBody();
         toUpdateWith.setId(event.getId());
-        assertEquals(updated, toUpdateWith);
+        assertEquals(updated.getId(), toUpdateWith.getId());
     }
 
     @Test

@@ -30,6 +30,10 @@ public class TagService {
             throw new IllegalArgumentException("Not a valid tag!");
     }
 
+    public List<Tag> getAll() {
+        return tagRepository.findAll();
+    }
+
     public List<Tag> getAllByEvent(UUID eventUuid) {
         List<Tag> list = tagRepository.findTagsByEventId(eventUuid);
         if (list == null)

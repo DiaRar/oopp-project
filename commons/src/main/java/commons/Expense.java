@@ -46,6 +46,16 @@ public class Expense {
         this.debtors = debtors;
         this.tag = tag;
     }
+
+    public Expense(UUID id, double amount, String title, LocalDateTime date, Participant participant, Event event) {
+        this.id = id;
+        this.amount = amount;
+        this.title = title;
+        this.date = date;
+        this.payer = participant;
+        this.event = event;
+    }
+
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

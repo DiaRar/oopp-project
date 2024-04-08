@@ -34,14 +34,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import org.springframework.http.HttpStatus;
 
 
 public class ServerUtils {
 
 	private final String server;
 	private final Config config;
+
+	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 	@Inject
 	public ServerUtils(Config config) throws IOException {
 		this.config = config;
@@ -276,6 +282,29 @@ public class ServerUtils {
 			return null;
 		}
 	}
+
+	public void registerForUpdates(UUID eventId, Consumer<Expense> consumer) {
+		EXECUTOR.submit(() -> {
+				while (!Thread.interrupted()) {
+					var response = ClientBuilder.newClient(new ClientConfig())
+							.target(server)
+							.path("/api/events/{eventId}/expenses/updates")
+							.resolveTemplate("eventId", eventId)
+							.request(APPLICATION_JSON)
+							.accept(APPLICATION_JSON)
+							.get(Response.class);
+					if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+						continue;
+					}
+					var expense = response.readEntity(Expense.class);
+					consumer.accept(expense);
+				}
+			});
+	}
+	public void stop() {
+		EXECUTOR.shutdownNow();
+	}
+
 	public Expense updateExpense(UUID eventId, UUID expenseId, Expense expense) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())

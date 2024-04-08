@@ -11,6 +11,7 @@ import server.database.ExpenseRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,10 @@ public class ExpenseService {
 
     public Collection<Expense> getAll(UUID eventId) {
         return expenseRepo.findExpenseByEventId(eventId);
+    }
+
+    public List<Expense> getAllActuallyThisTime() {
+        return expenseRepo.findAll();
     }
 
     public Expense getById(UUID expenseId) throws EntityNotFoundException {

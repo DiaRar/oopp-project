@@ -1,6 +1,6 @@
-package client.utils;
+package admin.utils;
 
-import client.implementations.WSSessionHandler;
+import admin.implementations.WSSessionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
@@ -25,10 +25,6 @@ public class WebSocketUtils {
         WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
         stompClient.setMessageConverter(new MappingJackson2MessageConverter(mapper()));
         stompSession = stompClient.connectAsync(url, stompSessionHandler).get();
-    }
-    public void disconnect() {
-        if (stompSession != null)
-            stompSession.disconnect();
     }
     public ObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();

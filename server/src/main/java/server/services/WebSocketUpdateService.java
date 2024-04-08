@@ -21,12 +21,22 @@ public class WebSocketUpdateService {
         this.messagingTemplate = messagingTemplate;
     }
     public String destination(String path, UUID eventId) {
-
         return "/changes" + path + "/" + eventId.toString();
     }
     public void sendUpdatedEvent(Event event) {
         messagingTemplate.convertAndSend(destination("/update/name",
                 event.getId()), event, getCommons());
+    }
+    public void sendUpdateEvent(Event event) {
+        messagingTemplate.convertAndSend("/changes/update/event",
+                event, getCommons());
+    }
+    public void sendNewEvent(Event event) {
+        messagingTemplate.convertAndSend("/changes/add/event",
+                event, getCommons());
+    }
+    public void deleteEvent(UUID eventID) {
+        messagingTemplate.convertAndSend("/changes/delete/event", eventID, getCommons());
     }
     public void sendAddedParticipant(UUID eventId, Participant participant) {
         messagingTemplate.convertAndSend(destination("/add/participant",

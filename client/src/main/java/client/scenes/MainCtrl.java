@@ -129,6 +129,7 @@ public class MainCtrl {
     public void showStart() {
         saveDimensions();
         startCtrl.getRoot().setTop(menuBar);
+        startCtrl.refreshRecents();
         menuBar.hideEdit();
         primaryStage.setTitle("Start");
         primaryStage.setScene(startScene);
@@ -146,6 +147,7 @@ public class MainCtrl {
 
     public void showOverviewStart() {
         try {
+            webSocketUtils.disconnect();
             webSocketUtils.connectToWebSocket("ws://localhost:8080/ws");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -315,6 +317,9 @@ public class MainCtrl {
         primaryStage.setHeight(screenHeight);
     }
 
+    public void stop() {
+        serverUtils.stop();
+    }
     public LanguageUtils getLanguageUtils() {
         return this.languageUtils;
     }

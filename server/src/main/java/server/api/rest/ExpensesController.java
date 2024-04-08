@@ -6,13 +6,15 @@ import commons.views.View;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.services.ExpenseService;
 import server.services.WebSocketUpdateService;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/api/events/{eventId}/expenses")
@@ -20,7 +22,7 @@ public class ExpensesController {
 
     private final ExpenseService expenseService;
     private final WebSocketUpdateService updateService;
-
+    private Map<Object, Consumer<Expense>> listners = new HashMap<>();
 
     public ExpensesController(ExpenseService expenseService, WebSocketUpdateService updateService) {
         this.expenseService = expenseService;
@@ -40,6 +42,7 @@ public class ExpensesController {
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
         Expense saved = expenseService.save(eventId, expense);
+        listners.forEach((k, v) -> v.accept(expense));
         updateService.sendAddedExpense(eventId, saved);
         return ResponseEntity.ok(saved);
     }
@@ -71,5 +74,21 @@ public class ExpensesController {
         expenseService.delete(expenseId);
         updateService.sendRemovedExpense(eventId, expenseId);
         return ResponseEntity.ok().build();
+    }
+
+    private final long timeout = 5000L;
+    @GetMapping("/updates")
+    @JsonView(View.StatisticsView.class)
+    public DeferredResult<ResponseEntity<Expense>> getUpdates() {
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
+        var key = new Object();
+        listners.put(key, e -> {
+            result.setResult(ResponseEntity.ok(e));
+        });
+        result.onCompletion(() -> {
+            listners.remove(key);
+        });
+        return result;
     }
 }

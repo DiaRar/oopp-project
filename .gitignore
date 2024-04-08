@@ -47,4 +47,6 @@ out/
 recents.csv
 
 config.properties
+
+export.json
 client/src/main/resources/config/config.properties
