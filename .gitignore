@@ -9,6 +9,7 @@ build/
 **/*.trace.db
 /coverage/*
 **/*.swp
+config.properties
 **/.DS_STORE
 
 ### STS ###

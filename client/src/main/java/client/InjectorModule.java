@@ -25,8 +25,6 @@ import com.google.inject.Scopes;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 
 public class InjectorModule implements Module {
@@ -53,14 +51,14 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        Path path = Paths.get("./client/src/main/resources/config/recents.csv");
-        utils.setRecentsFile(new File(path.toAbsolutePath().toString()));
+        System.out.println(new File(getClass().getResource("/config/recents.csv").getFile()).exists());
+        utils.setRecentsFile(new File(getClass().getResource("/config/recents.csv").getFile()));
         return utils;
     }
 
     private Config createConfig() {
         try {
-            return Config.read(new File("./client/src/main/resources/config/config.properties"));
+            return Config.read(new File("./config.properties"));
         } catch (IOException e) {
             // TODO: Add alert box to say config was not set up
             throw new RuntimeException(e);
