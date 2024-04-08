@@ -30,11 +30,19 @@ public class Participant {
         this.email = email;
     }
 
+    public Participant(UUID id, String nickname, String email, BankAccount bankAccount, Event event) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.bankAccount = bankAccount;
+        this.event = event;
+    }
     public Participant(String nickname, String email, BankAccount bankAccount) {
         this.nickname = nickname;
         this.email = email;
         this.bankAccount = bankAccount;
     }
+
     // Attributes
     @Id
     @Column(name = "participant_id")

@@ -51,8 +51,8 @@ public class Expense {
         this.amount = amount;
         this.title = title;
         this.date = date;
-        this.event = event;
         this.payer = participant;
+        this.event = event;
     }
 
     // Attributes

@@ -13,6 +13,7 @@ public class ImportExportData {
     private List<ExpenseBean> expenses;
     private List<ParticipantBean> participants;
     private List<Tag> tags;
+    private List<DebtorBean> debtors;
 
     @JsonCreator
     public ImportExportData(@JsonProperty("bankAccounts") List<BankAccount> bankAccounts,
@@ -20,13 +21,15 @@ public class ImportExportData {
                             @JsonProperty("debts") List<DebtBean> debts,
                             @JsonProperty("expenses") List<ExpenseBean> expenses,
                             @JsonProperty("participants") List<ParticipantBean> participants,
-                            @JsonProperty("tags") List<Tag> tags) {
+                            @JsonProperty("tags") List<Tag> tags,
+                            @JsonProperty("debtor") List<DebtorBean> debtorBeans) {
         this.bankAccounts = bankAccounts;
         this.events = events;
         this.debts = debts;
         this.expenses = expenses;
         this.participants = participants;
         this.tags = tags;
+        this.debtors = debtorBeans;
     }
 
     public List<BankAccount> getBankAccounts() {
@@ -51,5 +54,9 @@ public class ImportExportData {
 
     public List<Tag> getTags() {
         return tags;
+    }
+
+    public List<DebtorBean> getDebtors() {
+        return debtors;
     }
 }
