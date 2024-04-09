@@ -157,23 +157,6 @@ public class DebtsCtrl implements Initializable {
         mainCtrl.showOverview();
     }
 
-    public List<Debt> mockData() {
-        Event event = new Event("New Year Party");
-        BankAccount b1 = new BankAccount("myIBAN1", "myBIC1");
-        BankAccount b2 = new BankAccount("myIBAN2", "myBIC2");
-        BankAccount b3 = new BankAccount("myIBAN3", "myBIC3");
-        Participant p1 = new Participant("Ale", "email1");
-        Participant p2 = new Participant("Becky", "email2", b2);
-        Participant p3 = new Participant("Cactus", "email3", b3);
-        Participant p4 = new Participant("Lazarus", "email4");
-        List<Debt> list = new ArrayList<>();
-        list.add(new Debt(p1, p2, DEBT_AMOUNT, event));
-        list.add(new Debt(p3, p2, DEBT_AMOUNT, event));
-        list.add(new Debt(p1, p4, DEBT_AMOUNT, event));
-        list.add(new Debt(p3, p4, DEBT_AMOUNT, event));
-        return list;
-    }
-
     public void settleDebt(UUID eventId, DebtPK debtId) {
         Debt settled = debtList.stream().filter(d -> debtId.equals(d.getId())).findFirst().get();
         server.settleDebt(eventId, debtId, settled.getAmount());
