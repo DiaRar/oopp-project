@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.uicomponents.Alerts;
 import client.uicomponents.PastDateCell;
 import client.utils.Config;
 import client.utils.ConfigUtils;
@@ -109,10 +110,9 @@ public class AddExpenseCtrl implements Initializable {
         }
     }
     public void ok() {
-        // TODO Check if we have to create or update an expense (currently only creating)
         String valid = validInput();
         if (!valid.equals("valid")) {
-            System.out.println("input not valid: " + valid + " is missing");
+            Alerts.invalidExpenseAlert(valid);
             return;
         }
         double amt = Double.parseDouble(amount.getText());
@@ -121,7 +121,7 @@ public class AddExpenseCtrl implements Initializable {
         Participant pay = mainCtrl.getEvent().getParticipants().stream()
                 .filter(p -> p.equals(payer.getValue()))
                 .toList()
-                .get(0);
+                .getFirst();
         Collection<Participant> debt;
         if (equallySplit.isSelected()) {
             debt = mainCtrl.getEvent().getParticipants();
@@ -148,13 +148,15 @@ public class AddExpenseCtrl implements Initializable {
     }
 
     public String validInput() {
-        if (payer.getSelectionModel().isEmpty()) return "payer";
-        if (description.getText().isEmpty()) return "description";
-        if (amount.getText().isEmpty()) return "amount";
-        if (!NumberUtils.isCreatable(amount.getText())) return "amount";
-        if (date == null || date.getValue() == null || date.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) return "date";
-        if (!equallySplit.isSelected() && !partialSplit.isSelected()) return "debtors";
-        if (partialSplit.isSelected() && selectedDebtors.getItems().isEmpty()) return "debtors";
+        if (payer.getSelectionModel().isEmpty()) return "Payer can't be empty";
+        if (description.getText().isEmpty()) return "Description can't be empty";
+        if (amount.getText().isEmpty()) return "Amount can't be empty";
+        if (!NumberUtils.isCreatable(amount.getText())) return "Amount must be a number";
+        if (Double.parseDouble(amount.getText()) <= 0) return "Amount can't be less than 0";
+        if (date == null || date.getValue() == null) return "Date can't be empty";
+        if (date.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) return "Date can't be after now";
+        if (!equallySplit.isSelected() && !partialSplit.isSelected()) return "Debtors must be selected";
+        if (partialSplit.isSelected() && selectedDebtors.getItems().isEmpty()) return "Debtors must be selected";
         return "valid";
     }
 

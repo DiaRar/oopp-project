@@ -60,4 +60,10 @@ public class Alerts {
         Optional<ButtonType> result = alert.showAndWait();
         return (result.filter(buttonType -> buttonType == ButtonType.OK).isPresent());
     }
+
+    public static void invalidExpenseAlert(String message) {
+        alertUser(AlertType.WARNING, "Invalid Expense",
+                message,
+                "The data you have entered is invalid. Please update it and try again.");
+    }
 }
