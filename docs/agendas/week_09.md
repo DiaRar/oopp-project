@@ -1,8 +1,8 @@
-# Meeting Agenda - week 8
+# Meeting Agenda - week 9
 
 | Key          | Value                                                                                           |
 | ------------ |-------------------------------------------------------------------------------------------------|
-| Date:        | 02.04.2024                                                                                      |
+| Date:        | 09.04.2024                                                                                      |
 | Time:        | 16:45                                                                                           |
 | Location:    | DW PC1 Cubicle 3                                                                                |
 | Chair        | Stefan Lupsan                                                                                   |
