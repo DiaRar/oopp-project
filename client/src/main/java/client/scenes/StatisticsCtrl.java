@@ -101,7 +101,7 @@ public class StatisticsCtrl implements Initializable {
         ArrayList<PieChart.Data> data = new ArrayList<>();
         HashMap<Tag, Double> map = new HashMap<>();
         Tag other = new Tag("Other", "#000000");
-        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+        for (Expense x : mainCtrl.getExpenseList()) {
             if (x.getTag() == null) {
                 if (!map.containsKey(other)) {
                     map.put(other, x.getAmount());
@@ -125,7 +125,7 @@ public class StatisticsCtrl implements Initializable {
 
     private double getSum() {
         double sum = 0;
-        for (Expense x : mainCtrl.getEvent().getExpenses()) {
+        for (Expense x : mainCtrl.getExpenseList()) {
             sum = sum + x.getAmount();
         }
         return sum;
