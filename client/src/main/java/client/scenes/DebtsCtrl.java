@@ -51,6 +51,8 @@ public class DebtsCtrl implements Initializable {
     private StringProperty remindButton;
     private StringProperty owesLabel;
     private StringProperty toLabel;
+    private StringProperty noBank;
+    private StringProperty bank;
 
     private List<Debt> debtList;
     private Map<UUID, Participant> participantCache;
@@ -65,6 +67,8 @@ public class DebtsCtrl implements Initializable {
         this.settleButton = new SimpleStringProperty();
         this.remindButton = new SimpleStringProperty();
         this.toLabel = new SimpleStringProperty();
+        this.noBank = new SimpleStringProperty();
+        this.bank = new SimpleStringProperty();
     }
 
     public void refresh() {
@@ -76,7 +80,9 @@ public class DebtsCtrl implements Initializable {
         }
         for (Debt debt : debtList) {
             UUID payerId = debt.getPayer().getId();
+            UUID debtorId = debt.getDebtor().getId();
             debt.setPayer(participantCache.get(payerId));
+            debt.setDebtor(participantCache.get(debtorId));
         }
 
         List<BorderPane> collection = debtList.stream().map(this::debtComponent).toList();
@@ -101,7 +107,8 @@ public class DebtsCtrl implements Initializable {
         HBox description = new HBox();
         TextFlow content = new TextFlow();
         Text debtor = new Text(debt.getDebtor().getNickname());
-        Text amount = new Text(debt.getAmount().toString().concat("EUR"));
+        String amountWithPrecision = String.format("%.2f", debt.getAmount());
+        Text amount = new Text(amountWithPrecision.concat("EUR"));
         Text payer = new Text(debt.getPayer().getNickname());
         debtor.setFont(ARIAL_BOLD);
         payer.setFont(ARIAL_BOLD);
@@ -109,7 +116,8 @@ public class DebtsCtrl implements Initializable {
         owes.textProperty().bind(owesLabel);
         Text to = new Text();
         to.textProperty().bind(toLabel);
-        content.getChildren().addAll(debtor, owes, amount, to, payer);
+        content.getChildren().addAll(debtor, new Text(" "), owes, new Text(" "), amount,
+                new Text(" "), to, new Text(" "), payer);
         description.getChildren().addAll(content);
         BorderPane.setMargin(description, new Insets(BORDER_PANE_MARGIN, BORDER_PANE_MARGIN, BORDER_PANE_MARGIN, BORDER_PANE_MARGIN));
 
@@ -127,6 +135,9 @@ public class DebtsCtrl implements Initializable {
                 settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
         reminder.setOnAction(e ->
                 remind(debt.getDebtor(), debt));
+        if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty()) {
+            reminder.setDisable(true);
+        }
 
         borderPane.setLeft(bankIcon);
         borderPane.setCenter(description);
@@ -139,14 +150,17 @@ public class DebtsCtrl implements Initializable {
         // Bank details at the bottom
         TextFlow tf = new TextFlow();
         if (debt.getPayer().getBankAccount() == null) {
-            tf.getChildren().add(new Text("Bank information NOT available"));
+            Text noBankText = new Text();
+            noBankText.textProperty().bind(noBank);
+            tf.getChildren().add(new Text(noBank.toString()));
         } else {
-            // TODO change nickname with bankAccount.getAccountHolder();
             Text accountHolder = new Text("Account Holder: " + debt.getPayer().getNickname() + "\n");
             Text iban = new Text("IBAN: " + debt.getPayer().getBankAccount().getIban() + "\n");
             Text bic = new Text("BIC: " + debt.getPayer().getBankAccount().getBic());
-            tf.getChildren().addAll(new Text("Bank information available, transfer the money to:\n"),
-                    accountHolder, iban, bic);
+            Text bankText = new Text();
+            bankText.textProperty().bind(bank);
+            tf.getChildren().addAll(bankText, new Text("\n"),
+                    accountHolder, new Text("\n"), iban, new Text("\n"), bic);
         }
         bankIcon.setOnMouseClicked(e -> showHideBankDetails(tf, borderPane));
 
@@ -190,6 +204,8 @@ public class DebtsCtrl implements Initializable {
         this.title.textProperty().bind(languageUtils.getBinding("debts.openDebtsLabel"));
         this.returnButton.textProperty().bind(languageUtils.getBinding("debts.returnToOverviewBtn"));
         this.recalculateButton.textProperty().bind(languageUtils.getBinding("debts.recalculateBtn"));
+        this.noBank.bind(languageUtils.getBinding("debts.noBank"));
+        this.bank.bind(languageUtils.getBinding("debts.bank"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
