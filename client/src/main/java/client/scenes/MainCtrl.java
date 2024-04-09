@@ -210,7 +210,8 @@ public class MainCtrl {
         tagList.removeIf(oTag -> oTag.getId().equals(tag.getId()));
     }
     public void updateTag(Tag tag) {
-        expenseList.stream().filter(expense -> expense.getTag().equals(tag)).forEach(expense -> expense.setTag(tag));
+        expenseList.forEach(expense -> expense.setTag(expense.getTag().getId().equals(tag.getId()) ? tag : expense.getTag()));
+        expenseList.stream().filter(expense -> expense.getTag().getId().equals(tag.getId())).forEach(expense -> expense.setTag(tag));
         int index = tagList
                 .stream().map(Tag::getId)
                 .toList().indexOf(tag.getId());
