@@ -157,6 +157,7 @@ public class MainCtrl {
         overviewCtrl.startup();
         addExpenseCtrl.startup();
         addTagCtrl.startup();
+        statisticsCtrl.startup();
         contactDetailsCtrl.startup();
         restoreDimensions();
     }
@@ -280,7 +281,6 @@ public class MainCtrl {
         saveDimensions();
         primaryStage.setTitle("Statistics");
         primaryStage.setScene(statisticsScene);
-        statisticsCtrl.startup();
         statisticsScene.setOnKeyPressed(e -> statisticsCtrl.keyPressed(e));
         restoreDimensions();
     }
