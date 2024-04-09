@@ -70,6 +70,9 @@ public class ContactDetailsCtrl implements Initializable {
 
     public void confirmAction() {
         System.out.println(editMode ? "Edited Participant" : "Created Participant");
+        if (!dataCheck().equals("valid")) {
+            // TODO add alert
+        }
         Participant newParticipant = this.createParticipantFromFields();
         this.clearText();
         newParticipant.setEvent(parentEvent);
@@ -83,6 +86,16 @@ public class ContactDetailsCtrl implements Initializable {
         clearText();
         editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();
+    }
+
+    private String dataCheck() {
+        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) return "Name is required";
+        if (emailField.getText() == null || emailField.getText().trim().isEmpty()) return "Email is required";
+        if (ibanField.getText() == null || ibanField.getText().trim().isEmpty()
+            && bicField.getText() != null) return "Both IBAN and BIC are required";
+        if (bicField.getText() == null || bicField.getText().trim().isEmpty()
+                && ibanField.getText() != null) return "Both IBAN and BIC are required";
+        return "valid";
     }
 
     private Participant createParticipantFromFields() {
