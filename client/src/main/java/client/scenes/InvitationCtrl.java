@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.*;
@@ -27,7 +28,7 @@ public class InvitationCtrl implements Initializable {
     @FXML
     private Label name;
     @FXML
-    private Label inviteCode;
+    private Text inviteCode;
     @FXML
     private TextArea emails;
     @FXML
@@ -36,6 +37,9 @@ public class InvitationCtrl implements Initializable {
     private Label invite1;
     @FXML
     private Button cancel;
+    @FXML
+    private Button copyButton;
+
     @Inject
     public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
         this.server = server;
