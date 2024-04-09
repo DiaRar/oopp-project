@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ContactDetailsCtrl implements Initializable {
