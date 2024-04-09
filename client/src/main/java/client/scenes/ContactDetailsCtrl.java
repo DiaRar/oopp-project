@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.uicomponents.Alerts;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.BankAccount;
@@ -70,6 +71,10 @@ public class ContactDetailsCtrl implements Initializable {
 
     public void confirmAction() {
         System.out.println(editMode ? "Edited Participant" : "Created Participant");
+        if (!dataCheck().equals("valid")) {
+            Alerts.invalidParticipantAlert(dataCheck());
+            return;
+        }
         Participant newParticipant = this.createParticipantFromFields();
         this.clearText();
         newParticipant.setEvent(parentEvent);
@@ -83,6 +88,18 @@ public class ContactDetailsCtrl implements Initializable {
         clearText();
         editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();
+    }
+
+    private String dataCheck() {
+        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) return "Name is required";
+        if (emailField.getText() == null || emailField.getText().trim().isEmpty()) return "Email is required";
+        if ((ibanField.getText() == null || ibanField.getText().trim().isEmpty())
+            && (bicField.getText() != null && !bicField.getText().trim().isEmpty()))
+                return "Both IBAN and BIC are required to save a Bank Account";
+        if ((bicField.getText() == null || bicField.getText().trim().isEmpty())
+            && (ibanField.getText() != null && !ibanField.getText().trim().isEmpty()))
+            return "Both IBAN and BIC are required to save a Bank Account";
+        return "valid";
     }
 
     private Participant createParticipantFromFields() {
@@ -200,8 +217,10 @@ public class ContactDetailsCtrl implements Initializable {
         this.deleteButton = new Button();
         this.deleteButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
         this.actionBtnHBox.getChildren().add(1, deleteButton);
-        // TODO: Add confirmation
         this.deleteButton.setOnAction(eventClick -> {
+            if (toBeUpdatedParticipant == null) return;
+            boolean choice = Alerts.deleteParticipantAlert(toBeUpdatedParticipant);
+            if (!choice) return;
             server.deleteParticipant(parentEvent.getId(), toBeUpdatedParticipant.getId());
             clearText();
             mainCtrl.closeDialog();

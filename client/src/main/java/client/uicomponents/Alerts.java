@@ -1,7 +1,11 @@
 package client.uicomponents;
 
+import commons.Participant;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class Alerts {
     private static void alertUser(AlertType alertType, String title, String header, String context) {
@@ -39,5 +43,21 @@ public class Alerts {
                 "The configuration file is not set up properly or could not be found at the specified path:\n" +
                         "/client/src/main/resources/config/config.properties\n" +
                         "Please ensure that the configuration file exists and is correctly configured.");
+    }
+
+    public static void invalidParticipantAlert(String message) {
+        alertUser(AlertType.WARNING, "Invalid Participant",
+                message,
+                "The data you have entered is invalid. Please update it and try again.");
+    }
+
+    public static boolean deleteParticipantAlert(Participant participant) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Deleting Participant");
+        alert.setHeaderText("Are you really sure you want to remove " + participant.getNickname() + " from the event?");
+        alert.setContentText("Removing a Participant is PERMANENT, you can't restore them.\n" +
+                "This operation will also DELETE ALL EXPENSES made by " + participant.getNickname() + ".");
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.filter(buttonType -> buttonType == ButtonType.OK).isPresent());
     }
 }
