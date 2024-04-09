@@ -55,7 +55,7 @@ public class Alerts {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Deleting Participant");
         alert.setHeaderText("Are you really sure you want to remove " + participant.getNickname() + " from the event?");
-        alert.setContentText("Removing a Participant is PERMANENT, you can't restore him");
+        alert.setContentText("Removing a Participant is PERMANENT, you can't restore them");
         Optional<ButtonType> result = alert.showAndWait();
         return (result.filter(buttonType -> buttonType == ButtonType.OK).isPresent());
     }
