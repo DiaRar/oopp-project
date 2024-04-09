@@ -33,7 +33,7 @@ public class TagServiceTest {
         MockitoAnnotations.openMocks(this);
         this.event = new Event("test");
         this.event.setId(UUID.fromString("63953720-1c27-4664-8078-1cbbcfba583e"));
-        this.tag = new Tag("testTag", Color.BLACK);
+        this.tag = new Tag("testTag", Color.BLACK.toString());
         this.tag.setId(UUID.fromString("4b975f92-d65a-4a0f-91de-8849d6fc9928"));
         this.tag.setEvent(event);
     }
@@ -44,7 +44,7 @@ public class TagServiceTest {
     }
     @Test
     public void addTest() {
-        Tag tag1 = new Tag("testTag", Color.BLACK);
+        Tag tag1 = new Tag("testTag", Color.BLACK.toString());
         Event event1 = new Event();
         event1.setId(UUID.fromString("63953720-1c27-4664-8078-1cbbcfba583e"));
         tag.setEvent(event1);
@@ -83,9 +83,9 @@ public class TagServiceTest {
     @Test
     public void updateTest() {
         when(tagRepository.findTagById(tag.getId())).thenReturn(Optional.of(tag));
-        Tag tag1 = new Tag("test", Color.BLUE);
+        Tag tag1 = new Tag("test", Color.BLUE.toString());
         assertEquals("test", tagService.update(tag.getId(), tag1).getName());
-        assertEquals(Color.BLUE, tagService.update(tag.getId(),tag1).getColor());
+        assertEquals(Color.BLUE.toString(), tagService.update(tag.getId(),tag1).getColor());
     }
 
     @Test

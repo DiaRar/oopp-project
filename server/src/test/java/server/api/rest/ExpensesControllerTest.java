@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import server.services.ExpenseService;
 import server.services.WebSocketUpdateService;
 
@@ -97,6 +98,6 @@ public class ExpensesControllerTest {
         when(expenseService.save(event.getId(),expense)).thenReturn(expense);
         var result = expensesController.getUpdates();
         expensesController.post(event.getId(),expense);
-        assertEquals(((ResponseEntity)result.getResult()).getBody(),expense);
+        assertEquals(((ResponseEntity<Expense>)result.getResult()).getBody(),expense);
     }
 }
