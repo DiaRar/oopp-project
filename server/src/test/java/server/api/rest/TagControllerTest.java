@@ -10,17 +10,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import server.services.TagService;
+import server.services.WebSocketUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class TagControllerTest {
     @Mock
     private TagService tagService;
+    @Mock
+    private WebSocketUpdateService webSocketUpdateService;
     @InjectMocks
     private TagController tagController;
 
@@ -47,7 +51,7 @@ public class TagControllerTest {
     @Test
     public void getTagsFail() {
         when(tagService.getAllByEvent(event.getId())).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.getTags(event.getId()));
+        assertThrows(EntityNotFoundException.class,() -> tagController.getTags(event.getId()));
     }
     @Test
     public void getTagByIdTest() {
@@ -58,7 +62,7 @@ public class TagControllerTest {
     @Test
     public void getTagByIdFailTest() {
         when(tagService.getById(tag.getId())).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.getTagById(tag.getId()));
+        assertThrows(EntityNotFoundException.class, () -> tagController.getTagById(tag.getId()));
     }
 
     @Test
@@ -70,7 +74,7 @@ public class TagControllerTest {
     @Test
     public void postTagFailTest() {
         when(tagService.add(event.getId(), tag)).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.postTag(event.getId(), tag));
+        assertThrows(EntityNotFoundException.class, () -> tagController.postTag(event.getId(), tag));
     }
 
     @Test
@@ -82,7 +86,7 @@ public class TagControllerTest {
     @Test
     public void putTagFailTest() {
         when(tagService.update(tag.getId(), tag)).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.putTag(event.getId(), tag.getId(), tag));
+        assertThrows(EntityNotFoundException.class, () -> tagController.putTag(event.getId(), tag.getId(), tag));
     }
 
     @Test
@@ -93,6 +97,6 @@ public class TagControllerTest {
     @Test
     public void deleteTagFail() {
         when(tagService.delete(tag.getId())).thenThrow(new EntityNotFoundException());
-        assertEquals(ResponseEntity.badRequest().build(), tagController.deleteTag(event.getId(), tag.getId()));
+        assertThrows(EntityNotFoundException.class, () -> tagController.deleteTag(event.getId(), tag.getId()));
     }
 }

@@ -17,13 +17,9 @@ package client;
 
 import client.implementations.WSSessionHandler;
 import client.scenes.*;
+import client.uicomponents.Alerts;
 import client.uicomponents.CustomMenuBar;
 import client.utils.*;
-import client.uicomponents.Alerts;
-import client.utils.Config;
-import client.utils.ConfigUtils;
-import client.utils.LanguageUtils;
-import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;

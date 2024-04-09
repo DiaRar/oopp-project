@@ -29,8 +29,6 @@ import com.google.inject.Inject;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
-
-
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;

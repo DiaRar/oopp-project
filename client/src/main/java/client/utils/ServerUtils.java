@@ -26,6 +26,7 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.HttpStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +40,6 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import org.springframework.http.HttpStatus;
 
 
 public class ServerUtils {

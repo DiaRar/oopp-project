@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import server.database.EventRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class EventService {
         event.setLastActivityDate(LocalDateTime.now());
         if (event.getId() != null)
             throw new IllegalArgumentException("Id is auto-generated, should not be given as parameter");
-        return eventRepository.saveAndFlush(event);
+        return eventRepository.save(event);
     }
 
     public Event update(UUID id, Event event) throws EntityNotFoundException,

@@ -3,24 +3,22 @@ package server.api.rest;
 import commons.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import server.repositories.TestEventRepository;
 import server.services.EventService;
 import server.services.WebSocketUpdateService;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class EventControllerTest {
     private int id;
     private TestEventRepository repo;
     private EventController eventController;
-    @Mock
     private WebSocketUpdateService webSocketUpdateService;
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+        webSocketUpdateService = mock(WebSocketUpdateService.class);
         id = 1;
         repo = new TestEventRepository();
         eventController = new EventController(new EventService(repo), webSocketUpdateService);
