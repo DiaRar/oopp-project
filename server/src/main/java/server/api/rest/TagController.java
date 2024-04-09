@@ -46,7 +46,8 @@ public class TagController {
 
     @PutMapping("/{tagId}")
     @JsonView(View.CommonsView.class)
-    public ResponseEntity<Tag> putTag(@PathVariable UUID eventId, @PathVariable UUID tagId, @RequestBody Tag tag) throws IllegalArgumentException {
+    public ResponseEntity<Tag> putTag(@PathVariable UUID eventId, @PathVariable UUID tagId,
+                                      @RequestBody Tag tag) throws IllegalArgumentException {
         Tag updatedTag = tagService.update(tagId, tag);
         updateService.sendUpdatedTag(eventId, updatedTag);
         return ResponseEntity.ok(updatedTag);

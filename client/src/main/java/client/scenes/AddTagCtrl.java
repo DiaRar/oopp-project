@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class AddTagCtrl implements Initializable {
-    private static int MAX_COLOR = 255;
+    private static final int MAX_COLOR = 255;
     private MainCtrl mainCtrl;
     private ServerUtils server;
     private Config config;
