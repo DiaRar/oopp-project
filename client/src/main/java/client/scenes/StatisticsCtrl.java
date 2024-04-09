@@ -62,6 +62,7 @@ public class StatisticsCtrl implements Initializable {
                         data.remove(i);
                         data.add(new PieChart.Data("Other", temp));
                         b = false;
+                        break;
                     }
                 }
                 if (b) data.add(new PieChart.Data("Other", e.getAmount()));
@@ -74,6 +75,7 @@ public class StatisticsCtrl implements Initializable {
                             data.remove(i);
                             data.add(new PieChart.Data(x.getName(), temp));
                             b = false;
+                            break;
                         }
                     }
                     if (b) data.add(new PieChart.Data(x.getName(), e.getAmount()));
