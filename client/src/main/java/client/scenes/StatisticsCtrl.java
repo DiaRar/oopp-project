@@ -54,32 +54,10 @@ public class StatisticsCtrl implements Initializable {
         data = FXCollections.observableArrayList(getData());
         chart.setData(data);
         server.registerForUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
-            if (e.getTag() == null) {
-                boolean b = true;
-                for (int i = 0; i < data.size(); i++) {
-                    if (data.get(i).getName().equals("Other")) {
-                        double temp = e.getAmount() + data.get(i).getPieValue();
-                        data.remove(i);
-                        data.add(new PieChart.Data("Other", temp));
-                        b = false;
-                    }
-                }
-                if (b) data.add(new PieChart.Data("Other", e.getAmount()));
-            } else {
-                Tag x = e.getTag();
-                boolean b = true;
-                for (int i = 0; i < data.size(); i++) {
-                    if (data.get(i).getName().equals(x.getName())) {
-                        double temp = e.getAmount() + data.get(i).getPieValue();
-                        data.remove(i);
-                        data.add(new PieChart.Data(x.getName(), temp));
-                        b = false;
-                    }
-                }
-                if (b) data.add(new PieChart.Data(x.getName(), e.getAmount()));
-            }
-            sum = sum + e.getAmount();
+            sum = getSum();
             amount.setText("" + sum + "$");
+            data = FXCollections.observableArrayList(getData());
+            chart.setData(data);
         }));
     }
 
