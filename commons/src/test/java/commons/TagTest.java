@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,20 +18,20 @@ class TagTest {
 
     @BeforeEach
     public void beforeEach() {
-        tag1 = new Tag("food", new Color(red));
-        tag2 = new Tag("food1", new Color(magenta));
-        tag3 = new Tag("food", new Color(red));
+        tag1 = new Tag("food", new Color(red).toString());
+        tag2 = new Tag("food1", new Color(magenta).toString());
+        tag3 = new Tag("food", new Color(red).toString());
     }
 
     @Test
     public void checkConstructor() {
-        Tag tag = new Tag("food", new Color(red));
+        Tag tag = new Tag("food", new Color(red).toString());
 
         // Tag name should be food
         assertEquals("food", tag.getName());
 
         // Tag color should be red
-        assertEquals(new Color(red), tag.getColor());
+        assertEquals(new Color(red).toString(), tag.getColor());
     }
 
     @Test
@@ -55,6 +58,26 @@ class TagTest {
         assertTrue(tag1.toString().contains("food"));
         // String should contain RGB values
         assertTrue(tag1.toString().contains("255"));
+    }
+
+    @Test
+    public void getterSetterTest() {
+        Tag tag = new Tag("test", Color.BLACK.toString(), null, new Event());
+        UUID id = UUID.randomUUID();
+        tag.setId(id);
+        assertEquals(id, tag.getId());
+        List<Expense> expenseList = new ArrayList<>();
+        Expense expense = new Expense();
+        expenseList.add(expense);
+        tag.setExpenses(expenseList);
+        assertEquals(expenseList, tag.getExpenses());
+        Event event = new Event("test");
+        tag.setEvent(event);
+        assertEquals(tag.getEvent(), event);
+        tag.setName("name");
+        assertEquals("name", tag.getName());
+        tag.setColor(Color.BLUE.toString());
+        assertEquals(Color.BLUE.toString(), tag.getColor());
     }
 
 }

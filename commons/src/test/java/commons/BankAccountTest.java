@@ -1,6 +1,7 @@
 package commons;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BankAccountTest {
@@ -46,5 +47,16 @@ public class BankAccountTest {
         String string = new BankAccount("IBAN1", "BIC1").toString();
         assertTrue(string.contains("IBAN1"));
         assertTrue(string.contains("BIC1"));
+    }
+
+    @Test
+    public void getterSetterTest() {
+        BankAccount bankAccount = new BankAccount();
+        String iban = "112";
+        bankAccount.setIban(iban);
+        assertEquals(iban, bankAccount.getIban());
+        String bic = "bic";
+        bankAccount.setBic(bic);
+        assertEquals(bic, bankAccount.getBic());
     }
 }

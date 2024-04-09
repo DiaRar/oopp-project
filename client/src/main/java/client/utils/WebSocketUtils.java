@@ -26,6 +26,10 @@ public class WebSocketUtils {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter(mapper()));
         stompSession = stompClient.connectAsync(url, stompSessionHandler).get();
     }
+    public void disconnect() {
+        if (stompSession != null)
+            stompSession.disconnect();
+    }
     public ObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());

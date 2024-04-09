@@ -83,10 +83,10 @@ public class Dialog extends VBox {
         init();
     }
 
-    public void start(ObservableList<Participant> participants, ObservableList<Tag> tagsList) {
+    public void start(ObservableList<Participant> participants, ObservableList<Tag> tagList) {
         payer.setItems(participants);
         paidFor.setItems(participants);
-        tags.setItems(tagsList);
+        tags.setItems(tagList);
     }
     private ListCell<Participant> getParticipantListCell() {
         return new ListCell<>() {
@@ -174,8 +174,8 @@ public class Dialog extends VBox {
         );
         tagPredicate = Bindings.createObjectBinding(
                 () -> expense -> {
-                    if (tags.getValue() != null && expense.getTags() != null)
-                        return expense.getTags().contains(tags.getValue());
+                    if (tags.getValue() != null && expense.getTag() != null)
+                        return expense.getTag().equals(tags.getValue());
                     return true;
                 }, tags.valueProperty()
         );

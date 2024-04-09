@@ -12,29 +12,23 @@ import commons.Tag;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.awt.*;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
-import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AddExpenseCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
     public ToggleGroup split;
-    private LanguageUtils languageUtils;
-    private Config config;
+    private final LanguageUtils languageUtils;
+    private final Config config;
     @FXML
     private ComboBox<Participant> payer;
     @FXML
@@ -75,6 +69,8 @@ public class AddExpenseCtrl implements Initializable {
     private Label expenseType;
     @FXML
     private Button addTag;
+    private boolean editMode;
+    private Expense toUpdate;
 
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
@@ -99,14 +95,7 @@ public class AddExpenseCtrl implements Initializable {
         tag.getSelectionModel().clearSelection();
         equallySplit.setSelected(false);
         partialSplit.setSelected(false);
-        if (debtorsList != null) {
-            debtorsList.getItems().clear();
-            debtorsList.setVisible(false);
-        }
-        if (selectedDebtors != null) {
-            selectedDebtors.getItems().clear();
-            selectedDebtors.setVisible(false);
-        }
+        selectedDebtors.getItems().clear();
     }
     public void ok() {
         // TODO Check if we have to create or update an expense (currently only creating)
@@ -118,29 +107,27 @@ public class AddExpenseCtrl implements Initializable {
         double amt = Double.parseDouble(amount.getText());
         String desc = description.getText();
         LocalDateTime time = date.getValue().atStartOfDay();
-        Participant pay = mainCtrl.getEvent().getParticipants().stream()
-                .filter(p -> p.equals(payer.getValue()))
-                .toList()
-                .getFirst();
+        Participant pay = payer.getValue();
         Collection<Participant> debt;
         if (equallySplit.isSelected()) {
-            debt = mainCtrl.getEvent().getParticipants();
+            debt = mainCtrl.getParticipantList();
         } else {
-            debt = mainCtrl.getEvent().getParticipants().stream()
+            debt = mainCtrl.getParticipantList().stream()
                     .filter(p -> selectedDebtors.getItems().contains(p))
                     .toList();
         }
-
+        Expense expense;
         if (tag.getSelectionModel().isEmpty()) {
-            Expense expense = new Expense(amt, desc, time, pay, debt);
-            server.addExpense(mainCtrl.getEvent().getId(), expense);
+            expense = new Expense(amt, desc, time, pay, debt);
         } else {
-            Collection<Tag> tg = mainCtrl.getEvent().getTags().stream()
-                    .filter(t -> tag.getSelectionModel().getSelectedItem().equals(t))
-                    .collect(Collectors.toList());
-            Expense expense = new Expense(amt, desc, time, pay, debt, tg);
+            expense = new Expense(amt, desc, time, pay, debt, tag.getValue());
+        }
+        if (editMode) {
+            server.updateExpense(mainCtrl.getEvent().getId(), toUpdate.getId(), expense);
+        } else {
             server.addExpense(mainCtrl.getEvent().getId(), expense);
         }
+
         cancel();
     }
 
@@ -153,16 +140,6 @@ public class AddExpenseCtrl implements Initializable {
         if (!equallySplit.isSelected() && !partialSplit.isSelected()) return "debtors";
         if (partialSplit.isSelected() && selectedDebtors.getItems().isEmpty()) return "debtors";
         return "valid";
-    }
-
-    public void showDebtors() {
-        if (partialSplit.isSelected()) {
-            debtorsList.setVisible(true);
-            selectedDebtors.setVisible(true);
-        } else {
-            debtorsList.setVisible(false);
-            selectedDebtors.setVisible(false);
-        }
     }
 
     public void keyPressed(KeyEvent e) {
@@ -181,13 +158,16 @@ public class AddExpenseCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
-        setTags();
-        fillDebtors();
-        fillPayers();
+        payer.setCellFactory(participantListView -> getParticipantListCell());
+        payer.setButtonCell(getParticipantListCell());
+        tag.setCellFactory(tagListView -> getTagListCell());
+        tag.setButtonCell(getTagListCell());
+        debtorsList.setCellFactory(participantListView -> getParticipantListCell());
+        selectedDebtors.setCellFactory(participantListView -> getParticipantListCell());
         this.add.textProperty().bind(languageUtils.getBinding("addExpense.addBtn"));
         this.cancel.textProperty().bind(languageUtils.getBinding("addExpense.cancelBtn"));
         this.whoPaid.textProperty().bind(languageUtils.getBinding("addExpense.whoPaidLabel"));
-        this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.addEditExpenseLabel"));
+        this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.addExpenseLabel"));
         this.whatFor.textProperty().bind(languageUtils.getBinding("addExpense.whatForLabel"));
         this.howMuch.textProperty().bind(languageUtils.getBinding("addExpense.howMuchLabel"));
         this.when.textProperty().bind(languageUtils.getBinding("addExpense.whenLabel"));
@@ -199,6 +179,9 @@ public class AddExpenseCtrl implements Initializable {
         this.date.setDayCellFactory(datePicker -> new PastDateCell());
         this.debtorsList.managedProperty().bind(this.debtorsList.visibleProperty());
         this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
+        this.debtorsList.visibleProperty().bind(partialSplit.selectedProperty());
+        this.selectedDebtors.visibleProperty().bind(partialSplit.selectedProperty());
+
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -207,6 +190,28 @@ public class AddExpenseCtrl implements Initializable {
             default:
                 languageUtils.setLang("en");
         }
+    }
+
+    public void selectDebtor() {
+        List<Participant> alreadySelected = new ArrayList<>(selectedDebtors.getItems());
+        Participant selected = debtorsList.getSelectionModel().getSelectedItem();
+        if (alreadySelected.contains(selected)) {
+            alreadySelected.remove(selected);
+        } else {
+            alreadySelected.add(selected);
+        }
+        selectedDebtors.setItems(FXCollections.observableArrayList(alreadySelected));
+    }
+
+    public void keyPressedDebtors(KeyEvent e) {
+        if (e != null && (e.getCode()) == KeyCode.ENTER) {
+            selectDebtor();
+        }
+    }
+
+    public void openAddTags() {
+        System.out.println("Add Tags");
+        mainCtrl.showAddTags();
     }
 
     private ListCell<Participant> getParticipantListCell() {
@@ -233,56 +238,45 @@ public class AddExpenseCtrl implements Initializable {
                     setGraphic(null);
                 } else {
                     setText(item.getName());
-                    setGraphic(null);
                 }
             }
         };
     }
 
-    public void fillDebtors() {
-        debtorsList.setCellFactory(participantListView -> getParticipantListCell());
-        selectedDebtors.setCellFactory(participantListView -> getParticipantListCell());
-    }
-
-    public void fillPayers() {
-        payer.setCellFactory(participantListView -> getParticipantListCell());
-        payer.setButtonCell(getParticipantListCell());
-    }
-
-    public void selectDebtor() {
-        List<Participant> alreadySelected = new ArrayList<>(selectedDebtors.getItems());
-        Participant selected = debtorsList.getSelectionModel().getSelectedItem();
-        if (alreadySelected.contains(selected)) {
-            alreadySelected.remove(selected);
-        } else {
-            alreadySelected.add(selected);
-        }
-        selectedDebtors.setItems(FXCollections.observableArrayList(alreadySelected));
-    }
-
-    public void keyPressedDebtors(KeyEvent e) {
-        if (e != null && (e.getCode()) == KeyCode.ENTER) {
-            selectDebtor();
-        }
-    }
-
-    public void setTags() {
-        tag.setCellFactory(tagListView -> getTagListCell());
-        tag.setButtonCell(getTagListCell());
-    }
-
-    public void refresh() {
+    public void addMode() {
+        this.editMode = false;
         clearFields();
-        setTags();
-        fillPayers();
-        fillDebtors();
-        tag.setItems(FXCollections.observableArrayList(mainCtrl.getEvent().getTags()));
-        payer.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
-        debtorsList.setItems(FXCollections.observableList(mainCtrl.getEvent().getParticipants()));
+        this.add.textProperty().bind(languageUtils.getBinding("addExpense.addBtn"));
+        this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.addExpenseLabel"));
     }
 
-    public void openAddTags() {
-        System.out.println("Add Tags");
-        mainCtrl.showAddTags();
+    public void editMode(Expense expense) {
+        this.editMode = true;
+        this.toUpdate = expense;
+        clearFields();
+        this.add.textProperty().bind(languageUtils.getBinding("addExpense.editBtn"));
+        this.addEditExpense.textProperty().bind(languageUtils.getBinding("addExpense.editExpenseLabel"));
+
+        payer.getSelectionModel().select(toUpdate.getPayer());
+        description.setText(toUpdate.getTitle());
+        amount.setText(String.valueOf(toUpdate.getAmount()));
+        date.setValue(toUpdate.getDate().toLocalDate());
+        if (toUpdate.getTag() != null) {
+            tag.getSelectionModel().select(toUpdate.getTag());
+        }
+        if (toUpdate.getDebtors().containsAll(mainCtrl.getParticipantList())) {
+            equallySplit.setSelected(true);
+            partialSplit.setSelected(false);
+        } else {
+            equallySplit.setSelected(false);
+            partialSplit.setSelected(true);
+            selectedDebtors.getItems().addAll(toUpdate.getDebtors());
+        }
+    }
+
+    public void startup() {
+        tag.setItems(mainCtrl.getTagList());
+        payer.setItems(mainCtrl.getParticipantList());
+        debtorsList.setItems(mainCtrl.getParticipantList());
     }
 }

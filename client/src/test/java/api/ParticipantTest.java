@@ -3,7 +3,6 @@ package api;
 import client.utils.Config;
 import client.utils.ServerUtils;
 import commons.Event;
-
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;

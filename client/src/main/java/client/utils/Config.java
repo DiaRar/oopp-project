@@ -1,7 +1,10 @@
 package client.utils;
 
 import java.io.*;
-import java.util.*;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Properties;
 
 public class Config {
     private Locale locale;
@@ -54,6 +57,7 @@ public class Config {
 
     public static Config read(File file) throws IOException {
         if (!file.exists()) {
+            System.out.println(file);
             file.createNewFile();
             Writer writer = new BufferedWriter(new FileWriter(file));
             writer.write("#\n" +
@@ -75,7 +79,7 @@ public class Config {
 
     public void save() throws FileNotFoundException {
         try {
-            OutputStream outputStream = new FileOutputStream(new File("client/src/main/resources/config/config.properties"));
+            OutputStream outputStream = new FileOutputStream("./config.properties");
             Properties properties = new Properties();
             properties.setProperty("server", server);
             properties.setProperty("language", locale.getLanguage());

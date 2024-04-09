@@ -1,5 +1,6 @@
 package commons;
 
+import commons.primary_keys.DebtPK;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -29,5 +30,31 @@ public class DebtTest {
         Debt test1 = new Debt();
         test1.setAmount(100.0);
         assertNotEquals(test1.toString(), test.toString());
+    }
+
+    @Test
+    public void constructorTest() {
+        assertDoesNotThrow(() -> {
+            Debt debt = new Debt(UUID.randomUUID(), UUID.randomUUID(), 1.0, new Event());
+            Debt debt1 = new Debt(new Participant(), new Participant(), 1.0, new Event());
+        });
+    }
+
+    @Test
+    public void getterSetterTest() {
+        Debt debt = new Debt();
+        debt.setAmount(1.0);
+        assertEquals(1.0, debt.getAmount());
+        Participant participant = new Participant("t", "h");
+        debt.setDebtor(participant);
+        assertEquals(participant, debt.getDebtor());
+        debt.setPayer(participant);
+        assertEquals(participant, debt.getPayer());
+        Event event = new Event();
+        debt.setEvent(event);
+        assertEquals(event, debt.getEvent());
+        DebtPK debtPK = new DebtPK(UUID.randomUUID(), UUID.randomUUID());
+        debt.setId(debtPK);
+        assertEquals(debt.getId(), debtPK);
     }
 }

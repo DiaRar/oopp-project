@@ -35,6 +35,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println(getClass().getPackageName());
+        System.out.println(getClass().toString());
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         var startScreen = FXML.load(StartCtrl.class, "client", "scenes", "Start.fxml");
         var overview = FXML.load(OverviewCtrl.class, "client", "scenes", "Overview.fxml");
@@ -47,5 +49,8 @@ public class Main extends Application {
         var mc = INJECTOR.getInstance(MainCtrl.class);
         mc.init(primaryStage, startScreen, overview, addExpense, statistics,
                 invitation, contactDetails, debts, tags);
+        primaryStage.setOnCloseRequest(e -> {
+            mc.stop();
+        });
     }
 }

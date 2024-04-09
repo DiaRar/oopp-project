@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.views.View;
 import jakarta.persistence.*;
@@ -30,11 +31,19 @@ public class Participant {
         this.email = email;
     }
 
+    public Participant(UUID id, String nickname, String email, BankAccount bankAccount, Event event) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.bankAccount = bankAccount;
+        this.event = event;
+    }
     public Participant(String nickname, String email, BankAccount bankAccount) {
         this.nickname = nickname;
         this.email = email;
         this.bankAccount = bankAccount;
     }
+
     // Attributes
     @Id
     @Column(name = "participant_id")
@@ -64,7 +73,8 @@ public class Participant {
     public BankAccount getBankAccount() {
         return bankAccount;
     }
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     public Event getEvent() {
         return event;
     }

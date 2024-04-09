@@ -4,10 +4,7 @@ import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Event;
 import commons.Tag;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,6 +17,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class AddTagCtrl implements Initializable {
+    private static final int MAX_COLOR = 255;
     private MainCtrl mainCtrl;
     private ServerUtils server;
     private Config config;
@@ -44,16 +42,12 @@ public class AddTagCtrl implements Initializable {
     private ColorPicker colorField;
     private Tag selectedTag;
 
-    private Event parentEvent;
-    private ObservableList<Tag> tagsList;
-
     @Inject
     public AddTagCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
         this.languageUtils = languageUtils;
-        this.tagsList = FXCollections.observableArrayList();
     }
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,7 +58,6 @@ public class AddTagCtrl implements Initializable {
         this.cancelBtn.textProperty().bind(languageUtils.getBinding("addTag.cancelBtn"));
         this.deleteBtn.textProperty().bind(languageUtils.getBinding("addTag.deleteBtn"));
 
-        this.tags.setItems(tagsList);
         this.tags.setCellFactory(tagListView -> getTagListCell());
         this.tags.setButtonCell(getTagListCell());
 
@@ -93,8 +86,11 @@ public class AddTagCtrl implements Initializable {
     public void save() {
         String name = nameField.getText();
         Color selected = colorField.getValue();
-        Tag newTag = new Tag(name, new java.awt.Color((float) selected.getRed(), (float) selected.getGreen(),
-                (float) selected.getBlue(), (float) selected.getOpacity()));
+        String color = String.format("#%02x%02x%02x",
+                ((int)(selected.getRed() * MAX_COLOR)),
+                ((int)(selected.getGreen() * MAX_COLOR)),
+                ((int)(selected.getBlue() * MAX_COLOR)));
+        Tag newTag = new Tag(name, color);
         newTag.setEvent(mainCtrl.getEvent());
         if (selectedTag == null) {
             server.addTag(mainCtrl.getEvent().getId(), newTag);
@@ -138,25 +134,22 @@ public class AddTagCtrl implements Initializable {
         };
     }
 
-    public void setParentEvent(Event event) {
-        this.parentEvent = event;
-        this.tagsList.setAll(parentEvent.getTags());
-    }
-
     public void editMode(Tag tag) {
         this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.saveBtn"));
         this.title.textProperty().bind(languageUtils.getBinding("addTag.editTitle"));
 
         nameField.setText(tag.getName());
         var col = tag.getColor();
-        colorField.setValue(new Color(col.getRed(), col.getGreen(),
-                col.getBlue(), col.getAlpha()));
-        System.out.println("red: " + col.getRed() + " green: " + col.getGreen() + " blue: " + col.getBlue() + " alpha: " + col.getAlpha());
+        colorField.setValue(Color.web(col));
     }
 
     public void addMode() {
         this.saveBtn.textProperty().bind(languageUtils.getBinding("addTag.addBtn"));
         this.title.textProperty().bind(languageUtils.getBinding("addTag.addTitle"));
         clearFields();
+    }
+
+    public void startup() {
+        this.tags.setItems(mainCtrl.getTagList());
     }
 }
