@@ -53,6 +53,7 @@ public class DebtsCtrl implements Initializable {
     private StringProperty toLabel;
 
     private List<Debt> debtList;
+    private Map<UUID, Participant> participantCache;
 
     @Inject
     public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
@@ -67,9 +68,16 @@ public class DebtsCtrl implements Initializable {
     }
 
     public void refresh() {
-        // TODO instead of the hardcoded data we should use:
         debtList = server.getDebts(mainCtrl.getEvent());
-//        List<Debt> debts = mockData();
+        Collection<Participant> allParticipants = server.getParticipants(mainCtrl.getEvent().getId());
+        participantCache = new HashMap<>();
+        for (Participant participant : allParticipants) {
+            participantCache.put(participant.getId(), participant);
+        }
+        for (Debt debt : debtList) {
+            UUID payerId = debt.getPayer().getId();
+            debt.setPayer(participantCache.get(payerId));
+        }
 
         List<BorderPane> collection = debtList.stream().map(this::debtComponent).toList();
         debtsList.getChildren().clear();

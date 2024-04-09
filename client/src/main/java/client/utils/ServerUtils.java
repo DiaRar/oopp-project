@@ -138,11 +138,12 @@ public class ServerUtils {
 		}
 	}
 
-	public List<Participant> getParticipants() {
+	public List<Participant> getParticipants(UUID eventId) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
-					.path("/api/participants/")
+					.path("/api/events/{eventId}/participants")
+					.resolveTemplate("eventId", eventId)
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.get(new GenericType<List<Participant>>() {});
