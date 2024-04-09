@@ -96,7 +96,7 @@ public class Expense {
         return debtors;
     }
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonView(View.ExpenseView.class)
+    @JsonView(View.CommonsView.class)
     public Tag getTag() {
         return tag;
     }
