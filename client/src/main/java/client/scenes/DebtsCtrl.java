@@ -53,6 +53,7 @@ public class DebtsCtrl implements Initializable {
     private StringProperty toLabel;
     private StringProperty noBank;
     private StringProperty bank;
+    private StringProperty accountHolder;
 
     private List<Debt> debtList;
     private Map<UUID, Participant> participantCache;
@@ -69,6 +70,7 @@ public class DebtsCtrl implements Initializable {
         this.toLabel = new SimpleStringProperty();
         this.noBank = new SimpleStringProperty();
         this.bank = new SimpleStringProperty();
+        this.accountHolder = new SimpleStringProperty();
     }
 
     public void refresh() {
@@ -154,13 +156,15 @@ public class DebtsCtrl implements Initializable {
             noBankText.textProperty().bind(noBank);
             tf.getChildren().add(new Text(noBank.toString()));
         } else {
-            Text accountHolder = new Text("Account Holder: " + debt.getPayer().getNickname() + "\n");
-            Text iban = new Text("IBAN: " + debt.getPayer().getBankAccount().getIban() + "\n");
+            Text accountHolderText = new Text();
+            accountHolderText.textProperty().bind(accountHolder);
+            Text accountHolderNickname = new Text(": " + debt.getPayer().getNickname());
+            Text iban = new Text("IBAN: " + debt.getPayer().getBankAccount().getIban());
             Text bic = new Text("BIC: " + debt.getPayer().getBankAccount().getBic());
             Text bankText = new Text();
             bankText.textProperty().bind(bank);
-            tf.getChildren().addAll(bankText, new Text("\n"),
-                    accountHolder, new Text("\n"), iban, new Text("\n"), bic);
+            tf.getChildren().addAll(bankText, new Text("\n"), accountHolderText,
+                    accountHolderNickname, new Text("\n"), iban, new Text("\n"), bic);
         }
         bankIcon.setOnMouseClicked(e -> showHideBankDetails(tf, borderPane));
 
@@ -206,6 +210,7 @@ public class DebtsCtrl implements Initializable {
         this.recalculateButton.textProperty().bind(languageUtils.getBinding("debts.recalculateBtn"));
         this.noBank.bind(languageUtils.getBinding("debts.noBank"));
         this.bank.bind(languageUtils.getBinding("debts.bank"));
+        this.accountHolder.bind(languageUtils.getBinding("debts.accountHolder"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
