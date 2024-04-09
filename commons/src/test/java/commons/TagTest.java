@@ -18,20 +18,20 @@ class TagTest {
 
     @BeforeEach
     public void beforeEach() {
-        tag1 = new Tag("food", new Color(red));
-        tag2 = new Tag("food1", new Color(magenta));
-        tag3 = new Tag("food", new Color(red));
+        tag1 = new Tag("food", new Color(red).toString());
+        tag2 = new Tag("food1", new Color(magenta).toString());
+        tag3 = new Tag("food", new Color(red).toString());
     }
 
     @Test
     public void checkConstructor() {
-        Tag tag = new Tag("food", new Color(red));
+        Tag tag = new Tag("food", new Color(red).toString());
 
         // Tag name should be food
         assertEquals("food", tag.getName());
 
         // Tag color should be red
-        assertEquals(new Color(red), tag.getColor());
+        assertEquals(new Color(red).toString(), tag.getColor());
     }
 
     @Test
@@ -62,7 +62,7 @@ class TagTest {
 
     @Test
     public void getterSetterTest() {
-        Tag tag = new Tag("test", Color.BLACK, null, new Event());
+        Tag tag = new Tag("test", Color.BLACK.toString(), null, new Event());
         UUID id = UUID.randomUUID();
         tag.setId(id);
         assertEquals(id, tag.getId());
@@ -76,8 +76,8 @@ class TagTest {
         assertEquals(tag.getEvent(), event);
         tag.setName("name");
         assertEquals("name", tag.getName());
-        tag.setColor(Color.BLUE);
-        assertEquals(Color.BLUE, tag.getColor());
+        tag.setColor(Color.BLUE.toString());
+        assertEquals(Color.BLUE.toString(), tag.getColor());
     }
 
 }

@@ -1,5 +1,7 @@
 package commons;
 
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -46,7 +48,8 @@ public class ExpenseTest {
     public void constructorTests() {
         assertDoesNotThrow(() -> {
             Expense expense = new Expense();
-            Expense expense1 = new Expense(1.0, "test", LocalDateTime.now(), new Participant(), new ArrayList<>(), new ArrayList<>());
+            Expense expense1 = new Expense(Double.valueOf(10),"test",LocalDateTime.of(10,10,10,10,10)
+                    ,new Participant(),new ArrayList<Participant>(),new Tag());
         });
     }
 
@@ -75,9 +78,7 @@ public class ExpenseTest {
         expense.setEvent(event);
         assertEquals(event, expense.getEvent());
         Tag tag = new Tag();
-        Collection<Tag> tags = new ArrayList<>();
-        tags.add(tag);
-        expense.setTags(tags);
-        assertEquals(tags, expense.getTags());
+        expense.setTag(tag);
+        assertEquals(tag, expense.getTag());
     }
 }
