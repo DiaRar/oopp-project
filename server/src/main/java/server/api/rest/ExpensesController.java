@@ -42,7 +42,7 @@ public class ExpensesController {
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
         Expense saved = expenseService.save(eventId, expense);
-        listners.forEach((k, v) -> v.accept(expense));
+        listners.forEach((k, v) -> v.accept(saved));
         updateService.sendAddedExpense(eventId, saved);
         return ResponseEntity.ok(saved);
     }
