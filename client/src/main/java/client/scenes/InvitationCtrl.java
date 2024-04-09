@@ -4,12 +4,14 @@ import client.utils.*;
 import com.google.inject.Inject;
 import javafx.fxml.*;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
-
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -103,5 +105,10 @@ public class InvitationCtrl implements Initializable {
         }
     }
 
+    public void copyInvite() {
+        StringSelection stringSelection = new StringSelection(inviteCode.getText());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    }
 
 }
