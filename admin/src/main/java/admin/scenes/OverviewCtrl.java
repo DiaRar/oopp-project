@@ -92,6 +92,7 @@ public class OverviewCtrl {
 
     public void download() {
         var json = serverUtils.getExportResult();
+        createJsonDumpRepo();
         var file = new File(config.getJsonPath(), "export.json");
         if (file.exists()) file.delete();
 
@@ -105,8 +106,16 @@ public class OverviewCtrl {
         }
     }
 
+    private void createJsonDumpRepo() {
+        var dir = new File(config.getJsonPath());
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+    }
+
     public void upload() {
         // Create the UI components for uploading (e.g., FileChooser)
+        createJsonDumpRepo();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a JSON file to upload to the database");
         fileChooser.setInitialDirectory(new File(config.getJsonPath()));
