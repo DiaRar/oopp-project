@@ -1,14 +1,14 @@
 package client.scenes;
 
 import client.utils.Config;
+import client.utils.EmailUtils;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.BankAccount;
 import commons.Debt;
-import commons.Event;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -24,20 +24,25 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class DebtsCtrl implements Initializable {
     private Config config;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
-
     private final LanguageUtils languageUtils;
+    private Executor executor;
+
     private static final double DEBT_AMOUNT = 100;
     private static final double IMAGE_SIZE = 20;
     private static final double BORDER_PANE_MARGIN = 10;
     private static final double FLOW_PANE_MARGIN = 5;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 12);
+    private static final long DISABLE_TIMEOUT = 5000L;
     @FXML
     private Button returnButton;
     @FXML
@@ -71,6 +76,7 @@ public class DebtsCtrl implements Initializable {
         this.noBank = new SimpleStringProperty();
         this.bank = new SimpleStringProperty();
         this.accountHolder = new SimpleStringProperty();
+        this.executor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     public void refresh() {
@@ -136,7 +142,7 @@ public class DebtsCtrl implements Initializable {
         settled.setOnAction(e ->
                 settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
         reminder.setOnAction(e ->
-                remind(debt.getDebtor(), debt));
+                remind(debt.getDebtor(), debt, reminder));
         if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty()) {
             reminder.setDisable(true);
         }
@@ -181,9 +187,30 @@ public class DebtsCtrl implements Initializable {
         refresh();
     }
 
-    public void remind(Participant participant, Debt debt) {
-        if (participant.getEmail() == null || participant.getEmail().isEmpty()) return;
-        // TODO send email to the participant with the details of the debt (first ask confirmation)
+    public void remind(Participant debtor, Debt debt, Button remindButton) {
+        if (debtor.getEmail() == null || debtor.getEmail().isEmpty()) return;
+        new Thread(() -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    remindButton.setDisable(true);
+                }
+            });
+            try {
+                Thread.sleep(DISABLE_TIMEOUT);
+            } catch (InterruptedException ex) {
+            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    remindButton.setDisable(false);
+                }
+            });
+        }).start();
+        EmailUtils emailUtils = new EmailUtils(debtor.getEmail(), "");
+        executor.execute(() -> {
+            emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()));
+        });
     }
 
     public void showHideBankDetails(TextFlow details, BorderPane borderPane) {
