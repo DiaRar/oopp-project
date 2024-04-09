@@ -44,6 +44,8 @@ public class DebtsCtrl implements Initializable {
     private Label title;
     @FXML
     private VBox debtsList;
+    @FXML
+    private Button recalculateButton;
 
     private StringProperty settleButton;
     private StringProperty remindButton;
@@ -184,6 +186,10 @@ public class DebtsCtrl implements Initializable {
         }
     }
 
+    public void recalculate() {
+        server.recalculateDebt(mainCtrl.getEvent().getId());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.owesLabel.bind(languageUtils.getBinding("debts.owesLabel"));
@@ -192,6 +198,7 @@ public class DebtsCtrl implements Initializable {
         this.toLabel.bind(languageUtils.getBinding("debts.toLabel"));
         this.title.textProperty().bind(languageUtils.getBinding("debts.openDebtsLabel"));
         this.returnButton.textProperty().bind(languageUtils.getBinding("debts.returnToOverviewBtn"));
+        this.recalculateButton.textProperty().bind(languageUtils.getBinding("debts.recalculateBtn"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");

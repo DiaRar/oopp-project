@@ -240,6 +240,20 @@ public class ServerUtils {
 		}
 	}
 
+	public Response recalculateDebt(UUID eventId) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/{eventId}/debts/recalculate")
+					.resolveTemplate("eventId", eventId)
+					.request()
+					.get();
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
 	public Expense addExpense(UUID eventID, Expense expense) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())

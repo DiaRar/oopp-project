@@ -118,10 +118,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             }
         });
 
-        session.subscribe(source("update/debt"), new StompFrameHandler() {
+        session.subscribe(source("/update/debt"), new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
-                return Debt.class;
+                return Object.class;
             }
 
             @Override

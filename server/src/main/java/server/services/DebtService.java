@@ -68,9 +68,6 @@ public class DebtService {
         if (debt.getAmount() == null) {
             throw new IllegalArgumentException("Cannot add debt without amount.");
         }
-        if (compareAmounts(debt.getAmount(), 0.0) < 0) {
-            throw new IllegalArgumentException("Cannot add debt with negative amount.");
-        }
         if (debtRepo.existsById(debt.getId())) {
             throw new IllegalArgumentException("Cannot add already existing debt.");
         }
