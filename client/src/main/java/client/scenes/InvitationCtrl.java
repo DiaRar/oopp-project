@@ -58,7 +58,7 @@ public class InvitationCtrl implements Initializable {
         this.inviteLabel.textProperty().bind(languageUtils.getBinding("invitation.inviteLabel"));
         this.invite1.textProperty().bind(languageUtils.getBinding("invitation.inviteEmailLabel"));
         this.cancel.textProperty().bind(languageUtils.getBinding("invitation.cancelBtn"));
-
+        this.copyButton.textProperty().bind(languageUtils.getBinding("invitation.copyBtn"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
