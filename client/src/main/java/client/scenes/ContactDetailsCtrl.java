@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.uicomponents.Alerts;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.BankAccount;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ContactDetailsCtrl implements Initializable {
@@ -71,7 +73,8 @@ public class ContactDetailsCtrl implements Initializable {
     public void confirmAction() {
         System.out.println(editMode ? "Edited Participant" : "Created Participant");
         if (!dataCheck().equals("valid")) {
-            // TODO add alert
+            Alerts.invalidParticipantAlert(dataCheck());
+            return;
         }
         Participant newParticipant = this.createParticipantFromFields();
         this.clearText();
@@ -91,10 +94,12 @@ public class ContactDetailsCtrl implements Initializable {
     private String dataCheck() {
         if (nameField.getText() == null || nameField.getText().trim().isEmpty()) return "Name is required";
         if (emailField.getText() == null || emailField.getText().trim().isEmpty()) return "Email is required";
-        if (ibanField.getText() == null || ibanField.getText().trim().isEmpty()
-            && bicField.getText() != null) return "Both IBAN and BIC are required";
-        if (bicField.getText() == null || bicField.getText().trim().isEmpty()
-                && ibanField.getText() != null) return "Both IBAN and BIC are required";
+        if ((ibanField.getText() == null || ibanField.getText().trim().isEmpty())
+            && (bicField.getText() != null && !bicField.getText().trim().isEmpty()))
+                return "Both IBAN and BIC are required to save a Bank Account";
+        if ((bicField.getText() == null || bicField.getText().trim().isEmpty())
+            && (ibanField.getText() != null && !ibanField.getText().trim().isEmpty()))
+            return "Both IBAN and BIC are required to save a Bank Account";
         return "valid";
     }
 
@@ -213,8 +218,10 @@ public class ContactDetailsCtrl implements Initializable {
         this.deleteButton = new Button();
         this.deleteButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
         this.actionBtnHBox.getChildren().add(1, deleteButton);
-        // TODO: Add confirmation
         this.deleteButton.setOnAction(eventClick -> {
+            if (toBeUpdatedParticipant == null) return;
+            boolean choice = Alerts.deleteParticipantAlert(toBeUpdatedParticipant);
+            if (!choice) return;
             server.deleteParticipant(parentEvent.getId(), toBeUpdatedParticipant.getId());
             clearText();
             mainCtrl.closeDialog();
