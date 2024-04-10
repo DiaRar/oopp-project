@@ -3,7 +3,6 @@ package client.implementations;
 import client.scenes.MainCtrl;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import commons.Debt;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;

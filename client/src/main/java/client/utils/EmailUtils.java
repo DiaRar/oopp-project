@@ -1,6 +1,5 @@
 package client.utils;
 
-import commons.Debt;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
