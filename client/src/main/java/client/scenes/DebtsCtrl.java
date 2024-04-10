@@ -1,5 +1,7 @@
 package client.scenes;
 
+import atlantafx.base.layout.InputGroup;
+import atlantafx.base.util.DoubleStringConverter;
 import client.utils.Config;
 import client.utils.EmailUtils;
 import client.utils.LanguageUtils;
@@ -17,9 +19,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -42,6 +46,7 @@ public class DebtsCtrl implements Initializable {
     private static final double BORDER_PANE_MARGIN = 10;
     private static final double FLOW_PANE_MARGIN = 5;
     private static final Font ARIAL_BOLD = new Font("Arial Bold", 12);
+    private static final long SPINNER_WIDTH = 80;
     private static final long DISABLE_TIMEOUT = 5000L;
     @FXML
     private Button returnButton;
@@ -135,17 +140,25 @@ public class DebtsCtrl implements Initializable {
         reminder.textProperty().bind(remindButton);
         Button settled = new Button();
         settled.textProperty().bind(settleButton);
-        buttons.getChildren().addAll(reminder, settled);
-        HBox.setMargin(settled, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
+        HBox.setMargin(settled, new Insets(FLOW_PANE_MARGIN, 0, FLOW_PANE_MARGIN, 0));
         HBox.setMargin(reminder, new Insets(FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, FLOW_PANE_MARGIN, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
+        var spinner = new Spinner<Double>(Math.min(1, debt.getAmount()), debt.getAmount(), debt.getAmount());
+        DoubleStringConverter.createFor(spinner);
+        spinner.setEditable(true);
+        spinner.setPrefWidth(SPINNER_WIDTH);
+        InputGroup settleGroup = new InputGroup(settled, spinner);
+
         settled.setOnAction(e ->
-                settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId())));
+                settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId()),
+                        spinner));
         reminder.setOnAction(e ->
                 remind(debt.getDebtor(), debt, reminder));
         if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty()) {
             reminder.setDisable(true);
         }
+        buttons.getChildren().addAll(reminder, settleGroup);
+
 
         borderPane.setLeft(bankIcon);
         borderPane.setCenter(description);
@@ -181,9 +194,8 @@ public class DebtsCtrl implements Initializable {
         mainCtrl.showOverview();
     }
 
-    public void settleDebt(UUID eventId, DebtPK debtId) {
-        Debt settled = debtList.stream().filter(d -> debtId.equals(d.getId())).findFirst().get();
-        server.settleDebt(eventId, debtId, settled.getAmount());
+    public void settleDebt(UUID eventId, DebtPK debtId, Spinner<Double> spinner) {
+        server.settleDebt(eventId, debtId, spinner.getValue());
         refresh();
     }
 

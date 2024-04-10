@@ -1,0 +1,19 @@
+.spinner .increment-arrow-button {
+    -fx-padding: 2 4 2 4; /*caspian.css values are 4 8 4 8 */
+}
+.spinner .decrement-arrow-button {
+    -fx-padding: 2 4 2 4; /*caspian.css values are 3 8 6 8 */
+}
+
+
+.spinner .increment-arrow-button .increment-arrow {
+    -fx-padding: 2 4 2 4;    /*caspian.css values are 2 4 2 4 */
+}
+.spinner .decrement-arrow-button .decrement-arrow {
+    -fx-padding: 2 4 2 4; /*caspian.css values are 2 4 2 4 */
+}
+
+.spinner {
+    -fx-border-width: 1 1 1 0;
+    -fx-border-radius: 0 4 4 0;
+}
