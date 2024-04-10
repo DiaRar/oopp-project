@@ -48,7 +48,7 @@
          <left>
             <VBox prefHeight="32.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox prefHeight="40.0" prefWidth="1000.0">
+                  <HBox prefHeight="40.0" prefWidth="1000.0" alignment="CENTER_LEFT">
                      <Label fx:id="inviteLabel" prefHeight="38.0" prefWidth="242.0" text="Give people the following code:">
                         <font>
                            <Font name="Arial" size="15.0" />
@@ -63,8 +63,8 @@
                         </BorderPane.margin>
                      </Button>
                   </HBox>
-                  <TextFlow prefWidth="1000.0" textAlignment="CENTER">
-                     <Text fx:id="inviteCode" textAlignment="CENTER">
+                  <TextFlow prefWidth="1000.0">
+                     <Text fx:id="inviteCode">
                         <font>
                            <Font name="Arial Bold" size="15.0"/>
                         </font>
