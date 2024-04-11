@@ -2,7 +2,8 @@ package server.beans;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import commons.*;
+import commons.BankAccount;
+import commons.Tag;
 
 import java.util.List;
 

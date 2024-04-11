@@ -16,6 +16,14 @@ java {
 	sourceCompatibility = '21'
 }
 
+jar {
+	manifest {
+		attributes (
+			'Main-Class': 'client.Main'
+		)
+	}
+}
+
 
 dependencies {
 	implementation project(":commons")

@@ -6,6 +6,7 @@ import com.google.inject.Provider;
 import commons.Event;
 import commons.Expense;
 import commons.Participant;
+import commons.Tag;
 import javafx.application.Platform;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -105,6 +106,40 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
                 Platform.runLater(() -> mainCtrl.get().updateExpense(expense));
+            }
+        });
+        session.subscribe(source("/add/tag"), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Tag.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Tag tag = (Tag) payload;
+                System.out.println("received smth");
+                Platform.runLater(() -> mainCtrl.get().addTag(tag));
+            }
+        });
+        session.subscribe(source("/remove/tag"), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Tag.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Tag tag = (Tag) payload;
+                Platform.runLater(() -> mainCtrl.get().removeTag(tag));
+            }
+        });
+        session.subscribe(source("/update/tag"), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Tag.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Tag tag = (Tag) payload;
+                Platform.runLater(() -> mainCtrl.get().updateTag(tag));
             }
         });
     }

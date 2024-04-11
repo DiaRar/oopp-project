@@ -1,8 +1,7 @@
 package server.api.rest;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonView;
+import commons.Event;
 import commons.views.View;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
@@ -10,10 +9,11 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import commons.Event;
 import server.services.EventService;
 import server.services.WebSocketUpdateService;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events")
@@ -55,8 +55,8 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    @JsonView(View.CommonsView.class)
     @CachePut(value = "events", key = "#id")
+    @JsonView(View.CommonsView.class)
     public ResponseEntity<Event> update(@PathVariable("id") UUID id, @RequestBody Event event)
             throws EntityNotFoundException, IllegalArgumentException, NullPointerException {
         Event updated = eventService.update(id, event);
@@ -66,7 +66,7 @@ public class EventController {
     }
     @DeleteMapping("/{id}")
     @CacheEvict(value = "events", key = "#id")
-    public ResponseEntity<Void> update(@PathVariable("id") UUID id)
+    public ResponseEntity<Void> delete(@PathVariable("id") UUID id)
             throws EntityNotFoundException, IllegalArgumentException {
         eventService.delete(id);
         updateService.deleteEvent(id);

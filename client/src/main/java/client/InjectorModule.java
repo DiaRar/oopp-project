@@ -17,13 +17,9 @@ package client;
 
 import client.implementations.WSSessionHandler;
 import client.scenes.*;
+import client.uicomponents.Alerts;
 import client.uicomponents.CustomMenuBar;
 import client.utils.*;
-import client.uicomponents.Alerts;
-import client.utils.Config;
-import client.utils.ConfigUtils;
-import client.utils.LanguageUtils;
-import client.utils.ServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -58,19 +54,20 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
+//        utils.setRecentsFile(new File(getClass().getResource("/config/recents.csv").getFile()));
         utils.setRecentsFile(new File(normalizePath("./client/src/main/resources/config/recents.csv")));
+
         return utils;
     }
 
     private Config createConfig() {
         try {
-            return Config.read(new File(normalizePath("./client/src/main/resources/config/config.properties")));
+            return Config.read(new File("./config.properties"));
         } catch (IOException e) {
             Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
         }
     }
-
     private String normalizePath(String strPath) {
         Path path = Paths.get(strPath);
         String absolutePath = path.toAbsolutePath().normalize().toString();
@@ -79,4 +76,5 @@ public class InjectorModule implements Module {
         }
         return absolutePath;
     }
+
 }
