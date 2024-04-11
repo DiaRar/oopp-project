@@ -1,6 +1,7 @@
 package client.scenes;
 
 import atlantafx.base.layout.InputGroup;
+import atlantafx.base.theme.Styles;
 import atlantafx.base.util.DoubleStringConverter;
 import client.utils.Config;
 import client.utils.EmailUtils;
@@ -20,6 +21,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -115,7 +117,8 @@ public class DebtsCtrl implements Initializable {
         bankIcon.setFitHeight(IMAGE_SIZE);
         bankIcon.setFitWidth(IMAGE_SIZE);
         BorderPane.setMargin(bankIcon, new Insets(0, 0, 0, BORDER_PANE_MARGIN));
-        // TODO add onClick event for the image (add bank details on the bottom of the the BorderPane
+        Button bankButton = new Button(null, bankIcon);
+        bankButton.getStyleClass().add(Styles.BUTTON_OUTLINED);
 
         // Description of the debt (in the center)
         HBox description = new HBox();
@@ -161,11 +164,11 @@ public class DebtsCtrl implements Initializable {
         buttons.getChildren().addAll(reminder, settleGroup);
 
 
-        borderPane.setLeft(bankIcon);
+        borderPane.setLeft(bankButton);
         borderPane.setCenter(description);
         borderPane.setRight(buttons);
 
-        BorderPane.setAlignment(bankIcon, Pos.CENTER_LEFT);
+        BorderPane.setAlignment(bankButton, Pos.CENTER_LEFT);
         BorderPane.setAlignment(description, Pos.CENTER_LEFT);
         BorderPane.setAlignment(buttons, Pos.CENTER_RIGHT);
 
@@ -183,6 +186,9 @@ public class DebtsCtrl implements Initializable {
             Text noBankText = new Text();
             noBankText.textProperty().bind(noBank);
             tf.getChildren().add(noBankText);
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setSaturation(-1);
+            bankIcon.setEffect(colorAdjust);
         } else {
             Text accountHolderText = new Text();
             accountHolderText.textProperty().bind(accountHolder);
@@ -194,7 +200,7 @@ public class DebtsCtrl implements Initializable {
             tf.getChildren().addAll(bankText, new Text("\n"), accountHolderText,
                     accountHolderNickname, new Text("\n"), iban, new Text("\n"), bic);
         }
-        bankIcon.setOnMouseClicked(e -> showHideBankDetails(tf, borderPane));
+        bankButton.setOnMouseClicked(e -> showHideBankDetails(tf, borderPane));
 
         return borderPane;
     }
