@@ -1,8 +1,7 @@
 package server.services;
 
-import commons.Event;
-import commons.Expense;
-import commons.Participant;
+import commons.*;
+import commons.primary_keys.DebtPK;
 import commons.views.View;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,22 @@ public class WebSocketUpdateService {
         this.messagingTemplate = messagingTemplate;
     }
     public String destination(String path, UUID eventId) {
-
         return "/changes" + path + "/" + eventId.toString();
     }
     public void sendUpdatedEvent(Event event) {
         messagingTemplate.convertAndSend(destination("/update/name",
                 event.getId()), event, getCommons());
+    }
+    public void sendUpdateEvent(Event event) {
+        messagingTemplate.convertAndSend("/changes/update/event",
+                event, getCommons());
+    }
+    public void sendNewEvent(Event event) {
+        messagingTemplate.convertAndSend("/changes/add/event",
+                event, getCommons());
+    }
+    public void deleteEvent(UUID eventID) {
+        messagingTemplate.convertAndSend("/changes/delete/event", eventID, getCommons());
     }
     public void sendAddedParticipant(UUID eventId, Participant participant) {
         messagingTemplate.convertAndSend(destination("/add/participant",
@@ -41,11 +50,11 @@ public class WebSocketUpdateService {
     }
     public void sendUpdatedParticipant(UUID eventId, Participant participant) {
         messagingTemplate.convertAndSend(destination("/update/participant", eventId),
-                participant, getCommons());
+                participant, getExpense());
     }
     public void sendAddedExpense(UUID eventId, Expense expense) {
         messagingTemplate.convertAndSend(destination("/add/expense",
-                eventId), expense, getCommons());
+                eventId), expense, getExpense());
     }
     public void sendRemovedExpense(UUID eventId, UUID id) {
         Expense expense = new Expense();
@@ -53,7 +62,20 @@ public class WebSocketUpdateService {
         messagingTemplate.convertAndSend(destination("/remove/expense", eventId), expense, getCommons());
     }
     public void sendUpdatedExpense(UUID eventId, Expense expense) {
-        messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getCommons());
+        messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getExpense());
+    }
+    public void sendAddedTag(UUID eventId, Tag tag) {
+        System.out.println(tag);
+        messagingTemplate.convertAndSend(destination("/add/tag",
+                eventId), tag, getCommons());
+    }
+    public void sendRemovedTag(UUID eventId, UUID id) {
+        Tag tag = new Tag();
+        tag.setId(id);
+        messagingTemplate.convertAndSend(destination("/remove/tag", eventId), tag, getCommons());
+    }
+    public void sendUpdatedTag(UUID eventId, Tag tag) {
+        messagingTemplate.convertAndSend(destination("/update/tag", eventId), tag, getCommons());
     }
 
     public void sendUpdatedDebt(UUID eventId) {
@@ -62,5 +84,11 @@ public class WebSocketUpdateService {
 
     private static Map<String, Object> getCommons() {
         return Map.of(CONVERSION_HINT_HEADER, View.CommonsView.class);
+    }
+    private static Map<String, Object> getExpense() {
+        return Map.of(CONVERSION_HINT_HEADER, View.ExpenseView.class);
+    }
+    private static Map<String, Object> getOverview() {
+        return Map.of(CONVERSION_HINT_HEADER, View.OverviewView.class);
     }
 }

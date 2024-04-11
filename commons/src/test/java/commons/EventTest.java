@@ -63,7 +63,7 @@ public class EventTest {
 
     @Test
     public void getTagsTest() {
-        Tag tag = new Tag("test", Color.BLACK);
+        Tag tag = new Tag("test", Color.BLACK.toString());
         Collection<Tag> tags = new ArrayList<>();
         tags.add(tag);
         Event event = new Event();

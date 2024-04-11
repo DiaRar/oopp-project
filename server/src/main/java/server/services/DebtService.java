@@ -31,6 +31,9 @@ public class DebtService {
         newDebt.setAmount(-newDebt.getAmount());
         return Optional.of(newDebt);
     }
+    public List<Debt> getAll() {
+        return debtRepo.findAll();
+    }
 
     public Debt getById(DebtPK id) {
         Debt clone = clone(getByIdInner(id));

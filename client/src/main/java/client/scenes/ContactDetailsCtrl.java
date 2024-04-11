@@ -1,20 +1,19 @@
 package client.scenes;
 
+import client.uicomponents.Alerts;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.BankAccount;
-import commons.Event;
 import commons.Participant;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -50,39 +49,52 @@ public class ContactDetailsCtrl implements Initializable {
     private HBox actionBtnHBox;
     private Button deleteButton;
 
-    private Event parentEvent;
-    private ObservableList<Participant> participants;
     private Participant toBeUpdatedParticipant;
     private boolean editMode;
 
     // Will be used to bind text for translations
-    private StringProperty addLabelText = new SimpleStringProperty();
-    private StringProperty editLabelText = new SimpleStringProperty();
-    private StringProperty addBtnText = new SimpleStringProperty();
-    private StringProperty saveBtnText = new SimpleStringProperty();
+    private final StringProperty addLabelText = new SimpleStringProperty();
+    private final StringProperty editLabelText = new SimpleStringProperty();
+    private final StringProperty addBtnText = new SimpleStringProperty();
+    private final StringProperty saveBtnText = new SimpleStringProperty();
 
     @Inject
     public ContactDetailsCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
-        this.participants = FXCollections.observableArrayList();
     }
 
     public void confirmAction() {
         System.out.println(editMode ? "Edited Participant" : "Created Participant");
+        if (!dataCheck().equals("valid")) {
+            Alerts.invalidParticipantAlert(dataCheck());
+            return;
+        }
         Participant newParticipant = this.createParticipantFromFields();
         this.clearText();
-        newParticipant.setEvent(parentEvent);
+        newParticipant.setEvent(mainCtrl.getEvent());
         if (!editMode) { // add mode
-            server.addParticipant(newParticipant, parentEvent.getId());
+            server.addParticipant(newParticipant, mainCtrl.getEvent().getId());
         } else { // edit mode
             System.out.println(toBeUpdatedParticipant);
-            server.updateParticipant(newParticipant, parentEvent.getId(), toBeUpdatedParticipant.getId());
+            server.updateParticipant(newParticipant, mainCtrl.getEvent().getId(), toBeUpdatedParticipant.getId());
         }
         System.out.println(newParticipant);
         clearText();
         editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();
+    }
+
+    private String dataCheck() {
+        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) return "Name is required";
+        if (emailField.getText() == null || emailField.getText().trim().isEmpty()) return "Email is required";
+        if ((ibanField.getText() == null || ibanField.getText().trim().isEmpty())
+            && (bicField.getText() != null && !bicField.getText().trim().isEmpty()))
+                return "Both IBAN and BIC are required to save a Bank Account";
+        if ((bicField.getText() == null || bicField.getText().trim().isEmpty())
+            && (ibanField.getText() != null && !ibanField.getText().trim().isEmpty()))
+            return "Both IBAN and BIC are required to save a Bank Account";
+        return "valid";
     }
 
     private Participant createParticipantFromFields() {
@@ -91,11 +103,6 @@ public class ContactDetailsCtrl implements Initializable {
         String iban = ibanField.getText();
         String bic = bicField.getText();
         return new Participant(name, email, new BankAccount(iban, bic));
-    }
-
-    public void setParentEvent(Event event) {
-        this.parentEvent = event;
-        this.participants.setAll(parentEvent.getParticipants());
     }
 
     public void setAddMode() {
@@ -127,7 +134,7 @@ public class ContactDetailsCtrl implements Initializable {
             setFieldsDisabled(true);
             return;
         }
-        selected = server.getParticipant(parentEvent.getId(), selected.getId());
+        selected = server.getParticipant(mainCtrl.getEvent().getId(), selected.getId());
         this.toBeUpdatedParticipant = selected;
         setFieldsDisabled(false);
         setFieldData(selected);
@@ -135,6 +142,7 @@ public class ContactDetailsCtrl implements Initializable {
 
     public void cancel() {
         clearText();
+        editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();
     }
 
@@ -153,7 +161,6 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     private void setFieldData(Participant participant) {
-        System.out.println(participant);
         nameField.setText(participant.getNickname());
         emailField.setText(participant.getEmail());
         BankAccount bankAccount = participant.getBankAccount();
@@ -178,7 +185,6 @@ public class ContactDetailsCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.editSelectorComboBox.setItems(participants);
         this.editSelectorComboBox.setCellFactory(new Callback<ListView<Participant>, ListCell<Participant>>() {
             @Override
             public ListCell<Participant> call(ListView<Participant> param) {
@@ -200,9 +206,11 @@ public class ContactDetailsCtrl implements Initializable {
         this.deleteButton = new Button();
         this.deleteButton.textProperty().bind(mainCtrl.getLanguageUtils().getBinding("contact.deleteBtnText"));
         this.actionBtnHBox.getChildren().add(1, deleteButton);
-        // TODO: Add confirmation
         this.deleteButton.setOnAction(eventClick -> {
-            server.deleteParticipant(parentEvent.getId(), toBeUpdatedParticipant.getId());
+            if (toBeUpdatedParticipant == null) return;
+            boolean choice = Alerts.deleteParticipantAlert(toBeUpdatedParticipant);
+            if (!choice) return;
+            server.deleteParticipant(mainCtrl.getEvent().getId(), toBeUpdatedParticipant.getId());
             clearText();
             mainCtrl.closeDialog();
         });
@@ -222,5 +230,8 @@ public class ContactDetailsCtrl implements Initializable {
                 }
             }
         };
+    }
+    public void startup() {
+        this.editSelectorComboBox.setItems(mainCtrl.getParticipantList());
     }
 }

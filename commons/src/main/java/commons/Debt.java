@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -55,6 +56,15 @@ public class Debt {
     public Debt(Double amount) {
         this.amount = amount;
     }
+
+    public Debt(DebtPK debtPK, double amount, Event event, Participant payer, Participant debtor) {
+        this.id = debtPK;
+        this.amount = amount;
+        this.event = event;
+        this.payer = payer;
+        this.debtor = debtor;
+    }
+
     public Double getAmount() {
         return amount;
     }

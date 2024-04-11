@@ -11,6 +11,7 @@ import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.Tag;
 import jakarta.ws.rs.NotFoundException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -48,8 +49,6 @@ public class StartCtrl implements Initializable {
     public Button joinButton;
     @FXML
     public ToggleGroup language;
-    @FXML
-    public MenuItem download;
     private final LanguageComboBox languageComboBox;
     private final DoubleProperty width;
     @FXML
@@ -115,6 +114,8 @@ public class StartCtrl implements Initializable {
         this.joinExistingEvent.textProperty().bind(languageUtils.getBinding("start.joinEventLabel"));
         this.createField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.name"));
         this.joinField.promptTextProperty().bind(languageUtils.getBinding("start.placeholder.invite"));
+        this.createNewEvent.getStyleClass().add("bold");
+        this.joinExistingEvent.getStyleClass().add("bold");
          this.root.setTop(mainCtrl.getMenuBar());
         mainCtrl.getMenuBar().bind(languageUtils, mainCtrl, serverUtils);
     }
@@ -133,6 +134,9 @@ public class StartCtrl implements Initializable {
         }
         Event retEvent = serverUtils.addEvent(event);
         if (retEvent == null) return;
+        serverUtils.addTag(retEvent.getId(), new Tag("Food", "#888888"));
+        serverUtils.addTag(retEvent.getId(), new Tag("Ticket", "#00ff00"));
+            serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#0000ff"));
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();

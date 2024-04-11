@@ -2,15 +2,18 @@ package client.scenes;
 
 import client.utils.*;
 import com.google.inject.Inject;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
-
+import javafx.scene.text.Text;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.net.URL;
-import java.util.*;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -27,7 +30,7 @@ public class InvitationCtrl implements Initializable {
     @FXML
     private Label name;
     @FXML
-    private Label inviteCode;
+    private Text inviteCode;
     @FXML
     private TextArea emails;
     @FXML
@@ -36,6 +39,9 @@ public class InvitationCtrl implements Initializable {
     private Label invite1;
     @FXML
     private Button cancel;
+    @FXML
+    private Button copyButton;
+
     @Inject
     public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
         this.server = server;
@@ -52,7 +58,7 @@ public class InvitationCtrl implements Initializable {
         this.inviteLabel.textProperty().bind(languageUtils.getBinding("invitation.inviteLabel"));
         this.invite1.textProperty().bind(languageUtils.getBinding("invitation.inviteEmailLabel"));
         this.cancel.textProperty().bind(languageUtils.getBinding("invitation.cancelBtn"));
-
+        this.copyButton.textProperty().bind(languageUtils.getBinding("invitation.copyBtn"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
@@ -99,5 +105,10 @@ public class InvitationCtrl implements Initializable {
         }
     }
 
+    public void copyInvite() {
+        StringSelection stringSelection = new StringSelection(inviteCode.getText());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    }
 
 }

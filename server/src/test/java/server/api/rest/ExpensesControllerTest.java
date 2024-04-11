@@ -8,13 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import server.api.rest.ExpensesController;
 import server.services.ExpenseService;
 import server.services.WebSocketUpdateService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -91,5 +89,15 @@ public class ExpensesControllerTest {
         assertDoesNotThrow(() -> {
            expensesController.delete(event.getId(), expense.getId());
         });
+    }
+
+    @Test
+    public void getUpdatesTest() {
+        Event event = new Event();
+        Expense expense = new Expense();
+        when(expenseService.save(event.getId(),expense)).thenReturn(expense);
+        var result = expensesController.getUpdates();
+        expensesController.post(event.getId(),expense);
+        assertEquals(((ResponseEntity<Expense>)result.getResult()).getBody(),expense);
     }
 }

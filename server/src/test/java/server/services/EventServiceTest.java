@@ -1,16 +1,11 @@
 package server.services;
 
-import jakarta.persistence.EntityNotFoundException;
+import commons.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import commons.Event;
-
-import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 import server.database.EventRepository;
 import server.repositories.TestEventRepository;
-
 
 import java.util.UUID;
 
@@ -64,7 +59,8 @@ public class EventServiceTest {
         var temp3 = new Event("test4");
         temp3.setId(temp.getId());
         eventService.update(temp.getId(), temp2);
-        assertEquals(temp3, eventService.getById(temp.getId()));
+        assertEquals(temp3.getId(), eventService.getById(temp.getId()).getId());
+        assertEquals(temp3.getName(), eventService.getById(temp.getId()).getName());
     }
 
     @Test
