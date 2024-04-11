@@ -87,7 +87,6 @@ public class ContactDetailsCtrl implements Initializable {
 
     private String dataCheck() {
         if (nameField.getText() == null || nameField.getText().trim().isEmpty()) return "Name is required";
-        if (emailField.getText() == null || emailField.getText().trim().isEmpty()) return "Email is required";
         if ((ibanField.getText() == null || ibanField.getText().trim().isEmpty())
             && (bicField.getText() != null && !bicField.getText().trim().isEmpty()))
                 return "Both IBAN and BIC are required to save a Bank Account";
