@@ -1,0 +1,24 @@
+@font-face {
+    src: url("../font/inter/static/Inter-Regular.ttf");
+}
+
+@font-face {
+    src: url("../font/inter/static/Inter-Bold.ttf");
+    /*font-family: 'Inter';*/
+}
+@font-face {
+    src: url("../font/inter/static/Inter-Medium.ttf");
+}
+@font-face {
+    src: url("../font/inter/static/Inter-Light.ttf");
+}
+
+.root {
+    -fx-font-family: 'Inter';
+}
+.bold {
+    -fx-font-weight: 700;
+}
+.big {
+    -fx-font-size: 18px;
+}

@@ -13,7 +13,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 import server.services.ExpenseService;
 import server.services.WebSocketUpdateService;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @RestController
@@ -37,29 +40,30 @@ public class ExpensesController {
     }
 
     @PostMapping(path = {"", "/"})
-    @JsonView(View.CommonsView.class)
+    @JsonView(View.ExpenseView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> post(@PathVariable UUID eventId, @RequestBody Expense expense)
             throws IllegalArgumentException {
         Expense saved = expenseService.save(eventId, expense);
-        listners.forEach((k, v) -> v.accept(expense));
+        listners.forEach((k, v) -> v.accept(saved));
         updateService.sendAddedExpense(eventId, saved);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/{expenseId}")
-    @JsonView(View.CommonsView.class)
+    @JsonView(View.ExpenseView.class)
     // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
     public ResponseEntity<Expense> getById(@PathVariable UUID expenseId) throws EntityNotFoundException {
         return ResponseEntity.ok(expenseService.getById(expenseId));
     }
 
     @PutMapping("/{expenseId}")
-    @JsonView(View.OverviewView.class)
+    @JsonView(View.ExpenseView.class)
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Expense> update(@PathVariable UUID eventId, @PathVariable UUID expenseId,
                                           @RequestBody Expense expense)
             throws EntityNotFoundException, IllegalArgumentException {
+        System.out.println(expense);
         Expense updated = expenseService.update(eventId, expenseId, expense);
         updateService.sendUpdatedExpense(eventId, updated);
         return ResponseEntity.ok(updated);
@@ -77,6 +81,7 @@ public class ExpensesController {
 
     private final long timeout = 5000L;
     @GetMapping("/updates")
+    @JsonView(View.StatisticsView.class)
     public DeferredResult<ResponseEntity<Expense>> getUpdates() {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);

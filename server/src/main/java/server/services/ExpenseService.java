@@ -10,7 +10,10 @@ import server.database.ExpenseRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ExpenseService {
@@ -90,6 +93,9 @@ public class ExpenseService {
         }
         if (expense.getDate() != null) {
             repoExpense.setDate(expense.getDate());
+        }
+        if (expense.getTag() != null) {
+            repoExpense.setTag(expense.getTag());
         }
         expenseRepo.flush();
         debtedAmount = repoExpense.getAmount() / repoExpense.getDebtors().size();

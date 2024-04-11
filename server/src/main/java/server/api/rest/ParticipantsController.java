@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import server.services.ParticipantsService;
 import server.services.WebSocketUpdateService;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events/{eventId}/participants")

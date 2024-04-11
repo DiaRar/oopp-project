@@ -1,11 +1,13 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -16,17 +18,17 @@ public class Tag {
 
     private UUID id;
     private String name;
-    private Color color;
+    private String color;
     private Event event;
     private Collection<Expense> expenses;
 
-    protected Tag() {
+    public Tag() {
     }
-    public Tag(String name, Color color) {
+    public Tag(String name, String color) {
         this.name = name;
         this.color = color;
     }
-    public Tag(String name, Color color, Collection<Expense> expenses, Event event) {
+    public Tag(String name, String color, Collection<Expense> expenses, Event event) {
         this.name = name;
         this.color = color;
         this.expenses = expenses;
@@ -35,25 +37,30 @@ public class Tag {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonView(View.CommonsView.class)
     public UUID getId() {
         return id;
     }
     @Basic
     @Column(name = "name")
+    @JsonView(View.CommonsView.class)
     public String getName() {
         return name;
     }
     @Basic
     @Column(name = "color")
-    public Color getColor() {
+    @JsonView(View.CommonsView.class)
+    public String getColor() {
         return color;
     }
     // Relationships
-    @ManyToMany(mappedBy = "tags")
+    @OneToMany(mappedBy = "tag")
+    @JsonView(View.StatisticsView.class)
     public Collection<Expense> getExpenses() {
         return expenses;
     }
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     public Event getEvent() {
         return event;
     }
@@ -64,7 +71,7 @@ public class Tag {
     public void setName(String name) {
         this.name = name;
     }
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
     public void setExpenses(Collection<Expense> expenses) {

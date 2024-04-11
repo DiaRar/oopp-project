@@ -15,34 +15,31 @@
  */
 package client.utils;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import client.uicomponents.Alerts;
+import com.google.inject.Inject;
+import commons.*;
+import commons.primary_keys.DebtPK;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.HttpStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import client.uicomponents.Alerts;
-import com.google.inject.Inject;
-import commons.Debt;
-import commons.Event;
-import commons.Expense;
-import commons.Participant;
-import commons.primary_keys.DebtPK;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.core.Response;
-import org.glassfish.jersey.client.ClientConfig;
-
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.GenericType;
-import org.springframework.http.HttpStatus;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 public class ServerUtils {
@@ -318,6 +315,79 @@ public class ServerUtils {
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public List<Tag> getTags(UUID eventId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(new GenericType<List<Tag>>() {});
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag getTag(UUID eventId, UUID tagId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.get(Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag updateTag(UUID eventId, UUID tagId, Tag newTag) {
+		try {
+			return ClientBuilder.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.put(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+
+	public Tag deleteTag(UUID eventId, UUID tagId) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/" + tagId)
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.delete(Tag.class);
+		} catch (Exception ex) {
+			handleConnectionException(ex);
+			return null;
+		}
+	}
+	public Tag addTag(UUID eventId, Tag tag) {
+		try {
+			return ClientBuilder
+					.newClient(new ClientConfig())
+					.target(server)
+					.path("/api/events/" + eventId + "/tags/")
+					.request(APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
+					.post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;
