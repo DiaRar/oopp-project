@@ -172,7 +172,7 @@ public class DebtsCtrl implements Initializable {
         if (debt.getPayer().getBankAccount() == null) {
             Text noBankText = new Text();
             noBankText.textProperty().bind(noBank);
-            tf.getChildren().add(new Text(noBank.toString()));
+            tf.getChildren().add(noBankText);
         } else {
             Text accountHolderText = new Text();
             accountHolderText.textProperty().bind(accountHolder);
