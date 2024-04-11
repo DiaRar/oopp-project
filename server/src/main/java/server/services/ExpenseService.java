@@ -10,10 +10,7 @@ import server.database.ExpenseRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ExpenseService {
