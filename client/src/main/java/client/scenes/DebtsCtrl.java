@@ -63,6 +63,7 @@ public class DebtsCtrl implements Initializable {
     private StringProperty noBank;
     private StringProperty bank;
     private StringProperty accountHolder;
+    private StringProperty noEmail;
 
     private List<Debt> debtList;
     private Map<UUID, Participant> participantCache;
@@ -80,6 +81,7 @@ public class DebtsCtrl implements Initializable {
         this.noBank = new SimpleStringProperty();
         this.bank = new SimpleStringProperty();
         this.accountHolder = new SimpleStringProperty();
+        this.noEmail = new SimpleStringProperty();
         this.executor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
@@ -169,6 +171,14 @@ public class DebtsCtrl implements Initializable {
 
         // Bank details at the bottom
         TextFlow tf = new TextFlow();
+        Text email;
+        if (debt.getPayer().getEmail() != null && !debt.getPayer().getEmail().isEmpty()) {
+            email = new Text("Email: " + debt.getPayer().getEmail());
+        } else {
+            email = new Text();
+            email.textProperty().bind(noEmail);
+        }
+        tf.getChildren().addAll(email, new Text("\n"));
         if (debt.getPayer().getBankAccount() == null) {
             Text noBankText = new Text();
             noBankText.textProperty().bind(noBank);
@@ -249,6 +259,7 @@ public class DebtsCtrl implements Initializable {
         this.noBank.bind(languageUtils.getBinding("debts.noBank"));
         this.bank.bind(languageUtils.getBinding("debts.bank"));
         this.accountHolder.bind(languageUtils.getBinding("debts.accountHolder"));
+        this.noEmail.bind(languageUtils.getBinding("debts.noEmail"));
         switch (config.getLocale().getLanguage()) {
             case "nl":
                 languageUtils.setLang("nl");
