@@ -83,7 +83,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().addExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().addExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
             }
         });
         session.subscribe(source("/remove/expense"), new StompFrameHandler() {
@@ -94,7 +97,10 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().removeExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().removeExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
             }
         });
         session.subscribe(source("/update/expense"), new StompFrameHandler() {
@@ -105,7 +111,22 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Expense expense = (Expense) payload;
-                Platform.runLater(() -> mainCtrl.get().updateExpense(expense));
+                Platform.runLater(() -> {
+                    mainCtrl.get().updateExpense(expense);
+                    mainCtrl.get().getDebtsCtrl().refresh();
+                });
+            }
+        });
+
+        session.subscribe(source("/update/debt"), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Object.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                Platform.runLater(() -> mainCtrl.get().getDebtsCtrl().refresh());
             }
         });
         session.subscribe(source("/add/tag"), new StompFrameHandler() {

@@ -1,5 +1,7 @@
 package commons.primary_keys;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import commons.views.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -14,8 +16,10 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Embeddable
 public class DebtPK implements Serializable {
     @Column(name = "payer_id")
+    @JsonView(View.CommonsView.class)
     private UUID payerId;
     @Column(name = "debtor_id")
+    @JsonView(View.CommonsView.class)
     private UUID debtorId;
     protected DebtPK() {}
     public DebtPK(UUID payerId, UUID debtorId) {

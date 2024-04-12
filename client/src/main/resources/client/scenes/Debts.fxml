@@ -7,7 +7,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DebtsCtrl">
+
+<BorderPane stylesheets="@/client/stylesheets/debts.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DebtsCtrl">
    <center>
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="454.0" prefWidth="374.0" BorderPane.alignment="CENTER">
          <content>
@@ -23,11 +24,22 @@
       </ScrollPane>
    </center>
    <bottom>
-      <Button fx:id="returnButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" BorderPane.alignment="CENTER_RIGHT">
+      <GridPane BorderPane.alignment="CENTER_RIGHT">
          <BorderPane.margin>
-            <Insets right="5.0" top="5.0" />
+            <Insets top="5.0" />
          </BorderPane.margin>
-      </Button>
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="returnButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#openOverview" text="Return to Overview" GridPane.columnIndex="1" />
+            <Button fx:id="recalculateButton" mnemonicParsing="false" onAction="#recalculate" text="Recalculate Debts" />
+         </children>
+      </GridPane>
    </bottom>
    <top>
       <Label fx:id="title" contentDisplay="CENTER" prefHeight="22.0" prefWidth="374.0" text="Open debts" BorderPane.alignment="CENTER">
@@ -43,6 +55,6 @@
       </Label>
    </top>
    <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </BorderPane>

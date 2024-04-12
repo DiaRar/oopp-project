@@ -53,8 +53,7 @@ public class ParticipantsController {
     }
 
     @GetMapping(path = {"", "/"})
-    @JsonView(View.CommonsView.class)
-    // * THIS ENDPOINT WILL LIKELY NOT BE USED * //
+    @JsonView(View.ParticipantView.class)
     public ResponseEntity<List<Participant>> getParticipants(@PathVariable UUID eventId) {
         return ResponseEntity.ok(participantsService.getParticipants(eventId));
     }

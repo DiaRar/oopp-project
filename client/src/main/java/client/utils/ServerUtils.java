@@ -139,11 +139,12 @@ public class ServerUtils {
 		}
 	}
 
-	public List<Participant> getParticipants() {
+	public List<Participant> getParticipants(UUID eventId) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
-					.path("/api/participants/")
+					.path("/api/events/{eventId}/participants")
+					.resolveTemplate("eventId", eventId)
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
 					.get(new GenericType<List<Participant>>() {});
@@ -225,29 +226,30 @@ public class ServerUtils {
 		}
 	}
 
-	public Debt updateDebt(Event event, DebtPK debtPK, Debt newDebt) {
+	public Double settleDebt(UUID eventId, DebtPK debtPK, Double amount) {
 		try {
 			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
-					.path("/api/events/" + event.getId() + "/debts/" + debtPK)
+					.path("/api/events/{eventId}/debts/settle/{payerId}/{debtorId}")
+					.resolveTemplate("eventId", eventId)
+					.resolveTemplate("payerId", debtPK.getPayerId())
+					.resolveTemplate("debtorId", debtPK.getDebtorId())
 					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.put(Entity.entity(newDebt, APPLICATION_JSON), Debt.class);
+					.post(Entity.entity(amount, APPLICATION_JSON), Double.class);
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;
 		}
 	}
 
-	public Debt deleteDebt(UUID eventId, DebtPK debtId) {
+	public Response recalculateDebt(UUID eventId) {
 		try {
-			return ClientBuilder
-					.newClient(new ClientConfig())
+			return ClientBuilder.newClient(new ClientConfig())
 					.target(server)
-					.path("/api/events/" + eventId + "/debts/" + debtId)
-					.request(APPLICATION_JSON)
-					.accept(APPLICATION_JSON)
-					.delete(Debt.class);
+					.path("/api/events/{eventId}/debts/recalculate")
+					.resolveTemplate("eventId", eventId)
+					.request()
+					.get();
 		} catch (Exception ex) {
 			handleConnectionException(ex);
 			return null;

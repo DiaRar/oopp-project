@@ -318,6 +318,10 @@ public class MainCtrl {
         primaryStage.setHeight(screenHeight);
     }
 
+    public DebtsCtrl getDebtsCtrl() {
+        return this.debtsCtrl;
+    }
+
     public void stop() {
         serverUtils.stop();
     }

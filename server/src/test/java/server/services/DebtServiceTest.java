@@ -66,6 +66,7 @@ public class DebtServiceTest {
         when(debtRepository.findById(new DebtPK(payer.getId(), debtor.getId())))
                 .thenReturn(Optional.of(debt));
         Debt response = debtService.getById(new DebtPK(payer.getId(), debtor.getId()));
+        debt.setAmount(-debt.getAmount());
         assertEquals(debt, response);
     }
 

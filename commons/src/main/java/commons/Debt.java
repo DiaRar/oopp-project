@@ -18,9 +18,11 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Table(name = "debt")
 public class Debt {
     @EmbeddedId
+    @JsonView(View.CommonsView.class)
     private DebtPK id;
     @Column(name = "amount")
     @NotNull
+    @JsonView(View.CommonsView.class)
     private Double amount;
     @ManyToOne(optional = false)
     @MapsId("payer_id")

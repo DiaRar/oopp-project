@@ -23,13 +23,35 @@ public class DebtService {
     }
 
     public Optional<Debt> getOptionalById(DebtPK id) {
-        return debtRepo.findById(id);
+        Optional<Debt> od = debtRepo.findById(id);
+        if (od.isEmpty()) {
+            return od;
+        }
+        Debt newDebt = od.get();
+        newDebt.setAmount(-newDebt.getAmount());
+        return Optional.of(newDebt);
     }
     public List<Debt> getAll() {
         return debtRepo.findAll();
     }
 
     public Debt getById(DebtPK id) {
+        Debt clone = clone(getByIdInner(id));
+        clone.setAmount(-clone.getAmount());
+        return clone;
+    }
+
+    public Collection<Debt> getByEventId(UUID eventId) {
+        Collection<Debt> eventDebts = debtRepo.findDebtsByEventId(eventId);
+        return eventDebts.stream().filter(d -> d.getAmount() < 0.0 && !d.getId().getPayerId().equals(d.getId().getDebtorId()))
+                .map(d -> new Debt(d.getPayer(), d.getDebtor(), -d.getAmount(), d.getEvent())).toList();
+    }
+
+    private Collection<Debt> getByEventIdInner(UUID eventId) {
+        return debtRepo.findDebtsByEventId(eventId);
+    }
+
+    private Debt getByIdInner(DebtPK id) {
         Optional<Debt> od = debtRepo.findById(id);
         if (od.isEmpty()) {
             throw new EntityNotFoundException("Did not find the specified debt.");
@@ -46,6 +68,40 @@ public class DebtService {
     }
 
     public Debt add(UUID eventId, Debt debt) {
+        if (debt.getAmount() == null) {
+            throw new IllegalArgumentException("Cannot add debt without amount.");
+        }
+        if (debtRepo.existsById(debt.getId())) {
+            throw new IllegalArgumentException("Cannot add already existing debt.");
+        }
+        if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
+            throw new IllegalArgumentException("Cannot add debt from participant to itself.");
+        }
+        Event event = new Event();
+        Debt debtorToPayer = new Debt(debt.getDebtor(), debt.getPayer(), debt.getAmount(), event);
+
+        // Adds the debtor to payer with positive amount
+        addOneDirectional(eventId, debtorToPayer);
+        // Adds the actual debt
+        debt.setAmount(-debt.getAmount());
+        Debt returnVal = addOneDirectional(eventId, debt);
+
+        Debt cloneSaved = clone(returnVal);
+        cloneSaved.setAmount(-cloneSaved.getAmount());
+        return cloneSaved;
+    }
+
+    private Debt clone(Debt debt) {
+        Debt clone = new Debt();
+        clone.setId(debt.getId());
+        clone.setPayer(debt.getPayer());
+        clone.setDebtor(debt.getDebtor());
+        clone.setAmount(debt.getAmount());
+        clone.setEvent(debt.getEvent());
+        return clone;
+    }
+
+    private Debt addOneDirectional(UUID eventId, Debt debt) {
         Event event = new Event();
         event.setId(eventId);
         debt.setEvent(event);
@@ -53,23 +109,40 @@ public class DebtService {
     }
 
     public Debt update(UUID eventId, DebtPK id, Debt debt) {
-        // TODO: check if the new Debt is a valid input
         debt.setId(id);
-        Debt repoDebt = getById(id);
+        Debt repoDebt = getByIdInner(id);
         if (!repoDebt.getEvent().getId().equals(eventId)) {
             throw new IllegalArgumentException("Event and Debt mismatch!");
         }
-        if (repoDebt.getAmount() != null) {
-            repoDebt.setAmount(debt.getAmount());
+        if (debt.getAmount() == null) {
+            throw new IllegalArgumentException("Cannot update without amount.");
         }
+        if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
+            throw new IllegalArgumentException("Cannot add debt from participant to itself.");
+        }
+        Optional<Debt> odtp = debtRepo.findById(new DebtPK(id.getDebtorId(), id.getPayerId()));
+        Debt debtorToPayer;
+        if (odtp.isEmpty()) {
+            Debt newodtp = new Debt(repoDebt.getDebtor(), repoDebt.getPayer(), -repoDebt.getAmount(), repoDebt.getEvent());
+            debtRepo.save(newodtp);
+            debtorToPayer = newodtp;
+        } else {
+            debtorToPayer = getByIdInner(new DebtPK(id.getDebtorId(), id.getPayerId()));
+        }
+        debtorToPayer.setAmount(debt.getAmount());
+        repoDebt.setAmount(-debt.getAmount());
         debtRepo.flush();
-        return repoDebt;
+        Debt ret = clone(repoDebt);
+        ret.setAmount(-ret.getAmount());
+        return ret;
     }
 
     public Integer delete(DebtPK id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
+        DebtPK reverseDebt = new DebtPK(id.getDebtorId(), id.getPayerId());
+        debtRepo.deleteDebtById(reverseDebt);
         Integer deletedRows = debtRepo.deleteDebtById(id);
         if (deletedRows != 1) {
             throw new EntityNotFoundException("Could not find the debt");
@@ -126,16 +199,16 @@ public class DebtService {
                 debtorPair.setDebt(0.0);
                 payerPair.setDebt(payerAmount - debtorAmount);
                 // Payer to Debtor
-                add(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -debtorAmount, event));
+                addOneDirectional(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -debtorAmount, event));
                 // Debtor to Payer
-                add(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), debtorAmount, event));
+                addOneDirectional(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), debtorAmount, event));
             } else {
                 payerPair.setDebt(0.0);
                 debtorPair.setDebt(debtorAmount - payerAmount);
                 // Payer to Debtor
-                add(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -payerAmount, event));
+                addOneDirectional(eventId, new Debt(payerPair.getParticipant(), debtorPair.getParticipant(), -payerAmount, event));
                 // Debtor to Payer
-                add(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), payerAmount, event));
+                addOneDirectional(eventId, new Debt(debtorPair.getParticipant(), payerPair.getParticipant(), payerAmount, event));
             }
 
             // Go to next payer/debtor pair
@@ -145,8 +218,8 @@ public class DebtService {
     }
 
     public Debt settle(UUID eventId, UUID payerId, UUID debtorId, Double amount) {
-        Debt payerToDebtor = getById(new DebtPK(payerId, debtorId));
-        Debt debtorToPayer = getById(new DebtPK(debtorId, payerId));
+        Debt payerToDebtor = getByIdInner(new DebtPK(payerId, debtorId));
+        Debt debtorToPayer = getByIdInner(new DebtPK(debtorId, payerId));
         if (!payerToDebtor.getEvent().getId().equals(eventId)) {
             throw new IllegalArgumentException("Event and Debt mismatch!");
         }
