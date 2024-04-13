@@ -46,8 +46,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
 
