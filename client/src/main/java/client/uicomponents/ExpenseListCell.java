@@ -6,7 +6,6 @@ import commons.Expense;
 import commons.Participant;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -52,7 +51,8 @@ public class ExpenseListCell extends ListCell<Expense> {
 
     private final LanguageUtils languageUtils;
     public ExpenseListCell(ObservableList<Participant> participants, Function<UUID, EventHandler<ActionEvent>> onRemove,
-                           Function<Expense, EventHandler<ActionEvent>> onEdit, Function<Expense, EventHandler<ActionEvent>> tagSelect, LanguageUtils languageUtils) {
+                           Function<Expense, EventHandler<ActionEvent>> onEdit, Function<Expense,
+                            EventHandler<ActionEvent>> tagSelect, LanguageUtils languageUtils) {
         this.participants = participants;
         this.onRemove = onRemove;
         this.onEdit = onEdit;
