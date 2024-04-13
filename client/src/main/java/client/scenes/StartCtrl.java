@@ -148,10 +148,8 @@ public class StartCtrl implements Initializable {
     public void join() {
         try {
             UUID uuid = UUID.fromString(joinField.getText());
-            Event retEvent = mainCtrl.getEvent();
-            if (retEvent == null) return;
-            utils.addRecent(retEvent);
             mainCtrl.setEvent(uuid);
+            utils.addRecent(mainCtrl.getEvent());
             mainCtrl.showOverviewStart();
         } catch (IllegalArgumentException ex) {
             Alerts.invalidUUIDAlert();
