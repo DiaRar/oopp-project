@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.primary_keys.DebtPK;
 import commons.views.View;
@@ -35,16 +36,28 @@ public class Debt {
     @JsonView(View.SettleView.class)
     private Participant debtor;
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Event event;
     public Debt() {
         this.id = new DebtPK(null, null);
     }
     // Added another constructor, as I am unsure which one to use yet.
     // TODO: choose the constructor for Debt
+    public Debt(UUID payerId, UUID debtorId, Double amount) {
+        this.id = new DebtPK(payerId, debtorId);
+        this.amount = amount;
+        this.event = event;
+    }
     public Debt(UUID payerId, UUID debtorId, Double amount, Event event) {
         this.id = new DebtPK(payerId, debtorId);
         this.amount = amount;
         this.event = event;
+    }
+    public Debt(Participant payer, Participant debtor, Double amount) {
+        this.id = new DebtPK(payer.getId(), debtor.getId());
+        this.payer = payer;
+        this.debtor = debtor;
+        this.amount = amount;
     }
     public Debt(Participant payer, Participant debtor, Double amount, Event event) {
         this.id = new DebtPK(payer.getId(), debtor.getId());

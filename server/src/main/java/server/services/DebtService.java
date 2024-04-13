@@ -67,6 +67,19 @@ public class DebtService {
         return debtRepo.findDebtsByDebtorId(id);
     }
 
+    public Debt save(UUID eventId, Debt debt) {
+        if (debt.getAmount() == null) {
+            throw new IllegalArgumentException("Cannot add debt without amount.");
+        }
+        if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
+            throw new IllegalArgumentException("Cannot add debt from participant to itself");
+        }
+        Event event = new Event();
+        event.setId(eventId);
+        debt.setEvent(event);
+        return debtRepo.save(debt);
+    }
+
     public Debt add(UUID eventId, Debt debt) {
         if (debt.getAmount() == null) {
             throw new IllegalArgumentException("Cannot add debt without amount.");
@@ -77,8 +90,7 @@ public class DebtService {
         if (debt.getId().getPayerId().equals(debt.getId().getDebtorId())) {
             throw new IllegalArgumentException("Cannot add debt from participant to itself.");
         }
-        Event event = new Event();
-        Debt debtorToPayer = new Debt(debt.getDebtor(), debt.getPayer(), debt.getAmount(), event);
+        Debt debtorToPayer = new Debt(debt.getDebtor(), debt.getPayer(), debt.getAmount());
 
         // Adds the debtor to payer with positive amount
         addOneDirectional(eventId, debtorToPayer);
