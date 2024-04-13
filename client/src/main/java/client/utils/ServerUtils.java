@@ -58,7 +58,7 @@ public class ServerUtils {
 		if (ex instanceof ProcessingException) {
 			Alerts.connectionRefusedAlert();
 		} else {
-			throw new NotFoundException(ex);
+			Alerts.exceptionAlert(ex);
 		}
 	}
 
