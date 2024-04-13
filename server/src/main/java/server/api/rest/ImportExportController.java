@@ -1,6 +1,7 @@
 package server.api.rest;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,14 @@ public class ImportExportController {
     }
 
     @PostMapping("/import")
+    @Transactional
+    public ResponseEntity<String> importAllData(@RequestBody String json) {
+        importExportService.importAllData(json);
+        return ResponseEntity.ok("Data imported successfully.");
+    }
+
+    @PostMapping("/import/event")
+    @Transactional
     public ResponseEntity<String> importData(@RequestBody String json) {
         importExportService.importData(json);
         return ResponseEntity.ok("Data imported successfully.");

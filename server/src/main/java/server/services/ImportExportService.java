@@ -37,9 +37,36 @@ public class ImportExportService {
         this.tagService = tagService;
         this.updateService = updateService;
     }
-
-    // God bless whoever is reading this, this function is something
+    public void importEvent(Event event, HashMap<UUID, Participant> participantHashMap, HashMap<UUID, Tag> tagHashMap) {
+        Event newEvent = eventService.add(new Event(event.getName()));
+        event.getParticipants().forEach(participant ->
+                participantHashMap.put(participant.getId(), participantsService.addParticipant(newEvent.getId(), new Participant(participant.getNickname(),
+                        participant.getEmail(), participant.getBankAccount()))));
+        event.getTags().forEach(tag -> tagHashMap.put(tag.getId(), tagService.add(newEvent.getId(), new Tag(tag.getName(), tag.getColor()))));
+        event.getExpenses().forEach(expense -> expenseService.save(newEvent.getId(),
+                new Expense(expense.getAmount(), expense.getTitle(), expense.getDate(),
+                        participantHashMap.get(expense.getPayer().getId()), expense.getDebtors()
+                        .stream().map(participant -> participantHashMap.get(participant.getId())).toList(),
+                        tagHashMap.get(expense.getTag().getId()))));
+        debtService.deleteAll(newEvent.getId());
+        event.getDebts().forEach(debt ->
+                debtService.save(newEvent.getId(), new Debt(participantHashMap.get(debt.getPayer().getId()), participantHashMap.get(debt.getDebtor().getId()), debt.getAmount())));
+        updateService.sendNewEvent(newEvent);
+    }
     public void importData(String jsonData) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        HashMap<UUID, Participant> participantHashMap = new HashMap<>();
+        HashMap<UUID, Tag> tagHashMap = new HashMap<>();
+        try {
+            Event event = objectMapper.readValue(jsonData, Event.class);
+            importEvent(event, participantHashMap, tagHashMap);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    // God bless whoever is reading this, this function is something
+    public void importAllData(String jsonData) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         HashMap<UUID, Participant> participantHashMap = new HashMap<>();
@@ -47,19 +74,7 @@ public class ImportExportService {
         try {
             ArrayList<Event> events = objectMapper.readValue(jsonData, new TypeReference<>() {});
             for (Event event : events) {
-                Event newEvent = eventService.add(new Event(event.getName()));
-                event.getParticipants().forEach(participant ->
-                        participantHashMap.put(participant.getId(), participantsService.addParticipant(newEvent.getId(), new Participant(participant.getNickname(),
-                                participant.getEmail(), participant.getBankAccount()))));
-                event.getTags().forEach(tag -> tagHashMap.put(tag.getId(), tagService.add(newEvent.getId(), new Tag(tag.getName(), tag.getColor()))));
-                event.getDebts().forEach(debt ->
-                        debtService.save(newEvent.getId(), new Debt(participantHashMap.get(debt.getPayer().getId()), participantHashMap.get(debt.getDebtor().getId()), debt.getAmount())));
-                event.getExpenses().forEach(expense -> expenseService.save(newEvent.getId(),
-                        new Expense(expense.getAmount(), expense.getTitle(), expense.getDate(),
-                                participantHashMap.get(expense.getPayer().getId()), expense.getDebtors()
-                                .stream().map(participant -> participantHashMap.get(participant.getId())).toList(),
-                                tagHashMap.get(expense.getTag().getId()))));
-                updateService.sendNewEvent(newEvent);
+                importEvent(event, participantHashMap, tagHashMap);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

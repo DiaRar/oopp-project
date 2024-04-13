@@ -14,9 +14,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,12 +28,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class OverviewCtrl implements Initializable {
+    private static final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
     private ServerUtils serverUtils;
     private Config config;
     @FXML
     private TableView<Event> tableView;
+
+    public static Executor getExecutor() {
+        return executor;
+    }
+
     @Inject
     public OverviewCtrl(ServerUtils serverUtils, Config config) {
         this.serverUtils = serverUtils;
@@ -46,45 +54,41 @@ public class OverviewCtrl implements Initializable {
         tableView.setItems(eventList);
     }
 
-    public void download() throws InterruptedException {
-        Thread thread = Thread.ofVirtual().start(() -> {
+    public void download() {
             var json = serverUtils.getExportResult();
-            createJsonDumpRepo();
-            var file = new File(config.getJsonPath(), "export.json");
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose a path to download to:");
+            String home = System.getProperty("user.home");
+            directoryChooser.setInitialDirectory(new File(home + "/Downloads/"));
+            File selected = directoryChooser.showDialog(null);
+            if (selected == null) {
+                System.out.println("no folder selected");
+                return;
+            }
+            var file = new File(selected, "full.json");
             if (file.exists()) file.delete();
-
-            try (FileWriter fileWriter = new FileWriter(file)) {
+            executor.execute(() -> {
+                try (FileWriter fileWriter = new FileWriter(file)) {
                 fileWriter.write(json);
-                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                    Desktop.getDesktop().open(new File(config.getJsonPath()));
-                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        thread.join();
     }
-
-    private void createJsonDumpRepo() {
-        var dir = new File(config.getJsonPath());
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-    }
-
-    public void upload() {
-        // Create the UI components for uploading (e.g., FileChooser)
-        createJsonDumpRepo();
+    public static File uploadSelector() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a JSON file to upload to the database");
-        fileChooser.setInitialDirectory(new File(config.getJsonPath()));
-
-        File selectedFile = fileChooser.showOpenDialog(null);
+        String home = System.getProperty("user.home");
+        fileChooser.setInitialDirectory(new File(home + "/Downloads/"));
+        return fileChooser.showOpenDialog(null);
+    }
+    public void upload() {
+        File selectedFile = uploadSelector();
         if (selectedFile != null) {
             try {
                 String jsonData = Files.readString(selectedFile.toPath());
                 serverUtils.importDatabase(jsonData);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Error reading the selected file", e);
             }
         } else {
@@ -113,7 +117,18 @@ public class OverviewCtrl implements Initializable {
             }
         }
     }
-
+    public void uploadOne() {
+        File selectedFile = uploadSelector();
+        if (selectedFile == null) {
+            return;
+        }
+        try {
+            String jsonData = Files.readString(selectedFile.toPath());
+            serverUtils.importEvent(jsonData);
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading the selected file", e);
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         final int secondsInAMinute = 60;
@@ -164,8 +179,8 @@ public class OverviewCtrl implements Initializable {
         TableColumn<Event, Void> downloadColumn = new TableColumn<>("Download");
         downloadColumn.setCellFactory(param -> new DownloadButtonCell(tableView, serverUtils, config));
 
-
-        tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn, downloadColumn);
+        tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn,
+                removeColumn, downloadColumn);
 
     }
 }

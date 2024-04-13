@@ -113,4 +113,16 @@ public class ServerUtils {
             throw new RuntimeException(e);
         }
     }
+    public void importEvent(String json) {
+        try {
+            ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/json/import/event")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .post(Entity.json(json));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

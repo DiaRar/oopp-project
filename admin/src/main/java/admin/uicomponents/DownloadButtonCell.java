@@ -1,11 +1,13 @@
 package admin.uicomponents;
 
+import admin.scenes.OverviewCtrl;
 import admin.utils.Config;
 import admin.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import javafx.stage.DirectoryChooser;
 
 import java.awt.*;
 import java.io.File;
@@ -25,8 +27,7 @@ public class DownloadButtonCell extends TableCell<Event, Void> {
         this.downlodButton.setOnAction(event -> {
             Event eventToDownload = getTableView().getItems().get(getIndex());
             try {
-                Thread thread = Thread.ofVirtual().start(() -> download(eventToDownload.getId()));
-                thread.join();
+                download(eventToDownload.getId());
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -42,27 +43,24 @@ public class DownloadButtonCell extends TableCell<Event, Void> {
             setGraphic(downlodButton);
         }
     }
-
-    private void createJsonDumpRepo() {
-        var dir = new File(config.getJsonPath());
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-    }
-
     public void download(UUID eventID) {
         var json = serverUtils.getExportEvent(eventID);
-        createJsonDumpRepo();
-        var file = new File(config.getJsonPath(), "export.json");
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose a path to download to:");
+        String home = System.getProperty("user.home");
+        directoryChooser.setInitialDirectory(new File(home + "/Downloads/"));
+        File selected = directoryChooser.showDialog(null);
+        if (selected == null)
+            return;
+        var file = new File(selected, eventID.toString());
         if (file.exists()) file.delete();
 
+        OverviewCtrl.getExecutor().execute(() -> {
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(json);
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(new File(config.getJsonPath()));
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        });
     }
 }

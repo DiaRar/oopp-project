@@ -298,7 +298,6 @@ public class MainCtrl {
     }
 
     public void setEvent(UUID uuid) {
-        if (this.event != null) return;
         expenseList.clear();
         participantList.clear();
         tagList.clear();

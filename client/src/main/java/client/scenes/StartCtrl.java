@@ -136,7 +136,7 @@ public class StartCtrl implements Initializable {
         if (retEvent == null) return;
         serverUtils.addTag(retEvent.getId(), new Tag("Food", "#888888"));
         serverUtils.addTag(retEvent.getId(), new Tag("Ticket", "#00ff00"));
-            serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#0000ff"));
+        serverUtils.addTag(retEvent.getId(), new Tag("Transport", "#0000ff"));
         utils.addRecent(retEvent);
         mainCtrl.setEvent(retEvent.getId());
         mainCtrl.showOverviewStart();
@@ -148,10 +148,8 @@ public class StartCtrl implements Initializable {
     public void join() {
         try {
             UUID uuid = UUID.fromString(joinField.getText());
-            Event retEvent = mainCtrl.getEvent();
-            if (retEvent == null) return;
-            utils.addRecent(retEvent);
             mainCtrl.setEvent(uuid);
+            utils.addRecent(mainCtrl.getEvent());
             mainCtrl.showOverviewStart();
         } catch (IllegalArgumentException ex) {
             Alerts.invalidUUIDAlert();

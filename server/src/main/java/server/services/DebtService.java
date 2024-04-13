@@ -66,7 +66,9 @@ public class DebtService {
     public Collection<Debt> getByDebtorId(UUID id) {
         return debtRepo.findDebtsByDebtorId(id);
     }
-
+    public void deleteAll(UUID eventId) {
+        debtRepo.deleteDebtByEventId(eventId);
+    }
     public Debt save(UUID eventId, Debt debt) {
         if (debt.getAmount() == null) {
             throw new IllegalArgumentException("Cannot add debt without amount.");
