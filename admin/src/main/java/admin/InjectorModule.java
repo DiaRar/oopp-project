@@ -31,19 +31,10 @@ public class InjectorModule implements Module {
     private Config createConfig() {
         try {
             var dir = "./admin/src/main/resources/";
-            return Config.read(new File(normalizePath(dir  + "config/config.properties")), normalizePath(dir + "JsonDumps"));
+            return Config.read(new File(getClass().getResource("/config/config.properties").getFile()),  "./JsonDumps");
         } catch (IOException e) {
             Alerts.configNotSetUpAlert();
             throw new RuntimeException(e);
         }
-    }
-
-    private String normalizePath(String strPath) {
-        Path path = Paths.get(strPath);
-        String absolutePath = path.toAbsolutePath().normalize().toString();
-        if (absolutePath.contains("\\admin\\admin\\")) {
-            absolutePath = absolutePath.replaceFirst("\\\\admin\\\\admin\\\\", "\\\\admin\\\\");
-        }
-        return absolutePath;
     }
 }
