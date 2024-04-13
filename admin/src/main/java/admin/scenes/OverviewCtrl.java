@@ -85,7 +85,7 @@ public class OverviewCtrl {
         });
 
         TableColumn<Event, Void> removeColumn = new TableColumn<>("Remove");
-        removeColumn.setCellFactory(param -> new RemoveButtonCell(tableView));
+        removeColumn.setCellFactory(param -> new RemoveButtonCell(tableView, serverUtils));
 
         tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn);
     }

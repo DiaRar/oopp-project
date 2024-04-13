@@ -88,6 +88,19 @@ public class ServerUtils {
         }
     }
 
+    public String getExportEvent(UUID eventID) {
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(server)
+                    .path("/api/json/export/" + eventID.toString())
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<String>(){});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void importDatabase(String json) {
         try {
             ClientBuilder.newClient(new ClientConfig())
