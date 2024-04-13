@@ -7,8 +7,11 @@ import client.utils.ServerUtils;
 import com.google.inject.Singleton;
 import commons.Event;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import org.kordamp.ikonli.feather.Feather;
@@ -19,6 +22,7 @@ import java.util.Objects;
 public class CustomMenuBar extends MenuBar {
     private static final double FLAG_WIDTH = 48;
     private static final double FLAG_HEIGHT = 36;
+    private static final double INDICATOR_FLAG_HEIGHT = 16;
     private ToggleGroup language;
     private ToggleGroup theme;
     private Menu languages;
@@ -52,31 +56,53 @@ public class CustomMenuBar extends MenuBar {
             });
             dialog.show();
         });
+        ObjectBinding<Node> graphicBinding = Bindings.createObjectBinding(
+                () -> {
+                    ImageView view = null;
+                    if (language.getSelectedToggle() != null) {
+                        ClassLoader loader = getClass().getClassLoader();
+                        view = switch (((RadioMenuItem) language.getSelectedToggle()).getId()) {
+                            case "en" -> new ImageView(Objects.requireNonNull(loader.getResource(FlagPath.UK_FLAG_PATH)).toString());
+                            case "nl" -> new ImageView(Objects.requireNonNull(loader.getResource(FlagPath.NL_FLAG_PATH)).toString());
+                            default ->
+                                    null;
+                        };
+                        if (view != null) {
+                            view.setPreserveRatio(true);
+                            view.setFitHeight(INDICATOR_FLAG_HEIGHT);
+                            view.setSmooth(true);
+                        }
+                    }
+                    return view;
+                },
+                language.selectedToggleProperty()
+        );
+        languages.graphicProperty().bind(graphicBinding);
     }
     public CustomMenuBar() {
         super();
         ClassLoader loader = getClass().getClassLoader();
         language = new ToggleGroup();
         languages = new Menu("Language");
-        ImageView greatBrittain = new ImageView(
-                Objects.requireNonNull(loader.getResource("client/flags/UK.png")).toString()
+        ImageView gbFlag = new ImageView(
+                Objects.requireNonNull(loader.getResource(FlagPath.UK_FLAG_PATH)).toString()
         );
-        greatBrittain.setPreserveRatio(true);
-        greatBrittain.setSmooth(true);
-        greatBrittain.setFitWidth(FLAG_WIDTH);
-        greatBrittain.setFitHeight(FLAG_HEIGHT);
-        RadioMenuItem english = new RadioMenuItem("English", greatBrittain);
+        gbFlag.setPreserveRatio(true);
+        gbFlag.setSmooth(true);
+        gbFlag.setFitWidth(FLAG_WIDTH);
+        gbFlag.setFitHeight(FLAG_HEIGHT);
+        RadioMenuItem english = new RadioMenuItem("English", gbFlag);
         english.setToggleGroup(language);
         english.setId("en");
 
-        ImageView goofyLanguageCountry = new ImageView(
-                Objects.requireNonNull(loader.getResource("client/flags/Netherlands.png")).toString()
+        ImageView nlFlag = new ImageView(
+                Objects.requireNonNull(loader.getResource(FlagPath.NL_FLAG_PATH)).toString()
         );
-        goofyLanguageCountry.setFitWidth(FLAG_WIDTH);
-        goofyLanguageCountry.setFitHeight(FLAG_HEIGHT);
-        goofyLanguageCountry.setPreserveRatio(true);
-        goofyLanguageCountry.setSmooth(true);
-        RadioMenuItem dutch = new RadioMenuItem("Dutch", goofyLanguageCountry
+        nlFlag.setFitWidth(FLAG_WIDTH);
+        nlFlag.setFitHeight(FLAG_HEIGHT);
+        nlFlag.setPreserveRatio(true);
+        nlFlag.setSmooth(true);
+        RadioMenuItem dutch = new RadioMenuItem("Dutch", nlFlag
                 );
         dutch.setToggleGroup(language);
         dutch.setId("nl");
