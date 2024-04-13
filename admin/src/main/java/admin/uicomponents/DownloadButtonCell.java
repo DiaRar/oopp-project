@@ -32,6 +32,16 @@ public class DownloadButtonCell extends TableCell<Event, Void> {
         });
     }
 
+    @Override
+    protected void updateItem(Void item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty) {
+            setGraphic(null);
+        } else {
+            setGraphic(downlodButton);
+        }
+    }
+
     private void createJsonDumpRepo() {
         var dir = new File(config.getJsonPath());
         if (!dir.exists()) {

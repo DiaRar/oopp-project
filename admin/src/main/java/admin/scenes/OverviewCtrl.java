@@ -1,5 +1,6 @@
 package admin.scenes;
 
+import admin.uicomponents.DownloadButtonCell;
 import admin.uicomponents.RemoveButtonCell;
 import admin.utils.Config;
 import admin.utils.ServerUtils;
@@ -87,7 +88,10 @@ public class OverviewCtrl {
         TableColumn<Event, Void> removeColumn = new TableColumn<>("Remove");
         removeColumn.setCellFactory(param -> new RemoveButtonCell(tableView, serverUtils));
 
-        tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn);
+        TableColumn<Event, Void> downloadColumn = new TableColumn<>("Download");
+        downloadColumn.setCellFactory(param -> new DownloadButtonCell(tableView, serverUtils, config));
+
+        tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn, downloadColumn);
     }
 
     public void download() {

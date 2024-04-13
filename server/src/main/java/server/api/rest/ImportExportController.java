@@ -36,7 +36,7 @@ public class ImportExportController {
         }
     }
 
-    @GetMapping("/export/{eventId]")
+    @GetMapping("/export/{eventId}")
     public ResponseEntity<String> exportData(@PathVariable UUID eventId) {
         try {
             String json = importExportService.exportWithId(eventId);
