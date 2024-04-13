@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,12 +19,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class StatisticsCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
 
+    private ObservableList<Expense> expenses;
     private ObservableList<PieChart.Data> data;
     private double sum;
 
@@ -52,38 +55,84 @@ public class StatisticsCtrl implements Initializable {
         amount.setText("" + sum + "$");
         data = FXCollections.observableArrayList(getData());
         chart.setData(data);
+        startUpdates();
+    }
+    public void startUpdates() {
+        createUpdates();
+        editUpdates();
+        deleteUpdates();
+    }
+    public void createUpdates() {
         server.registerForUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
-            if (e.getTag() == null) {
-                boolean b = true;
-                for (int i = 0; i < data.size(); i++) {
-                    if (data.get(i).getName().equals("Other")) {
-                        double temp = e.getAmount() + data.get(i).getPieValue();
-                        data.remove(i);
-                        data.add(new PieChart.Data("Other", temp));
-                        b = false;
-                        break;
-                    }
+            expenses.add(e);
+            updateUI(e);
+        }));
+    }
+    public void editUpdates() {
+        server.registerForEditUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
+            for (Expense x: expenses) {
+                if (x.getId().equals(e.getId())) {
+                    removeUI(x);
+                    updateUI(e);
+                    expenses.remove(x);
+                    expenses.add(e);
+                    break;
                 }
-                if (b) data.add(new PieChart.Data("Other", e.getAmount()));
-            } else {
-                    Tag x = e.getTag();
-                    boolean b = true;
-                    for (int i = 0; i < data.size(); i++) {
-                        if (data.get(i).getName().equals(x.getName())) {
-                            double temp = e.getAmount() + data.get(i).getPieValue();
-                            data.remove(i);
-                            data.add(new PieChart.Data(x.getName(), temp));
-                            b = false;
-                            break;
-                        }
-                    }
-                    if (b) data.add(new PieChart.Data(x.getName(), e.getAmount()));
-                }
-            sum = sum + e.getAmount();
-            amount.setText("" + sum + "$");
+            }
         }));
     }
 
+    public void deleteUpdates() {
+        server.registerForDeleteUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
+            for (Expense x: expenses) {
+                if (x.getId().equals(e.getId())) {
+                    removeUI(x);
+                    expenses.remove(x);
+                    break;
+                }
+            }
+        }));
+    }
+    public void updateUI(Expense e) {
+        if (e.getTag() == null) {
+            data.stream().forEach(x -> {
+                if (x.getName().equals("Other")) {
+                    x.setPieValue(x.getPieValue() + e.getAmount());
+                }
+            });
+            if (data.stream().filter(x -> x.getName().equals("Other"))
+                    .collect(Collectors.toList()).size() == 0) data.add(new PieChart.Data("Other", e.getAmount()));
+        } else {
+            data.stream().forEach(x -> {
+                if (x.getName().equals(e.getTag().getName())) {
+                    x.setPieValue(x.getPieValue() + e.getAmount());
+                }
+            });
+            if (data.stream().filter(x -> x.getName().equals(e.getTag().getName())).
+                    collect(Collectors.toList()).size() == 0)data.add(new PieChart.Data(e.getTag().getName(), e.getAmount()));
+        }
+        sum = sum + e.getAmount();
+        amount.setText("" + sum + "$");
+    }
+
+    public void removeUI(Expense e) {
+        if (e.getTag() == null) {
+            data.stream().forEach(x -> {
+                if (x.getName().equals("Other")) {
+                    x.setPieValue(x.getPieValue() - e.getAmount());
+                }
+            });
+        } else {
+            data.stream().forEach(x -> {
+                if (x.getName().equals(e.getTag().getName())) {
+                    x.setPieValue(x.getPieValue() - e.getAmount());
+                }
+            });
+        }
+
+        sum = sum - e.getAmount();
+        amount.setText("" + sum + "$");
+    }
     public void back() {
         mainCtrl.showOverview();
     }
@@ -99,6 +148,7 @@ public class StatisticsCtrl implements Initializable {
     }
 
     private ArrayList<PieChart.Data> getData() {
+        expenses = FXCollections.observableArrayList(mainCtrl.getExpenseList().stream().collect(Collectors.toList()));
         ArrayList<PieChart.Data> data = new ArrayList<>();
         HashMap<Tag, Double> map = new HashMap<>();
         Tag other = new Tag("Other", "#000000");
