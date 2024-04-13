@@ -8,7 +8,6 @@ import commons.*;
 import commons.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.beans.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
