@@ -64,6 +64,7 @@ public class CustomMenuBar extends MenuBar {
                         view = switch (((RadioMenuItem) language.getSelectedToggle()).getId()) {
                             case "en" -> new ImageView(Objects.requireNonNull(loader.getResource(FlagPath.UK_FLAG_PATH)).toString());
                             case "nl" -> new ImageView(Objects.requireNonNull(loader.getResource(FlagPath.NL_FLAG_PATH)).toString());
+                            case "ro" -> new ImageView(Objects.requireNonNull(loader.getResource(FlagPath.RO_FLAG_PATH)).toString());
                             default ->
                                     null;
                         };
@@ -102,13 +103,23 @@ public class CustomMenuBar extends MenuBar {
         nlFlag.setFitHeight(FLAG_HEIGHT);
         nlFlag.setPreserveRatio(true);
         nlFlag.setSmooth(true);
-        RadioMenuItem dutch = new RadioMenuItem("Dutch", nlFlag
-                );
+        RadioMenuItem dutch = new RadioMenuItem("Dutch", nlFlag);
         dutch.setToggleGroup(language);
         dutch.setId("nl");
 
+        ImageView roFlag = new ImageView(
+                Objects.requireNonNull(loader.getResource(FlagPath.RO_FLAG_PATH)).toString()
+        );
+        roFlag.setPreserveRatio(true);
+        roFlag.setSmooth(true);
+        roFlag.setFitWidth(FLAG_WIDTH);
+        roFlag.setFitHeight(FLAG_HEIGHT);
+        RadioMenuItem romanian = new RadioMenuItem("Romanian", roFlag);
+        romanian.setToggleGroup(language);
+        romanian.setId("ro");
+
         download = new MenuItem("Download", new FontIcon(Feather.DOWNLOAD));
-        languages.getItems().addAll(english, dutch, download);
+        languages.getItems().addAll(english, dutch, romanian, download);
 
         edit = new Menu("Edit");
         name = new MenuItem("Event Name", new FontIcon(Feather.EDIT_2));
