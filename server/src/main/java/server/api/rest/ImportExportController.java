@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.ImportExportService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/json")
 public class ImportExportController {
@@ -28,6 +30,16 @@ public class ImportExportController {
     public ResponseEntity<String> exportData() {
         try {
             String json = importExportService.exportData();
+            return ResponseEntity.ok(json);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during export: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/export/{eventId]")
+    public ResponseEntity<String> exportData(@PathVariable UUID eventId) {
+        try {
+            String json = importExportService.exportWithId(eventId);
             return ResponseEntity.ok(json);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during export: " + e.getMessage());

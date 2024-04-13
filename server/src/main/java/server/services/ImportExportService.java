@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commons.*;
 import commons.primary_keys.DebtPK;
+import commons.views.View;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,7 @@ import server.beans.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class ImportExportService {
@@ -151,39 +153,28 @@ public class ImportExportService {
         }
     }
 
-    @Transactional
+
     public String exportData() {
-        Session session = entityManager.unwrap(Session.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
-        // Retrieve data from tables
-        List<BankAccount> bankAccounts = session.createNativeQuery("SELECT * FROM BANK_ACCOUNT", BankAccount.class).getResultList();
         List<Event> events = eventService.getAll();
-        List<Debt> debts = debtService.getAll();
-        List<Expense> expenses = expenseService.getAllActuallyThisTime();
-        List<Participant> participants = participantsService.getAll();
-        List<Tag> tags = tagService.getAll();
-
-        List<DebtorBean> debtorBeans = new ArrayList<>();
-        for (Expense expense : expenses) {
-            expense.getDebtors().forEach(debt -> debtorBeans.add(new DebtorBean(expense.getId(), debt.getId())));
-        }
-
-        // put all the relevant data into beans this replaces the objects with their id's to stop circular calling
-        List<EventBean> eventBeans = events.stream().map(e -> new EventBean(e.getId(),
-                e.getName(), e.getCreationDate(), e.getLastActivityDate())).toList();
-        List<ExpenseBean> expenseBeans = expenses.stream().map(e -> new ExpenseBean(e.getId(), e.getAmount(),
-                e.getTitle(), e.getDate(), e.getEvent().getId(), e.getPayer().getId())).toList();
-        List<ParticipantBean> participantBeans = participants.stream().map(p -> new ParticipantBean(p.getId(),
-                p.getEmail(), p.getNickname(), p.getBankAccount().getIban(), p.getEvent().getId())).toList();
-        List<DebtBean> debtBeans = debts.stream().map(d -> new DebtBean(d.getId().getDebtorId(),
-                d.getId().getPayerId(), d.getAmount(), d.getEvent().getId())).toList();
-
-        var data = new ImportExportData(bankAccounts, eventBeans, debtBeans, expenseBeans, participantBeans, tags, debtorBeans);
-
         try {
-            return objectMapper.writeValueAsString(data);
+            return objectMapper.writerWithView(View.OverviewView.class)
+                    .withDefaultPrettyPrinter()
+                    .writeValueAsString(events);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String exportWithId(UUID eventId) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        Event events = eventService.getById(eventId);
+        try {
+            return objectMapper.writerWithView(View.OverviewView.class)
+                    .withDefaultPrettyPrinter()
+                    .writeValueAsString(events);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
