@@ -189,6 +189,11 @@ public class AddExpenseCtrl implements Initializable {
                 languageUtils.setLang("nl");
                 break;
             case "en":
+                languageUtils.setLang("en");
+                break;
+            case "ro":
+                languageUtils.setLang("ro");
+                break;
             default:
                 languageUtils.setLang("en");
         }

@@ -104,6 +104,9 @@ public class StartCtrl implements Initializable {
             case "en":
                 languageUtils.setLang("en");
                 break;
+            case "ro":
+                languageUtils.setLang("ro");
+                break;
             default:
                 languageUtils.setLang("en");
                 break;
@@ -143,7 +146,7 @@ public class StartCtrl implements Initializable {
     }
 
     /**
-     * Loads event data from the database and switches to the overview screen.
+     * Loads event data from the database and `switch`es to the overview screen.
      */
     public void join() {
         try {
