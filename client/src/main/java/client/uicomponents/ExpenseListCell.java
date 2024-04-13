@@ -1,10 +1,12 @@
 package client.uicomponents;
 
 import atlantafx.base.theme.Styles;
+import client.utils.LanguageUtils;
 import commons.Expense;
 import commons.Participant;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -47,12 +49,15 @@ public class ExpenseListCell extends ListCell<Expense> {
     private final Button editButton;
     private final Button tag;
     private final HBox buttons;
+
+    private final LanguageUtils languageUtils;
     public ExpenseListCell(ObservableList<Participant> participants, Function<UUID, EventHandler<ActionEvent>> onRemove,
-                           Function<Expense, EventHandler<ActionEvent>> onEdit, Function<Expense, EventHandler<ActionEvent>> tagSelect) {
+                           Function<Expense, EventHandler<ActionEvent>> onEdit, Function<Expense, EventHandler<ActionEvent>> tagSelect, LanguageUtils languageUtils) {
         this.participants = participants;
         this.onRemove = onRemove;
         this.onEdit = onEdit;
         this.tagSelect = tagSelect;
+        this.languageUtils = languageUtils;
         graphic = new BorderPane();
         content = new TextFlow();
         vbox = new VBox();
@@ -82,8 +87,12 @@ public class ExpenseListCell extends ListCell<Expense> {
         tag.managedProperty().bind(tag.visibleProperty());
         buttons.getChildren().addFirst(tag);
         graphic.setRight(buttons);
-        content.getChildren().addAll(name, new Text(" paid "),
-                value, new Text(" for "), desc);
+        Text text1 = new Text("paid");
+        Text text2 = new Text("for");
+        text1.textProperty().bind(languageUtils.getBinding("overview.paidTxt"));
+        text2.textProperty().bind(languageUtils.getBinding("overview.forTxt"));
+        content.getChildren().addAll(name, new Text(" "), text1, new Text(" "),
+                value, new Text(" "), text2, new Text(" "), desc);
     }
     public void updateGraphic(Expense expense) {
         name.setText(expense.getPayer().getNickname());

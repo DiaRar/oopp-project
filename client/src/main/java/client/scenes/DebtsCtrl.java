@@ -273,6 +273,9 @@ public class DebtsCtrl implements Initializable {
             case "en":
                 languageUtils.setLang("en");
                 break;
+            case "ro":
+                languageUtils.setLang("ro");
+                break;
             default:
                 languageUtils.setLang("en");
                 break;
