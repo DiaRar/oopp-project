@@ -14,9 +14,16 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 @Singleton
 public class CustomMenuBar extends MenuBar {
@@ -119,6 +126,7 @@ public class CustomMenuBar extends MenuBar {
         romanian.setId("ro");
 
         download = new MenuItem("Download", new FontIcon(Feather.DOWNLOAD));
+        download.setOnAction((e) -> downloadTemplate());
         languages.getItems().addAll(english, dutch, romanian, download);
 
         edit = new Menu("Edit");
@@ -183,5 +191,25 @@ public class CustomMenuBar extends MenuBar {
     public void selectToggleById(String id) {
         language.selectToggle(language.getToggles().stream().filter(toggle -> ((RadioMenuItem) toggle).getId()
                 .equals(id)).toList().getFirst());
+    }
+
+    public void downloadTemplate() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose download folder");
+        fileChooser.setInitialFileName("template.properties");
+        String home = System.getProperty("user.home");
+        fileChooser.setInitialDirectory(new File(home + "/Downloads/"));
+        File selected = fileChooser.showSaveDialog(null);
+        if (selected == null) {
+            return;
+        }
+        InputStream templateURL = getClass().getClassLoader().getResourceAsStream("config/lang_en.properties");
+        Path newPath = Paths.get(selected.getPath());
+        try {
+            Files.copy(templateURL, newPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Could not write to path");
+        }
     }
 }
