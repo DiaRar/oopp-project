@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import commons.Expense;
 import commons.Tag;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,15 +64,14 @@ public class StatisticsCtrl implements Initializable {
     public void createUpdates() {
         server.registerForUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
             expenses.add(e);
-            updateUI(e);
+            createUI(e);
         }));
     }
     public void editUpdates() {
         server.registerForEditUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
             for (Expense x: expenses) {
                 if (x.getId().equals(e.getId())) {
-                    removeUI(x);
-                    updateUI(e);
+                    updateUI(x, e);
                     expenses.remove(x);
                     expenses.add(e);
                     break;
@@ -81,11 +79,10 @@ public class StatisticsCtrl implements Initializable {
             }
         }));
     }
-
     public void deleteUpdates() {
         server.registerForDeleteUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
-            for (Expense x: expenses) {
-                if (x.getId().equals(e.getId())) {
+            for (Expense x : expenses) {
+                if (x.getId().equals(e)) {
                     removeUI(x);
                     expenses.remove(x);
                     break;
@@ -93,7 +90,26 @@ public class StatisticsCtrl implements Initializable {
             }
         }));
     }
-    public void updateUI(Expense e) {
+    public void updateUI(Expense x, Expense e) {
+        if ((x.getTag() == null && e.getTag() == null) || (x.getTag() != null && x.getTag().equals(e.getTag()))) {
+            if (x.getAmount() == e.getAmount()) return;
+            else if (e.getTag() == null) {
+                data.stream().forEach(y -> {
+                    if (y.getName().equals("Other"))y.setPieValue(y.getPieValue() - x.getAmount() + e.getAmount());
+                });
+            } else {
+                data.stream().forEach(y -> {
+                    if (y.getName().equals(e.getTag().getName()))y.setPieValue(y.getPieValue() - x.getAmount() + e.getAmount());
+                });
+            }
+        } else {
+            removeUI(x);
+            createUI(e);
+        }
+        sum = sum - x.getAmount() + e.getAmount();
+        amount.setText("" + sum + "$");
+    }
+    public void createUI(Expense e) {
         if (e.getTag() == null) {
             data.stream().forEach(x -> {
                 if (x.getName().equals("Other")) {
@@ -117,17 +133,29 @@ public class StatisticsCtrl implements Initializable {
 
     public void removeUI(Expense e) {
         if (e.getTag() == null) {
-            data.stream().forEach(x -> {
+            for (PieChart.Data x : data) {
                 if (x.getName().equals("Other")) {
-                    x.setPieValue(x.getPieValue() - e.getAmount());
+                    if (x.getPieValue() == e.getAmount()) {
+                        data.remove(x);
+                        break;
+                    } else {
+                        x.setPieValue(x.getPieValue() - e.getAmount());
+                        break;
+                    }
                 }
-            });
+            }
         } else {
-            data.stream().forEach(x -> {
+            for (PieChart.Data x : data) {
                 if (x.getName().equals(e.getTag().getName())) {
-                    x.setPieValue(x.getPieValue() - e.getAmount());
+                   if (x.getPieValue() == e.getAmount()) {
+                       data.remove(x);
+                       break;
+                   } else {
+                       x.setPieValue(x.getPieValue() - e.getAmount());
+                       break;
+                   }
                 }
-            });
+            }
         }
 
         sum = sum - e.getAmount();

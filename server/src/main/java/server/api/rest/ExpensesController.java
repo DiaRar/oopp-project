@@ -27,7 +27,7 @@ public class ExpensesController {
     private final WebSocketUpdateService updateService;
     private Map<Object, Consumer<Expense>> listners = new HashMap<>();
     private Map<Object, Consumer<Expense>> editListners = new HashMap<>();
-    private Map<Object, Consumer<Expense>> deleteListners = new HashMap<>();
+    private Map<Object, Consumer<UUID>> deleteListners = new HashMap<>();
 
     public ExpensesController(ExpenseService expenseService, WebSocketUpdateService updateService) {
         this.expenseService = expenseService;
@@ -77,7 +77,7 @@ public class ExpensesController {
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Void> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
             throws EntityNotFoundException {
-        deleteListners.forEach((k, v) -> v.accept(expenseService.getById(expenseId)));
+        deleteListners.forEach((k, v) -> v.accept(expenseId));
         expenseService.delete(expenseId);
         updateService.sendRemovedExpense(eventId, expenseId);
         return ResponseEntity.ok().build();
@@ -116,9 +116,9 @@ public class ExpensesController {
 
     @GetMapping("/updates/delete")
     @JsonView(View.StatisticsView.class)
-    public DeferredResult<ResponseEntity<Expense>> getDeleteUpdates() {
+    public DeferredResult<ResponseEntity<UUID>> getDeleteUpdates() {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
+        var result = new DeferredResult<ResponseEntity<UUID>>(timeout, noContent);
         var key = new Object();
         deleteListners.put(key, e -> {
             result.setResult(ResponseEntity.ok(e));

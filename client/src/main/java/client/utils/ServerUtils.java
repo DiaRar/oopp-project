@@ -323,8 +323,8 @@ public class ServerUtils {
 			}
 		});
 	}
-	public void registerForDeleteUpdates(UUID eventId, Consumer<Expense> consumer) {
-		EXECUTOR1.submit(() -> {
+	public void registerForDeleteUpdates(UUID eventId, Consumer<UUID> consumer) {
+		EXECUTOR2.submit(() -> {
 			while (!Thread.interrupted()) {
 				var response = ClientBuilder.newClient(new ClientConfig())
 						.target(server)
@@ -336,8 +336,8 @@ public class ServerUtils {
 				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
 					continue;
 				}
-				var expense_id = response.readEntity(Expense.class);
-				consumer.accept(expense_id);
+				var expense = response.readEntity(UUID.class);
+				consumer.accept(expense);
 			}
 		});
 	}
