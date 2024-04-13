@@ -96,7 +96,7 @@ public class ExpensesControllerTest {
         Event event = new Event();
         Expense expense = new Expense();
         when(expenseService.save(event.getId(),expense)).thenReturn(expense);
-        var result = expensesController.getUpdates();
+        var result = expensesController.getCreateUpdates();
         expensesController.post(event.getId(),expense);
         assertEquals(((ResponseEntity<Expense>)result.getResult()).getBody(),expense);
     }

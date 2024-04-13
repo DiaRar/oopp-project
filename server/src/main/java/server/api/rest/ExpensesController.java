@@ -26,6 +26,8 @@ public class ExpensesController {
     private final ExpenseService expenseService;
     private final WebSocketUpdateService updateService;
     private Map<Object, Consumer<Expense>> listners = new HashMap<>();
+    private Map<Object, Consumer<Expense>> editListners = new HashMap<>();
+    private Map<Object, Consumer<Expense>> deleteListners = new HashMap<>();
 
     public ExpensesController(ExpenseService expenseService, WebSocketUpdateService updateService) {
         this.expenseService = expenseService;
@@ -66,6 +68,7 @@ public class ExpensesController {
         System.out.println(expense);
         Expense updated = expenseService.update(eventId, expenseId, expense);
         updateService.sendUpdatedExpense(eventId, updated);
+        editListners.forEach((k, v) -> v.accept(updated));
         return ResponseEntity.ok(updated);
     }
 
@@ -74,19 +77,50 @@ public class ExpensesController {
     @CacheEvict(value = "events", key = "#eventId")
     public ResponseEntity<Void> delete(@PathVariable UUID eventId, @PathVariable UUID expenseId)
             throws EntityNotFoundException {
+        deleteListners.forEach((k, v) -> v.accept(expenseService.getById(expenseId)));
         expenseService.delete(expenseId);
         updateService.sendRemovedExpense(eventId, expenseId);
         return ResponseEntity.ok().build();
     }
 
     private final long timeout = 5000L;
-    @GetMapping("/updates")
+    @GetMapping("/updates/create")
     @JsonView(View.StatisticsView.class)
-    public DeferredResult<ResponseEntity<Expense>> getUpdates() {
+    public DeferredResult<ResponseEntity<Expense>> getCreateUpdates() {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
         var key = new Object();
         listners.put(key, e -> {
+            result.setResult(ResponseEntity.ok(e));
+        });
+        result.onCompletion(() -> {
+            listners.remove(key);
+        });
+        return result;
+    }
+
+    @GetMapping("/updates/edit")
+    @JsonView(View.StatisticsView.class)
+    public DeferredResult<ResponseEntity<Expense>> getEditUpdates() {
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
+        var key = new Object();
+        editListners.put(key, e -> {
+            result.setResult(ResponseEntity.ok(e));
+        });
+        result.onCompletion(() -> {
+            listners.remove(key);
+        });
+        return result;
+    }
+
+    @GetMapping("/updates/delete")
+    @JsonView(View.StatisticsView.class)
+    public DeferredResult<ResponseEntity<Expense>> getDeleteUpdates() {
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var result = new DeferredResult<ResponseEntity<Expense>>(timeout, noContent);
+        var key = new Object();
+        deleteListners.put(key, e -> {
             result.setResult(ResponseEntity.ok(e));
         });
         result.onCompletion(() -> {
