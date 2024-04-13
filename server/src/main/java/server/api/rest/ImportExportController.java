@@ -1,11 +1,14 @@
 package server.api.rest;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.ImportExportService;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/json")
@@ -19,6 +22,14 @@ public class ImportExportController {
     }
 
     @PostMapping("/import")
+    @Transactional
+    public ResponseEntity<String> importAllData(@RequestBody String json) {
+        importExportService.importAllData(json);
+        return ResponseEntity.ok("Data imported successfully.");
+    }
+
+    @PostMapping("/import/event")
+    @Transactional
     public ResponseEntity<String> importData(@RequestBody String json) {
         importExportService.importData(json);
         return ResponseEntity.ok("Data imported successfully.");
@@ -28,6 +39,16 @@ public class ImportExportController {
     public ResponseEntity<String> exportData() {
         try {
             String json = importExportService.exportData();
+            return ResponseEntity.ok(json);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during export: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/export/{eventId}")
+    public ResponseEntity<String> exportData(@PathVariable UUID eventId) {
+        try {
+            String json = importExportService.exportWithId(eventId);
             return ResponseEntity.ok(json);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during export: " + e.getMessage());

@@ -68,7 +68,7 @@ public class Participant {
         return email;
     }
     // Relationships
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonView(View.ParticipantView.class)
     public BankAccount getBankAccount() {
         return bankAccount;
