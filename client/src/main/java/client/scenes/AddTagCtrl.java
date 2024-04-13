@@ -67,6 +67,7 @@ public class AddTagCtrl implements Initializable {
                 break;
             case "en":
                 languageUtils.setLang("en");
+                break;
             case "ro":
                 languageUtils.setLang("ro");
                 break;
