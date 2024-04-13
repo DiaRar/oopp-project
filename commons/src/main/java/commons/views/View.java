@@ -8,6 +8,6 @@ public class View {
     public interface ParticipantView extends CommonsView {}
     public interface OverviewView extends CommonsView, ExpenseView {}
     public interface SettleView extends CommonsView {}
-    public interface ImportExportView extends OverviewView, SettleView {}
+    public interface ImportExportView extends OverviewView, SettleView, ParticipantView {}
 
 }

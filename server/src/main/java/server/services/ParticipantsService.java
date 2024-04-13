@@ -1,9 +1,11 @@
 package server.services;
 
+import commons.BankAccount;
 import commons.Event;
 import commons.Participant;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import server.database.BankAccountRepository;
 import server.database.ParticipantRepository;
 
 import java.util.List;
@@ -14,8 +16,10 @@ import java.util.UUID;
 public class ParticipantsService {
 
     private final ParticipantRepository participantRepository;
-    public ParticipantsService(ParticipantRepository participantRepository) {
+    private final BankAccountRepository bankAccountRepository;
+    public ParticipantsService(ParticipantRepository participantRepository, BankAccountRepository bankAccountRepository) {
         this.participantRepository = participantRepository;
+        this.bankAccountRepository = bankAccountRepository;
     }
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
@@ -78,6 +82,10 @@ public class ParticipantsService {
         participant.setEvent(event);
         if (participant.getBankAccount() != null && participant.getBankAccount().getIban().isEmpty())
             participant.setBankAccount(null);
+        if (participant.getBankAccount() != null) {
+            Optional<BankAccount> oBankAccount = bankAccountRepository.findById(participant.getBankAccount().getIban());
+            oBankAccount.ifPresent(participant::setBankAccount);
+        }
         return participantRepository.save(participant);
     }
 }
