@@ -25,7 +25,8 @@ public class DownloadButtonCell extends TableCell<Event, Void> {
         this.downlodButton.setOnAction(event -> {
             Event eventToDownload = getTableView().getItems().get(getIndex());
             try {
-                download(eventToDownload.getId());
+                Thread thread = Thread.ofVirtual().start(() -> download(eventToDownload.getId()));
+                thread.join();
             } catch (Exception e) {
                 System.out.println(e);
             }

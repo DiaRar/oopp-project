@@ -94,20 +94,23 @@ public class OverviewCtrl {
         tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn, removeColumn, downloadColumn);
     }
 
-    public void download() {
-        var json = serverUtils.getExportResult();
-        createJsonDumpRepo();
-        var file = new File(config.getJsonPath(), "export.json");
-        if (file.exists()) file.delete();
+    public void download() throws InterruptedException {
+        Thread thread = Thread.ofVirtual().start(() -> {
+            var json = serverUtils.getExportResult();
+            createJsonDumpRepo();
+            var file = new File(config.getJsonPath(), "export.json");
+            if (file.exists()) file.delete();
 
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(json);
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(new File(config.getJsonPath()));
-        }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            try (FileWriter fileWriter = new FileWriter(file)) {
+                fileWriter.write(json);
+                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                    Desktop.getDesktop().open(new File(config.getJsonPath()));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread.join();
     }
 
     private void createJsonDumpRepo() {
