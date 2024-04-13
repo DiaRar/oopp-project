@@ -13,8 +13,6 @@ import com.google.inject.Scopes;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class InjectorModule implements Module {
 

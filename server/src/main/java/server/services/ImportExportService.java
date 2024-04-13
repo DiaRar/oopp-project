@@ -39,9 +39,11 @@ public class ImportExportService {
     public void importEvent(Event event, HashMap<UUID, Participant> participantHashMap, HashMap<UUID, Tag> tagHashMap) {
         Event newEvent = eventService.add(new Event(event.getName()));
         event.getParticipants().forEach(participant ->
-                participantHashMap.put(participant.getId(), participantsService.addParticipant(newEvent.getId(), new Participant(participant.getNickname(),
+                participantHashMap.put(participant.getId(), participantsService.addParticipant(
+                        newEvent.getId(), new Participant(participant.getNickname(),
                         participant.getEmail(), participant.getBankAccount()))));
-        event.getTags().forEach(tag -> tagHashMap.put(tag.getId(), tagService.add(newEvent.getId(), new Tag(tag.getName(), tag.getColor()))));
+        event.getTags().forEach(tag -> tagHashMap.put(tag.getId(), tagService.add(
+                newEvent.getId(), new Tag(tag.getName(), tag.getColor()))));
         event.getExpenses().forEach(expense -> expenseService.save(newEvent.getId(),
                 new Expense(expense.getAmount(), expense.getTitle(), expense.getDate(),
                         participantHashMap.get(expense.getPayer().getId()), expense.getDebtors()
@@ -49,7 +51,8 @@ public class ImportExportService {
                         tagHashMap.get(expense.getTag().getId()))));
         debtService.deleteAll(newEvent.getId());
         event.getDebts().forEach(debt ->
-                debtService.save(newEvent.getId(), new Debt(participantHashMap.get(debt.getPayer().getId()), participantHashMap.get(debt.getDebtor().getId()), debt.getAmount())));
+                debtService.save(newEvent.getId(), new Debt(participantHashMap.get(debt.getPayer().getId()),
+                        participantHashMap.get(debt.getDebtor().getId()), debt.getAmount())));
         updateService.sendNewEvent(newEvent);
     }
     public void importData(String jsonData) {

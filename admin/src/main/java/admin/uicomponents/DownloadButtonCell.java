@@ -7,7 +7,7 @@ import commons.Event;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import java.awt.*;
 import java.io.File;
@@ -45,16 +45,14 @@ public class DownloadButtonCell extends TableCell<Event, Void> {
     }
     public void download(UUID eventID) {
         var json = serverUtils.getExportEvent(eventID);
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose a path to download to:");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose a path to download to:");
         String home = System.getProperty("user.home");
-        directoryChooser.setInitialDirectory(new File(home + "/Downloads/"));
-        File selected = directoryChooser.showDialog(null);
-        if (selected == null)
+        fileChooser.setInitialDirectory(new File(home + "/Downloads/"));
+        fileChooser.setInitialFileName(eventID.toString() + ".json");
+        File file = fileChooser.showSaveDialog(null);
+        if (file == null)
             return;
-        var file = new File(selected, eventID.toString());
-        if (file.exists()) file.delete();
-
         OverviewCtrl.getExecutor().execute(() -> {
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(json);
