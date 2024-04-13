@@ -28,13 +28,16 @@ public class Debt {
     @ManyToOne(optional = false)
     @MapsId("payer_id")
     @JoinColumn(name = "payer_id", referencedColumnName = "participant_id",
-            foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (payer_id) REFERENCES participant(participant_id) ON DELETE CASCADE"))
+            foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (payer_id) REFERENCES " +
+                    "participant(participant_id) ON DELETE CASCADE"))
     @JsonView(View.SettleView.class)
     private Participant payer;
     @ManyToOne(optional = false)
     @MapsId("debtor_id")
     @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id",
-            foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (debtor_id) REFERENCES participant(participant_id) ON DELETE CASCADE"))
+            foreignKey = @ForeignKey(value = CONSTRAINT,
+                    foreignKeyDefinition = "FOREIGN KEY (debtor_id) " +
+                            "REFERENCES participant(participant_id) ON DELETE CASCADE"))
     @JsonView(View.SettleView.class)
     private Participant debtor;
     @ManyToOne(optional = false)
