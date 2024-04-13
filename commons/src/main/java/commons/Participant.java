@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -104,9 +105,22 @@ public class Participant {
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
+
+    /**
+     * These will not be used in the code, it is merely to define the cascade and orphan removal property
+     */
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "payer", fetch = FetchType.LAZY)
+    @JsonIgnore
+    public Collection<Expense> paidExpenses;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "payer", fetch = FetchType.LAZY)
+    @JsonIgnore
+    public Collection<Debt> paidBy;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "debtor", fetch = FetchType.LAZY)
+    @JsonIgnore
+    public Collection<Debt> paidFor;
+
 }
