@@ -39,13 +39,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 public class OverviewCtrl implements Initializable {
 
@@ -58,7 +58,7 @@ public class OverviewCtrl implements Initializable {
     @FXML
     private Label title;
     @FXML
-    private Text participantsText;
+    private TextFlow participantsText;
     @FXML
     private ListView<Expense> list;
     @FXML
@@ -167,8 +167,7 @@ public class OverviewCtrl implements Initializable {
         filteredExpenses.predicateProperty().bind(dialog.getPredicate());
         //TODO: make a listview instead of vbox and link it to the filtered list
         title.setText(mainCtrl.getEvent().getName());
-        participantsText.setText(mainCtrl.getEvent().getParticipants().stream().map(Participant::getNickname)
-                .collect(Collectors.joining(", ")));
+        fillParticipants(mainCtrl.getEvent().getParticipants());
         list.setItems(filteredExpenses);
     }
 
@@ -177,10 +176,20 @@ public class OverviewCtrl implements Initializable {
         title.setText(eventName);
     }
     public void updateParticipantsText() {
-        StringJoiner stringJoiner = new StringJoiner(", ");
-        mainCtrl.getParticipantList().forEach(participant -> stringJoiner.add(participant.getNickname()));
-        participantsText.setText(stringJoiner.toString());
+        fillParticipants(mainCtrl.getParticipantList());
     }
+
+    private void fillParticipants(List<Participant> partList) {
+        participantsText.getChildren().clear();
+        participantsText.getChildren().addAll(partList.stream()
+                .map(p -> new Text(p.getNickname()))
+                .toList());
+        int participantCount = partList.size();
+        for (int i = 0; i < participantCount - 1; i++) {
+            participantsText.getChildren().add(i * 2 + 1, new Text(", "));
+        }
+    }
+
     public void refreshParticipant(Participant participant) {
         updateParticipantsText();
     }
