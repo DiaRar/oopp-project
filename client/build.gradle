@@ -40,9 +40,5 @@ dependencies {
 	implementation 'org.openjfx:javafx-fxml:21.0.2'
 	implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
 	implementation 'org.kordamp.ikonli:ikonli-feather-pack:12.3.1'
-	
-	
-	implementation 'org.openjfx:javafx-controls:17.0.2'
-	implementation 'org.openjfx:javafx-fxml:17.0.2'
 
 }
