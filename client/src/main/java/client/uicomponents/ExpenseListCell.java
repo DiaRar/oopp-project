@@ -76,9 +76,9 @@ public class ExpenseListCell extends ListCell<Expense> {
         BorderPane.setAlignment(date, Pos.CENTER);
         graphic.setLeft(date);
         removeButton = new Button("", new FontIcon(Feather.TRASH));
-        removeButton.getStyleClass().addAll(Styles.DANGER, Styles.FLAT, Styles.BUTTON_ICON);
+        removeButton.getStyleClass().addAll(Styles.DANGER, Styles.FLAT, Styles.BUTTON_ICON, "btn-highlight");
         editButton = new Button("", new FontIcon(Feather.EDIT));
-        editButton.getStyleClass().addAll(Styles.ACCENT, Styles.FLAT, Styles.BUTTON_ICON);
+        editButton.getStyleClass().addAll(Styles.ACCENT, Styles.FLAT, Styles.BUTTON_ICON, "btn-highlight");
         buttons = new HBox(editButton, removeButton);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         tag = new Button();
