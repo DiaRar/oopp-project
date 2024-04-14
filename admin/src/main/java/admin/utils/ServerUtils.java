@@ -1,7 +1,9 @@
 package admin.utils;
 
+import admin.scenes.MainCtrl;
 import admin.uicomponents.Alerts;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import commons.Event;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
@@ -10,19 +12,16 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class ServerUtils {
-    private final String server;
-    private final Config config;
+    private final Provider<MainCtrl> mainCtrl;
     @Inject
-    public ServerUtils(Config config) throws IOException {
-        this.config = config;
-        this.server = config.getServer();
+    public ServerUtils(Provider<MainCtrl> mainCtrl) {
+        this.mainCtrl = mainCtrl;
     }
 
     public void handleConnectionException(Exception ex) {
@@ -37,7 +36,7 @@ public class ServerUtils {
         try {
             return ClientBuilder
                     .newClient(new ClientConfig())
-                    .target(config.getServer())
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/admin/login/" + password)
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -51,7 +50,7 @@ public class ServerUtils {
     public List<Event> getEvents() {
         try {
             return ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/events/")
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -65,7 +64,7 @@ public class ServerUtils {
     public void deleteEvent(UUID id) {
         try {
             ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/events/" + id.toString())
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -78,7 +77,7 @@ public class ServerUtils {
     public String getExportResult() {
         try {
             return ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/json/export")
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -91,7 +90,7 @@ public class ServerUtils {
     public String getExportEvent(UUID eventID) {
         try {
             return ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/json/export/" + eventID.toString())
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -104,7 +103,7 @@ public class ServerUtils {
     public void importDatabase(String json) {
         try {
             ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/json/import")
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
@@ -116,7 +115,7 @@ public class ServerUtils {
     public void importEvent(String json) {
         try {
             ClientBuilder.newClient(new ClientConfig())
-                    .target(server)
+                    .target(mainCtrl.get().getHttpServer())
                     .path("/api/json/import/event")
                     .request(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)

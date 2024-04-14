@@ -27,11 +27,7 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.http.HttpStatus;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +49,7 @@ public class ServerUtils {
 	@Inject
 	public ServerUtils(Config config) throws IOException {
 		this.config = config;
-		this.server = config.getServer();
+		this.server = config.getHttpServer();
 	}
 
 	public void handleConnectionException(Exception ex) {
@@ -64,21 +60,11 @@ public class ServerUtils {
 		}
 	}
 
-	public void getQuotesTheHardWay() throws IOException, URISyntaxException {
-		var url = new URI("http://localhost:8080/api/quotes").toURL();
-		var is = url.openConnection().getInputStream();
-		var br = new BufferedReader(new InputStreamReader(is));
-		String line;
-		while ((line = br.readLine()) != null) {
-			System.out.println(line);
-		}
-	}
-
 	public Event getEvent(UUID eventId) {
 		try {
 			return ClientBuilder
 					.newClient(new ClientConfig())
-					.target(config.getServer())
+					.target(config.getHttpServer())
 					.path("/api/events/" + eventId)
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)

@@ -65,7 +65,6 @@ public class ContactDetailsCtrl implements Initializable {
     }
 
     public void confirmAction() {
-        System.out.println(editMode ? "Edited Participant" : "Created Participant");
         if (!dataCheck().equals("valid")) {
             Alerts.invalidParticipantAlert(dataCheck());
             return;
@@ -76,10 +75,8 @@ public class ContactDetailsCtrl implements Initializable {
         if (!editMode) { // add mode
             server.addParticipant(newParticipant, mainCtrl.getEvent().getId());
         } else { // edit mode
-            System.out.println(toBeUpdatedParticipant);
             server.updateParticipant(newParticipant, mainCtrl.getEvent().getId(), toBeUpdatedParticipant.getId());
         }
-        System.out.println(newParticipant);
         clearText();
         editSelectorComboBox.setValue(null);
         mainCtrl.closeDialog();

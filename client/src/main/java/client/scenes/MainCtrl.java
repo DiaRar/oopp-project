@@ -2,6 +2,7 @@ package client.scenes;
 
 import atlantafx.base.theme.Theme;
 import client.uicomponents.CustomMenuBar;
+import client.utils.Config;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import client.utils.WebSocketUtils;
@@ -55,6 +56,7 @@ public class MainCtrl {
     private StatisticsCtrl statisticsCtrl;
     private Scene statisticsScene;
     private final WebSocketUtils webSocketUtils;
+    private final Config config;
 
     private AddTagCtrl addTagCtrl;
     private Scene addTagScene;
@@ -67,11 +69,13 @@ public class MainCtrl {
     private ObservableList<Tag> tagList;
 
     @Inject
-    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils, CustomMenuBar menuBar) {
+    public MainCtrl(ServerUtils serverUtils, LanguageUtils languageUtils, WebSocketUtils webSocketUtils,
+                    CustomMenuBar menuBar, Config config) {
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
         this.webSocketUtils = webSocketUtils;
         this.menuBar = menuBar;
+        this.config = config;
     }
 
     public void init(Stage primaryStage, Pair<StartCtrl, Parent> start, Pair<OverviewCtrl, Parent> overview,
@@ -148,7 +152,7 @@ public class MainCtrl {
     public void showOverviewStart() {
         try {
             webSocketUtils.disconnect();
-            webSocketUtils.connectToWebSocket("ws://localhost:8080/ws");
+            webSocketUtils.connectToWebSocket(config.getWsServer());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -200,7 +204,6 @@ public class MainCtrl {
                 .stream().map(Expense::getId)
                 .toList().indexOf(expense.getId());
         expenseList.set(index, expense);
-        System.out.println(expense);
         overviewCtrl.refreshExpenseList();
     }
     public void addTag(Tag tag) {

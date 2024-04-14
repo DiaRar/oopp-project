@@ -47,7 +47,6 @@ public class TagController {
     public ResponseEntity<Tag> postTag(@PathVariable UUID eventId, @RequestBody Tag tag)
             throws IllegalArgumentException {
         Tag savedTag = tagService.add(eventId, tag);
-        System.out.println("added smth");
         updateService.sendAddedTag(eventId, savedTag);
         return ResponseEntity.ok(savedTag);
     }

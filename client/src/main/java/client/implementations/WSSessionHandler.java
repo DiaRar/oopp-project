@@ -137,7 +137,6 @@ public class WSSessionHandler extends StompSessionHandlerAdapter {
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 Tag tag = (Tag) payload;
-                System.out.println("received smth");
                 Platform.runLater(() -> mainCtrl.get().addTag(tag));
             }
         });

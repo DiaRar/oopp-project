@@ -10,13 +10,6 @@ public class Alerts {
         alert.setContentText(context);
         alert.showAndWait();
     }
-    public static void configNotSetUpAlert() {
-        alertUser(Alert.AlertType.ERROR, "Configuration Not Set Up",
-                "Oops! Configuration not found or invalid.",
-                "The configuration file is not set up properly or could not be found at the specified path:\n" +
-                        "/client/src/main/resources/config/config.properties\n" +
-                        "Please ensure that the configuration file exists and is correctly configured.");
-    }
 
     public static void connectionRefusedAlert() {
         alertUser(Alert.AlertType.ERROR, "Connection Refused", "Oops! Unable to connect to the server.",

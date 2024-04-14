@@ -5,10 +5,7 @@ import atlantafx.base.theme.Styles;
 import atlantafx.base.util.Animations;
 import client.uicomponents.Alerts;
 import client.uicomponents.LanguageComboBox;
-import client.utils.Config;
-import client.utils.ConfigUtils;
-import client.utils.LanguageUtils;
-import client.utils.ServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.Tag;
@@ -60,15 +57,18 @@ public class StartCtrl implements Initializable {
     private final LanguageUtils languageUtils;
     private final MainCtrl mainCtrl;
     private final Config config;
+    private final EmailUtils emailUtils;
 
     @Inject
-    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils, MainCtrl mainCtrl, Config config) {
+    public StartCtrl(ConfigUtils configUtils, ServerUtils serverUtils, LanguageUtils languageUtils,
+                     MainCtrl mainCtrl, Config config, EmailUtils emailUtils) {
         this.utils = configUtils;
         this.serverUtils = serverUtils;
         this.languageUtils = languageUtils;
         this.mainCtrl = mainCtrl;
         this.languageComboBox = new LanguageComboBox(languageUtils);
         this.config = config;
+        this.emailUtils = emailUtils;
         width = new SimpleDoubleProperty();
     }
 
@@ -120,7 +120,7 @@ public class StartCtrl implements Initializable {
         this.createNewEvent.getStyleClass().add("bold");
         this.joinExistingEvent.getStyleClass().add("bold");
          this.root.setTop(mainCtrl.getMenuBar());
-        mainCtrl.getMenuBar().bind(languageUtils, mainCtrl, serverUtils);
+        mainCtrl.getMenuBar().bind(languageUtils, mainCtrl, serverUtils, config, emailUtils);
     }
     public BorderPane getRoot() {
         return root;

@@ -32,15 +32,13 @@ import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class DebtsCtrl implements Initializable {
-    private Config config;
+    private final Config config;
+    private final EmailUtils emailUtils;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final LanguageUtils languageUtils;
-    private Executor executor;
 
     private static final double DEBT_AMOUNT = 100;
     private static final double IMAGE_SIZE = 20;
@@ -71,7 +69,8 @@ public class DebtsCtrl implements Initializable {
     private Map<UUID, Participant> participantCache;
 
     @Inject
-    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
+    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config,
+                     LanguageUtils languageUtils, EmailUtils emailUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
@@ -84,7 +83,8 @@ public class DebtsCtrl implements Initializable {
         this.bank = new SimpleStringProperty();
         this.accountHolder = new SimpleStringProperty();
         this.noEmail = new SimpleStringProperty();
-        this.executor = Executors.newVirtualThreadPerTaskExecutor();
+
+        this.emailUtils = emailUtils;
     }
 
     public void refresh() {
@@ -158,7 +158,7 @@ public class DebtsCtrl implements Initializable {
                         spinner));
         reminder.setOnAction(e ->
                 remind(debt.getDebtor(), debt, reminder));
-        if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty()) {
+        if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty() || config.getEmail() == null) {
             reminder.setDisable(true);
         }
         buttons.getChildren().addAll(reminder, settleGroup);
@@ -216,28 +216,16 @@ public class DebtsCtrl implements Initializable {
 
     public void remind(Participant debtor, Debt debt, Button remindButton) {
         if (debtor.getEmail() == null || debtor.getEmail().isEmpty()) return;
+        if (config.getEmail() == null) return;
+        emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()), debtor.getEmail());
         new Thread(() -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    remindButton.setDisable(true);
-                }
-            });
+            Platform.runLater(() -> remindButton.setDisable(true));
             try {
                 Thread.sleep(DISABLE_TIMEOUT);
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException ignored) {
             }
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    remindButton.setDisable(false);
-                }
-            });
+            Platform.runLater(() -> remindButton.setDisable(false));
         }).start();
-        EmailUtils emailUtils = new EmailUtils(debtor.getEmail(), "");
-        executor.execute(() -> {
-            emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()));
-        });
     }
 
     public void showHideBankDetails(TextFlow details, BorderPane borderPane) {

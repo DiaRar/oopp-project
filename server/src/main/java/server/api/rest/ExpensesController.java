@@ -65,7 +65,6 @@ public class ExpensesController {
     public ResponseEntity<Expense> update(@PathVariable UUID eventId, @PathVariable UUID expenseId,
                                           @RequestBody Expense expense)
             throws EntityNotFoundException, IllegalArgumentException {
-        System.out.println(expense);
         Expense updated = expenseService.update(eventId, expenseId, expense);
         updateService.sendUpdatedExpense(eventId, updated);
         editListners.forEach((k, v) -> v.accept(updated));

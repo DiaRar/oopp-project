@@ -45,6 +45,7 @@ public class InjectorModule implements Module {
         binder.bind(Config.class).toInstance(createConfig());
         binder.bind(ServerUtils.class).in(Scopes.NO_SCOPE);
         binder.bind(LanguageUtils.class).in(Scopes.SINGLETON);
+        binder.bind(EmailUtils.class).in(Scopes.SINGLETON);
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
         binder.bind(DebtsCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddTagCtrl.class).in(Scopes.SINGLETON);
@@ -54,7 +55,7 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        utils.setRecentsFile(new File(getClass().getResource("/config/recents.csv").getFile()));
+        utils.setRecentsFile(new File("./recents.csv"));
 
         return utils;
     }

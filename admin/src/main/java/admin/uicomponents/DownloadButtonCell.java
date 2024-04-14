@@ -1,7 +1,6 @@
 package admin.uicomponents;
 
 import admin.scenes.OverviewCtrl;
-import admin.utils.Config;
 import admin.utils.ServerUtils;
 import commons.Event;
 import javafx.scene.control.Button;
@@ -9,7 +8,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,12 +16,10 @@ import java.util.UUID;
 public class DownloadButtonCell extends TableCell<Event, Void> {
     private final Button downlodButton;
     private final ServerUtils serverUtils;
-    private final Config config;
 
-    public DownloadButtonCell(TableView<Event> tableView, ServerUtils serverUtils, Config config) {
+    public DownloadButtonCell(TableView<Event> tableView, ServerUtils serverUtils) {
         this.downlodButton = new Button("Download");
         this.serverUtils = serverUtils;
-        this.config = config;
         this.downlodButton.setOnAction(event -> {
             Event eventToDownload = getTableView().getItems().get(getIndex());
             try {
