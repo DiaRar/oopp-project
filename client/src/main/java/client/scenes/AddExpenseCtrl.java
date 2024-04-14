@@ -176,7 +176,6 @@ public class AddExpenseCtrl implements Initializable {
         this.expenseType.textProperty().bind(languageUtils.getBinding("addExpense.expenseTypeLabel"));
         this.equallySplit.textProperty().bind(languageUtils.getBinding("addExpense.equallyRbtn"));
         this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
-        this.addTag.textProperty().bind(languageUtils.getBinding("addExpense.addTag"));
         this.date.setDayCellFactory(datePicker -> new PastDateCell());
         this.debtorsList.managedProperty().bind(this.debtorsList.visibleProperty());
         this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
@@ -214,11 +213,6 @@ public class AddExpenseCtrl implements Initializable {
         if (e != null && (e.getCode()) == KeyCode.ENTER) {
             selectDebtor();
         }
-    }
-
-    public void openAddTags() {
-        System.out.println("Add Tags");
-        mainCtrl.showAddTags();
     }
 
     private ListCell<Participant> getParticipantListCell() {

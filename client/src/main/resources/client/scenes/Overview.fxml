@@ -78,7 +78,7 @@
                                     <InputGroup fx:id="parentExpenseInput" BorderPane.alignment="CENTER">
                                        <children>
                                           <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" text="Add Expense" />
-                                          <Button fx:id="sendMoney" mnemonicParsing="false" text="Send" />
+                                          <Button fx:id="tagsBtn" mnemonicParsing="false" onAction="#openTag" text="Send" />
                                        </children>
                                     </InputGroup>
                                  </center>

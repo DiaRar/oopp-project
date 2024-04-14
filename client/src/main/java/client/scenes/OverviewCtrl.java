@@ -84,7 +84,7 @@ public class OverviewCtrl implements Initializable {
     @FXML
     private Button addParticipant;
     @FXML
-    private Button sendMoney;
+    private Button tagsBtn;
     @FXML
     private InputGroup parentExpenseInput;
     @FXML
@@ -108,7 +108,7 @@ public class OverviewCtrl implements Initializable {
         this.addExpense.textProperty().bind(languageUtils.getBinding("overview.addExpenseBtn"));
         this.settleDebts.textProperty().bind(languageUtils.getBinding("overview.settleDebtsBtn"));
         this.participantsLabel.textProperty().bind(languageUtils.getBinding("overview.participantsLabel"));
-        this.sendMoney.textProperty().bind(languageUtils.getBinding("overview.send"));
+        this.tagsBtn.textProperty().bind(languageUtils.getBinding("overview.tags"));
         this.resetButton.textProperty().bind(languageUtils.getBinding("overview.reset"));
         this.statistics.textProperty().bind(languageUtils.getBinding("overview.statistics"));
         this.filterButton.textProperty().bind(languageUtils.getBinding("overview.filterBtn"));
@@ -124,10 +124,10 @@ public class OverviewCtrl implements Initializable {
         this.addExpense.setContentDisplay(ContentDisplay.RIGHT);
         this.addExpense.setGraphic(new FontIcon(Feather.PLUS_CIRCLE));
         this.addExpense.prefWidthProperty().bind(this.parentExpenseInput.widthProperty().divide(2));
-        this.sendMoney.prefWidthProperty().bind(this.parentExpenseInput.widthProperty().divide(2));
-        this.sendMoney.setContentDisplay(ContentDisplay.RIGHT);
-        this.sendMoney.setGraphic(new FontIcon(Feather.SEND));
-        this.sendMoney.getStyleClass().addAll(Styles.ACCENT);
+        this.tagsBtn.prefWidthProperty().bind(this.parentExpenseInput.widthProperty().divide(2));
+        this.tagsBtn.setContentDisplay(ContentDisplay.RIGHT);
+        this.tagsBtn.setGraphic(new FontIcon(Feather.TAG));
+        this.tagsBtn.getStyleClass().addAll(Styles.ACCENT);
         this.filterButton.setGraphic(new FontIcon(Feather.FILTER));
         this.filterButton.getStyleClass().addAll(Styles.SUCCESS);
         this.editParticipant.setGraphic(new FontIcon(Feather.EDIT));
@@ -170,6 +170,10 @@ public class OverviewCtrl implements Initializable {
         title.setText(mainCtrl.getEvent().getName());
         fillParticipants(mainCtrl.getEvent().getParticipants());
         list.setItems(filteredExpenses);
+    }
+
+    public void openTag() {
+        mainCtrl.showAddTags();
     }
 
     public void updateEventName(String eventName) {
