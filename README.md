@@ -33,13 +33,11 @@ mail.smtp.starttls.enable=true
 mail.transport.protocol=smtp
 mail.debug=false
 ```
----
 ## Building
 To `build` this application you need to run the following command:
 ```console
 ./gradlew build
 ```
----
 ## Running
 ### Server
 To run the server we recommend you to use the gradle wrapper that we provide, along with the `bootRun` task:
