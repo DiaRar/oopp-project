@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import commons.Debt;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -156,7 +157,7 @@ public class DebtsCtrl implements Initializable {
                 settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId()),
                         spinner));
         reminder.setOnAction(e ->
-                remind(debt.getDebtor(), debt));
+                remind(debt.getDebtor(), debt, reminder));
         if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty() || config.getEmail() == null) {
             reminder.setDisable(true);
         }
@@ -213,10 +214,18 @@ public class DebtsCtrl implements Initializable {
         refresh();
     }
 
-    public void remind(Participant debtor, Debt debt) {
+    public void remind(Participant debtor, Debt debt, Button remindButton) {
         if (debtor.getEmail() == null || debtor.getEmail().isEmpty()) return;
         if (config.getEmail() == null) return;
         emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()), debtor.getEmail());
+        new Thread(() -> {
+            Platform.runLater(() -> remindButton.setDisable(true));
+            try {
+                Thread.sleep(DISABLE_TIMEOUT);
+            } catch (InterruptedException ignored) {
+            }
+            Platform.runLater(() -> remindButton.setDisable(false));
+        }).start();
     }
 
     public void showHideBankDetails(TextFlow details, BorderPane borderPane) {
