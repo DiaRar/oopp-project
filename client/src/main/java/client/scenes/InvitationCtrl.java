@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.*;
 import com.google.inject.Inject;
+import commons.Participant;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -85,8 +86,15 @@ public class InvitationCtrl implements Initializable {
     public void sendInvites() {
         String[] addresses = emails.getText().split("\\n|\\n\\r");
         emails.clear();
+        Participant participant = new Participant();
         for (String x : addresses) {
+            int index = x.indexOf('@');
+            if (index == -1)
+                continue;
             emailUtils.sendEmailInvite(x, mainCtrl.getEvent().getId().toString(), mainCtrl.getEvent().getName());
+            participant.setNickname(x.substring(0, index));
+            participant.setEmail(x);
+            server.addParticipant(participant, mainCtrl.getEvent().getId());
         }
         mainCtrl.showOverview();
     }
