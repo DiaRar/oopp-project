@@ -66,4 +66,8 @@ public class Alerts {
                 message,
                 "The data you have entered is invalid. Please update it and try again.");
     }
+
+    public static void exceptionAlert(Exception ex) {
+        alertUser(AlertType.ERROR, "An Error Occurred", ex.getMessage(), "An error occurred.");
+    }
 }
