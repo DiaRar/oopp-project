@@ -16,7 +16,7 @@ server.address=localhost
 server.port=8080
 ```
 ### Client
-To configure the client, we have provided a `config.properties` file in 
+To configure the client, we have provided a [client/config.properties](client/config.properties) file in 
 which you can setup the `server` and (optional) `mail`:
 ```properties
 # This is an example config
