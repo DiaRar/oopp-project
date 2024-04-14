@@ -78,7 +78,7 @@
                                     <InputGroup fx:id="parentExpenseInput" BorderPane.alignment="CENTER">
                                        <children>
                                           <Button fx:id="addExpense" mnemonicParsing="false" onAction="#openAddExpense" text="Add Expense" />
-                                          <Button fx:id="sendMoney" mnemonicParsing="false" text="Send" />
+                                          <Button fx:id="tagsBtn" mnemonicParsing="false" onAction="#openTag" text="Send" />
                                        </children>
                                     </InputGroup>
                                  </center>
@@ -100,7 +100,7 @@
                         <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="Back" />
                         <HBox alignment="CENTER_RIGHT" spacing="5.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Button fx:id="statistics" mnemonicParsing="false" onAction="#openStatistics" prefHeight="34.0" prefWidth="86.0" text="Statistics" />
+                              <Button fx:id="statistics" mnemonicParsing="false" onAction="#openStatistics" text="Statistics" />
                               <Button fx:id="settleDebts" mnemonicParsing="false" onAction="#openDebts" text="Settle Debts" />
                            </children>
                         </HBox>

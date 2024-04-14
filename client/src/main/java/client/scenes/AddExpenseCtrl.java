@@ -37,8 +37,6 @@ public class AddExpenseCtrl implements Initializable {
     @FXML
     private TextField amount;
     @FXML
-    private ComboBox<Currency> currency;
-    @FXML
     private DatePicker date;
     @FXML
     private ComboBox<Tag> tag;
@@ -70,6 +68,8 @@ public class AddExpenseCtrl implements Initializable {
     private Label expenseType;
     @FXML
     private Button addTag;
+    @FXML
+    private Label currency;
     private boolean editMode;
     private Expense toUpdate;
 
@@ -91,7 +91,6 @@ public class AddExpenseCtrl implements Initializable {
         payer.getSelectionModel().clearSelection();
         description.clear();
         amount.clear();
-        currency.getSelectionModel().selectFirst();
         date.setValue(null);
         tag.getSelectionModel().clearSelection();
         equallySplit.setSelected(false);
@@ -159,7 +158,6 @@ public class AddExpenseCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         payer.setCellFactory(participantListView -> getParticipantListCell());
         payer.setButtonCell(getParticipantListCell());
         tag.setCellFactory(tagListView -> getTagListCell());
@@ -177,12 +175,12 @@ public class AddExpenseCtrl implements Initializable {
         this.expenseType.textProperty().bind(languageUtils.getBinding("addExpense.expenseTypeLabel"));
         this.equallySplit.textProperty().bind(languageUtils.getBinding("addExpense.equallyRbtn"));
         this.partialSplit.textProperty().bind(languageUtils.getBinding("addExpense.partialSplitRbtn"));
-        this.addTag.textProperty().bind(languageUtils.getBinding("addExpense.addTag"));
         this.date.setDayCellFactory(datePicker -> new PastDateCell());
         this.debtorsList.managedProperty().bind(this.debtorsList.visibleProperty());
         this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
         this.debtorsList.visibleProperty().bind(partialSplit.selectedProperty());
         this.selectedDebtors.visibleProperty().bind(partialSplit.selectedProperty());
+        this.currency.setText("€");
 
         switch (config.getLocale().getLanguage()) {
             case "nl":
@@ -214,11 +212,6 @@ public class AddExpenseCtrl implements Initializable {
         if (e != null && (e.getCode()) == KeyCode.ENTER) {
             selectDebtor();
         }
-    }
-
-    public void openAddTags() {
-        System.out.println("Add Tags");
-        mainCtrl.showAddTags();
     }
 
     private ListCell<Participant> getParticipantListCell() {
