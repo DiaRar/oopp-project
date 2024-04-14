@@ -1,6 +1,5 @@
 package admin.scenes;
 
-import admin.utils.Config;
 import admin.utils.WebSocketUtils;
 import com.google.inject.Inject;
 import javafx.scene.Parent;
@@ -8,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
 public class MainCtrl {
@@ -21,11 +22,23 @@ public class MainCtrl {
     private double screenWidth;
     private double screenHeight;
     private WebSocketUtils socketUtils;
-    private Config config;
+    private URI server;
+
+    public String getHttpServer() {
+        return server.toString();
+    }
+    public String getWsServer() {
+        return "ws://" + server.getAuthority() + "/ws";
+    }
+
+    public void setServer(String server) throws URISyntaxException {
+        this.server = new URI(server);
+    }
+
+
     @Inject
-    public MainCtrl(WebSocketUtils socketUtils, Config config) {
+    public MainCtrl(WebSocketUtils socketUtils) {
         this.socketUtils = socketUtils;
-        this.config = config;
     }
 
     public void init(Stage primaryStage, Pair<LoginCtrl, Parent> login, Pair<OverviewCtrl, Parent> overview) {
@@ -47,8 +60,9 @@ public class MainCtrl {
 
     public void showOverview() {
         try {
-            socketUtils.connectToWebSocket("ws://localhost:8080/ws");
+            socketUtils.connectToWebSocket(getWsServer());
         } catch (ExecutionException | InterruptedException e) {
+            System.out.println(getWsServer());
             throw new RuntimeException(e);
         }
         saveDimensions();

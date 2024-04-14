@@ -2,7 +2,6 @@ package admin.scenes;
 
 import admin.uicomponents.DownloadButtonCell;
 import admin.uicomponents.RemoveButtonCell;
-import admin.utils.Config;
 import admin.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
@@ -33,7 +32,6 @@ import java.util.concurrent.Executors;
 public class OverviewCtrl implements Initializable {
     private static final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
     private ServerUtils serverUtils;
-    private Config config;
     @FXML
     private TableView<Event> tableView;
 
@@ -42,9 +40,8 @@ public class OverviewCtrl implements Initializable {
     }
 
     @Inject
-    public OverviewCtrl(ServerUtils serverUtils, Config config) {
+    public OverviewCtrl(ServerUtils serverUtils) {
         this.serverUtils = serverUtils;
-        this.config = config;
     }
 
     public void fillEvents() {
@@ -174,7 +171,7 @@ public class OverviewCtrl implements Initializable {
         removeColumn.setCellFactory(param -> new RemoveButtonCell(tableView, serverUtils));
 
         TableColumn<Event, Void> downloadColumn = new TableColumn<>("Download");
-        downloadColumn.setCellFactory(param -> new DownloadButtonCell(tableView, serverUtils, config));
+        downloadColumn.setCellFactory(param -> new DownloadButtonCell(tableView, serverUtils));
 
         tableView.getColumns().addAll(eventNameColumn, eventIdColumn, creationDateColumn, lastActionColumn,
                 removeColumn, downloadColumn);
