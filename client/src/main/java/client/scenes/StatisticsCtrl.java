@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ConfigUtils;
+import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Expense;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class StatisticsCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final LanguageUtils languageUtils;
     private ConfigUtils utils;
 
     private ObservableList<Expense> expenses;
@@ -35,12 +38,17 @@ public class StatisticsCtrl implements Initializable {
     private PieChart chart;
     @FXML
     private Label title;
+    @FXML
+    private Label label1;
+    @FXML
+    private Button button1;
 
     @Inject
-    public StatisticsCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils) {
+    public StatisticsCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, LanguageUtils languageUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.utils = utils;
+        this.languageUtils = languageUtils;
     }
 
     @Override
@@ -49,7 +57,9 @@ public class StatisticsCtrl implements Initializable {
     }
 
     public void startup() {
-        title.setText("Statistics of event: " + mainCtrl.getEvent().getName());
+        label1.textProperty().bind(languageUtils.getBinding("statistics.label1"));
+        button1.textProperty().bind(languageUtils.getBinding("statistics.button1"));
+        title.setText(mainCtrl.getEvent().getName());
         sum = getSum();
         amount.setText("" + sum + "$");
         data = FXCollections.observableArrayList(getData());
