@@ -67,7 +67,7 @@ To run the admin we recommend you to use the gradle wrapper that we provide, alo
 ```
 ## Usage
 `Splitty` is meant to be used as an expense managers for different events. Right below you will find out how to
-use the client, if you want to know how to use the admin click [here](#admin)
+use the client, if you want to know how to use the admin click [here](#admin-1)
 
 ### Client
 The client is straightforward and easy to use, when you start the client you are on the `starting` page of the app.
