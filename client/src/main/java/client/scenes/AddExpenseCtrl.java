@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -36,8 +37,6 @@ public class AddExpenseCtrl implements Initializable {
     private TextField description;
     @FXML
     private TextField amount;
-    @FXML
-    private ComboBox<Currency> currency;
     @FXML
     private DatePicker date;
     @FXML
@@ -70,6 +69,8 @@ public class AddExpenseCtrl implements Initializable {
     private Label expenseType;
     @FXML
     private Button addTag;
+    @FXML
+    private Label currency;
     private boolean editMode;
     private Expense toUpdate;
 
@@ -91,7 +92,6 @@ public class AddExpenseCtrl implements Initializable {
         payer.getSelectionModel().clearSelection();
         description.clear();
         amount.clear();
-        currency.getSelectionModel().selectFirst();
         date.setValue(null);
         tag.getSelectionModel().clearSelection();
         equallySplit.setSelected(false);
@@ -159,7 +159,6 @@ public class AddExpenseCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        currency.setItems(FXCollections.observableArrayList(Currency.getInstance(Locale.US), Currency.getInstance(Locale.UK)));
         payer.setCellFactory(participantListView -> getParticipantListCell());
         payer.setButtonCell(getParticipantListCell());
         tag.setCellFactory(tagListView -> getTagListCell());
@@ -183,6 +182,7 @@ public class AddExpenseCtrl implements Initializable {
         this.selectedDebtors.managedProperty().bind(this.selectedDebtors.visibleProperty());
         this.debtorsList.visibleProperty().bind(partialSplit.selectedProperty());
         this.selectedDebtors.visibleProperty().bind(partialSplit.selectedProperty());
+        this.currency.setText("€");
 
         switch (config.getLocale().getLanguage()) {
             case "nl":
