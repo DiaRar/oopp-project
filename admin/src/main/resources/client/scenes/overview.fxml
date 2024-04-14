@@ -11,7 +11,7 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#download" text="Dump Database" />
-            <Button fx:id="upload" mnemonicParsing="false" onAction="#upload" text="UploadDatabase" />
+            <Button fx:id="upload" mnemonicParsing="false" onAction="#upload" text="Upload Database" />
             <Button mnemonicParsing="false" onAction="#uploadOne" text="Upload Event" />
          </children>
       </HBox>
