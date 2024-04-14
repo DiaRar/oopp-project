@@ -55,7 +55,7 @@ public class InjectorModule implements Module {
 
     private ConfigUtils createConfigUtils() {
         ConfigUtils utils = new ConfigUtils();
-        utils.setRecentsFile(new File(getClass().getResource("/config/recents.csv").getFile()));
+        utils.setRecentsFile(new File("./recents.csv"));
 
         return utils;
     }
