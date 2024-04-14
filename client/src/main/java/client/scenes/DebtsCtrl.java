@@ -31,8 +31,6 @@ import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class DebtsCtrl implements Initializable {
     private final Config config;
@@ -40,7 +38,6 @@ public class DebtsCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final LanguageUtils languageUtils;
-    private Executor executor;
 
     private static final double DEBT_AMOUNT = 100;
     private static final double IMAGE_SIZE = 20;
@@ -85,7 +82,7 @@ public class DebtsCtrl implements Initializable {
         this.bank = new SimpleStringProperty();
         this.accountHolder = new SimpleStringProperty();
         this.noEmail = new SimpleStringProperty();
-        this.executor = Executors.newVirtualThreadPerTaskExecutor();
+
         this.emailUtils = emailUtils;
     }
 
@@ -219,9 +216,7 @@ public class DebtsCtrl implements Initializable {
     public void remind(Participant debtor, Debt debt) {
         if (debtor.getEmail() == null || debtor.getEmail().isEmpty()) return;
         if (config.getEmail() == null) return;
-        executor.execute(() -> {
-            emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()), debtor.getEmail());
-        });
+        emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()), debtor.getEmail());
     }
 
     public void showHideBankDetails(TextFlow details, BorderPane borderPane) {

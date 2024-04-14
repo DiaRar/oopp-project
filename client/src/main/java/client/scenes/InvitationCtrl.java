@@ -14,8 +14,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class InvitationCtrl implements Initializable {
     private Config config;
@@ -23,7 +21,6 @@ public class InvitationCtrl implements Initializable {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
-    private Executor executor;
     private LanguageUtils languageUtils;
     @FXML
     private Button sendInvites;
@@ -51,7 +48,6 @@ public class InvitationCtrl implements Initializable {
         this.utils = utils;
         this.config = config;
         this.languageUtils = languageUtils;
-        this.executor = Executors.newVirtualThreadPerTaskExecutor();
         this.emailUtils = emailUtils;
     }
 
@@ -90,7 +86,7 @@ public class InvitationCtrl implements Initializable {
         String[] addresses = emails.getText().split("\\n|\\n\\r");
         emails.clear();
         for (String x : addresses) {
-            executor.execute(() -> emailUtils.sendEmail(x, mainCtrl.getEvent().getId().toString(), mainCtrl.getEvent().getName()));
+            emailUtils.sendEmailInvite(x, mainCtrl.getEvent().getId().toString(), mainCtrl.getEvent().getName());
         }
         mainCtrl.showOverview();
     }

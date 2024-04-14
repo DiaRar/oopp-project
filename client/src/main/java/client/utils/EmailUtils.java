@@ -7,31 +7,49 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class EmailUtils {
     private final Config config;
-    private static final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    private final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     @Inject
     public EmailUtils(Config config) {
         this.config = config;
         setMetadata();
     }
-    public void sendEmail(String address, String code, String name) {
+
+    public void emailAlert(String address) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Email error");
+        alert.setHeaderText("Could not send email through smtp server to " + address);
+        alert.setContentText("Please check if the email address exists");
+        alert.show();
+    }
+    public void sendEmail(SimpleMailMessage message) {
+        try {
+            executor.execute(() -> mailSender.send(message));
+        } catch (MailException e) {
+            emailAlert(config.getEmail().getUsername());
+        }
+    }
+    public void testEmail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(config.getEmail().getUsername());
+        message.setTo(config.getEmail().getUsername());
+        message.setSubject("Mail server test");
+        message.setText("If you receive this email, then you have set up your smtp server correctly");
+        sendEmail(message);
+    }
+    public void sendEmailInvite(String address, String code, String name) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(config.getEmail().getUsername());
         message.setCc(config.getEmail().getUsername());
         message.setSubject("Event Invite");
         message.setText("You have been invited to join " + name + " using invite code: " + code);
         message.setTo(address);
-        try {
-            mailSender.send(message);
-        } catch (MailException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Email error");
-            alert.setHeaderText("Could not send email through smtp server to " + address);
-            alert.setContentText("Please check if the email address exists");
-            alert.show();
-        }
+        sendEmail(message);
     }
 
     public void sendDebtReminder(String payerName, String amount, String address) {
@@ -43,7 +61,7 @@ public class EmailUtils {
                 You should settle your debt to %s.
                 You owe %s.""", payerName, amount));
         message.setTo(address);
-        mailSender.send(message);
+        sendEmail(message);
     }
 
     private void setMetadata() {

@@ -2,6 +2,8 @@ package client.uicomponents;
 
 import atlantafx.base.theme.*;
 import client.scenes.MainCtrl;
+import client.utils.Config;
+import client.utils.EmailUtils;
 import client.utils.LanguageUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Singleton;
@@ -37,15 +39,19 @@ public class CustomMenuBar extends MenuBar {
     private Menu edit;
     private MenuItem name;
     private Menu help;
-    private MenuItem tooltips;
+    private MenuItem testMail;
     private Menu themes;
-    public void bind(LanguageUtils languageUtils, MainCtrl mainCtrl, ServerUtils serverUtils) {
+    public void bind(LanguageUtils languageUtils, MainCtrl mainCtrl, ServerUtils serverUtils,
+                     Config config, EmailUtils emailUtils) {
         languages.textProperty().bind(languageUtils.getBinding("menu.language"));
         download.textProperty().bind(languageUtils.getBinding("menu.language.download"));
         edit.textProperty().bind(languageUtils.getBinding("menu.edit"));
         name.textProperty().bind(languageUtils.getBinding("menu.edit.name"));
         help.textProperty().bind(languageUtils.getBinding("menu.help"));
-        tooltips.textProperty().bind(languageUtils.getBinding("menu.help.tooltips"));
+        testMail.textProperty().bind(languageUtils.getBinding("menu.help.mail"));
+        if (config.getEmail() == null)
+            testMail.setDisable(true);
+        testMail.setOnAction((e) -> emailUtils.testEmail());
         themes.textProperty().bind(languageUtils.getBinding("menu.theme"));
         name.setOnAction(actionEvent -> {
             var dialog = new TextInputDialog();
@@ -135,8 +141,8 @@ public class CustomMenuBar extends MenuBar {
         edit.setVisible(false);
 
         help = new Menu("Help");
-        tooltips = new MenuItem("Tooltips");
-        help.getItems().add(tooltips);
+        testMail = new MenuItem("Test Email", new FontIcon(Feather.MAIL));
+        help.getItems().add(testMail);
 
         themes = new Menu("Theme");
         theme = new ToggleGroup();
