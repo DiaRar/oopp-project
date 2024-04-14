@@ -1,6 +1,5 @@
 package admin.utils;
 
-import admin.Main;
 import admin.scenes.MainCtrl;
 import admin.uicomponents.Alerts;
 import com.google.inject.Inject;

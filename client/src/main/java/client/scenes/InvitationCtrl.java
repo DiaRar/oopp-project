@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 
 public class InvitationCtrl implements Initializable {
     private Config config;
+    private final EmailUtils emailUtils;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private ConfigUtils utils;
@@ -43,13 +44,15 @@ public class InvitationCtrl implements Initializable {
     private Button copyButton;
 
     @Inject
-    public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils, Config config, LanguageUtils languageUtils) {
+    public InvitationCtrl(ServerUtils server, MainCtrl mainCtrl, ConfigUtils utils,
+                          Config config, LanguageUtils languageUtils, EmailUtils emailUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.utils = utils;
         this.config = config;
         this.languageUtils = languageUtils;
         this.executor = Executors.newVirtualThreadPerTaskExecutor();
+        this.emailUtils = emailUtils;
     }
 
     @Override
@@ -73,6 +76,9 @@ public class InvitationCtrl implements Initializable {
                 languageUtils.setLang("en");
                 break;
         }
+        if (config.getEmail() == null) {
+            sendInvites.setDisable(true);
+        }
     }
 
     public void setFields() {
@@ -84,8 +90,7 @@ public class InvitationCtrl implements Initializable {
         String[] addresses = emails.getText().split("\\n|\\n\\r");
         emails.clear();
         for (String x : addresses) {
-            EmailUtils utils = new EmailUtils(x, mainCtrl.getEvent().getId().toString());
-            executor.execute(utils::sendEmail);
+            executor.execute(() -> emailUtils.sendEmail(x, mainCtrl.getEvent().getId().toString(), mainCtrl.getEvent().getName()));
         }
         mainCtrl.showOverview();
     }

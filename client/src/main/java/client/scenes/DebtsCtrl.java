@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import commons.Debt;
 import commons.Participant;
 import commons.primary_keys.DebtPK;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -36,7 +35,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class DebtsCtrl implements Initializable {
-    private Config config;
+    private final Config config;
+    private final EmailUtils emailUtils;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final LanguageUtils languageUtils;
@@ -71,7 +71,8 @@ public class DebtsCtrl implements Initializable {
     private Map<UUID, Participant> participantCache;
 
     @Inject
-    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config, LanguageUtils languageUtils) {
+    public DebtsCtrl(ServerUtils server, MainCtrl mainCtrl, Config config,
+                     LanguageUtils languageUtils, EmailUtils emailUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.config = config;
@@ -85,6 +86,7 @@ public class DebtsCtrl implements Initializable {
         this.accountHolder = new SimpleStringProperty();
         this.noEmail = new SimpleStringProperty();
         this.executor = Executors.newVirtualThreadPerTaskExecutor();
+        this.emailUtils = emailUtils;
     }
 
     public void refresh() {
@@ -157,8 +159,8 @@ public class DebtsCtrl implements Initializable {
                 settleDebt(mainCtrl.getEvent().getId(), new DebtPK(debt.getPayer().getId(), debt.getDebtor().getId()),
                         spinner));
         reminder.setOnAction(e ->
-                remind(debt.getDebtor(), debt, reminder));
-        if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty()) {
+                remind(debt.getDebtor(), debt));
+        if (debt.getDebtor().getEmail() == null || debt.getDebtor().getEmail().isEmpty() || config.getEmail() == null) {
             reminder.setDisable(true);
         }
         buttons.getChildren().addAll(reminder, settleGroup);
@@ -214,29 +216,11 @@ public class DebtsCtrl implements Initializable {
         refresh();
     }
 
-    public void remind(Participant debtor, Debt debt, Button remindButton) {
+    public void remind(Participant debtor, Debt debt) {
         if (debtor.getEmail() == null || debtor.getEmail().isEmpty()) return;
-        new Thread(() -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    remindButton.setDisable(true);
-                }
-            });
-            try {
-                Thread.sleep(DISABLE_TIMEOUT);
-            } catch (InterruptedException ex) {
-            }
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    remindButton.setDisable(false);
-                }
-            });
-        }).start();
-        EmailUtils emailUtils = new EmailUtils(debtor.getEmail(), "");
+        if (config.getEmail() == null) return;
         executor.execute(() -> {
-            emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()));
+            emailUtils.sendDebtReminder(debt.getPayer().getNickname(), String.format("%.2f", debt.getAmount()), debtor.getEmail());
         });
     }
 
