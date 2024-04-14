@@ -19,7 +19,6 @@ import client.uicomponents.Alerts;
 import com.google.inject.Inject;
 import commons.*;
 import commons.primary_keys.DebtPK;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
