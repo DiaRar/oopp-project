@@ -161,8 +161,11 @@ These are some of the checkstyle rules that we agreed on and checked throughout 
 
 - **NestedIfDepth** max value = 3
 - **No Magic Numbers**
-- **White space after comma**
-- **camelCase** for variable, method names
-- **PascalCase** for Class names
-- 
-
+- **Whitespace after** - comma, semicolon
+- **camelCase** - variable, method names
+- **PascalCase** - class names
+- **MethodParamPad** - no whitespace between method name and paranthesis
+- **ParenPad** - no whitespace after left parenthesis, or before right parenthesis
+- **Unused imports** - no unused imports allowed
+- **Whitespace around** - parantheses, braces
+- **Line Length** - 140
