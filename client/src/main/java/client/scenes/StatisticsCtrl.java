@@ -70,7 +70,7 @@ public class StatisticsCtrl implements Initializable {
         createUpdates();
         editUpdates();
         deleteUpdates();
-        tagUpdates();
+        //tagUpdates();
     }
     public void createUpdates() {
         server.registerForUpdates(mainCtrl.getEvent().getId(), e -> Platform.runLater(() -> {
@@ -101,19 +101,18 @@ public class StatisticsCtrl implements Initializable {
             }
         }));
     }
-    public void tagUpdates() {
-        server.registerForTagUpdates(mainCtrl.getEvent().getId(), t -> {
-            Tag x = null;
-            for (Expense e: expenses) {
-                if (e.getTag().getId().equals(t.getId())) {
-                    x = e.getTag();
-                    e.setTag(t);
-                }
+    public void tagUpdates(Tag tag) {
+        Tag prev = null;
+        for (Expense x: expenses) {
+            if (x.getTag() != null && x.getTag().getId().equals(tag.getId())) {
+               prev = x.getTag();
+               x.setTag(tag);
             }
-            updateTags(x, t);
-        });
+        }
+        updateTags(prev, tag);
     }
     public void updateTags(Tag x, Tag t) {
+        if (x == null) return;
         data.stream().forEach(y -> {
             if (y.getName().equals(x.getName()))y.setName(t.getName());
         });

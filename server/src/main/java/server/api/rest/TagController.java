@@ -58,7 +58,7 @@ public class TagController {
                                       @RequestBody Tag tag) throws IllegalArgumentException {
         Tag updatedTag = tagService.update(tagId, tag);
 
-        taglistners.forEach((k, v) -> v.accept(updatedTag));
+        //taglistners.forEach((k, v) -> v.accept(updatedTag));
 
         updateService.sendUpdatedTag(eventId, updatedTag);
         return ResponseEntity.ok(updatedTag);
