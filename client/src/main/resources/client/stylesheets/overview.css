@@ -61,3 +61,8 @@
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
 }
+
+.btn-highlight:focused {
+    -fx-border-color: #008bb9;
+    -fx-border-radius: 4px;
+}

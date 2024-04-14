@@ -131,9 +131,9 @@ public class OverviewCtrl implements Initializable {
         this.filterButton.setGraphic(new FontIcon(Feather.FILTER));
         this.filterButton.getStyleClass().addAll(Styles.SUCCESS);
         this.editParticipant.setGraphic(new FontIcon(Feather.EDIT));
-        this.editParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON);
+        this.editParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON, "btn-highlight");
         this.addParticipant.setGraphic(new FontIcon(Feather.USER_PLUS));
-        this.addParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON);
+        this.addParticipant.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_ICON, "btn-highlight");
         this.dialog = new Dialog();
         this.modalBox = new ModalBox(this.modal);
         this.modalBox.addContent(this.dialog);
