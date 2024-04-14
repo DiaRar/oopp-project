@@ -1,13 +1,11 @@
 # OOPP team 12 - Splitty
 > this project is still in its pre-release stage, so there may be small bugs
 
----
 ## Requirements
 * `Java 21` is required to run this application
 * commands should be ran in a compatible shell such as: 
   * `bash`, `zsh`, `fish` for `Linux`/`MacOS`
   * `PowerShell` for `Windows`
----
 ## Config
 ### Server
 To configure the server,
@@ -67,7 +65,6 @@ To run the admin we recommend you to use the gradle wrapper that we provide, alo
 ```console
 ./gradlew admin:run -a
 ```
----
 ## Usage
 `Splitty` is meant to be used as an expense managers for different events.
 
@@ -150,7 +147,6 @@ To see the `WebSockets` in action, you can find them in
 For `long-polling` please see the code for [StatisticsCtrl](client/src/main/java/client/scenes/StatisticsCtrl.java) - 
 client and [ExpensesController](server/src/main/java/server/api/rest/ExpensesController.java) - server.
 
----
 
 ## Contributions
 
@@ -168,4 +164,5 @@ These are some of the checkstyle rules that we agreed on and checked throughout 
 - **White space after comma**
 - **camelCase** for variable, method names
 - **PascalCase** for Class names
+- 
 
