@@ -204,7 +204,6 @@ public class MainCtrl {
                 .stream().map(Expense::getId)
                 .toList().indexOf(expense.getId());
         expenseList.set(index, expense);
-        System.out.println(expense);
         overviewCtrl.refreshExpenseList();
     }
     public void addTag(Tag tag) {

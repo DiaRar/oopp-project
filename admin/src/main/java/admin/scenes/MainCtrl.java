@@ -62,7 +62,6 @@ public class MainCtrl {
         try {
             socketUtils.connectToWebSocket(getWsServer());
         } catch (ExecutionException | InterruptedException e) {
-            System.out.println(getWsServer());
             throw new RuntimeException(e);
         }
         saveDimensions();

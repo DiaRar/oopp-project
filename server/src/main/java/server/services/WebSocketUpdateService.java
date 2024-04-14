@@ -64,7 +64,6 @@ public class WebSocketUpdateService {
         messagingTemplate.convertAndSend(destination("/update/expense", eventId), expense, getExpense());
     }
     public void sendAddedTag(UUID eventId, Tag tag) {
-        System.out.println(tag);
         messagingTemplate.convertAndSend(destination("/add/tag",
                 eventId), tag, getCommons());
     }

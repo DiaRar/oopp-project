@@ -20,7 +20,6 @@ public class LanguageComboBox extends ComboBox<String> {
         this.setValue(languageUtils.getLang());
         this.setOnAction(event -> {
             String selected = this.getValue();
-            System.out.println("Selected " + selected);
             this.languageUtils.setLang(selected);
         });
     }

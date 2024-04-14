@@ -71,7 +71,6 @@ public class Config {
 
     public static Config read(File file) throws IOException {
         if (!file.exists()) {
-            System.out.println(file);
             file.createNewFile();
             Writer writer = new BufferedWriter(new FileWriter(file));
             writer.write("#\n" +

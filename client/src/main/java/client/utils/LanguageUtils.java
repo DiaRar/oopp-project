@@ -57,6 +57,5 @@ public class LanguageUtils {
             System.out.println(e);
         }
         setResourceBundleProp(newLang);
-        System.out.println("success!");
     }
 }
