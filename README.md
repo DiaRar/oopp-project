@@ -3,7 +3,7 @@
 
 ## Requirements
 * `Java 21` is required to run this application
-* commands should be ran in a compatible shell such as: 
+* commands should be run in a compatible shell such as: 
   * `bash`, `zsh`, `fish` for `Linux`/`MacOS`
   * `PowerShell` for `Windows`
 ## Config
@@ -17,7 +17,7 @@ server.port=8080
 ```
 ### Client
 To configure the client, we have provided a [client/config.properties](client/config.properties) file in 
-which you can setup the `server` and (optional) `mail`:
+which you can set up the `server` and (optional) `mail`:
 ```properties
 # This is an example config
 #Sun Apr 14 16:01:07 CEST 2024
@@ -97,7 +97,7 @@ Similarly, by clicking the icon next to it (the edit participant icon), you can 
 
 ![Edit Participant Page](docs/images/editParticipant.png)
 
-To add a new expense, a user can just click the add expense button and it will lead you to the `add expense` page:
+To add a new expense, a user can just click the add expense button, and it will lead you to the `add expense` page:
 ![Add Expense Page](docs/images/addEditExpense.png)
 
 To edit an expense, a user can click on the `edit` icon next to a created expense, similarly,
@@ -151,7 +151,14 @@ client and [ExpensesController](server/src/main/java/server/api/rest/ExpensesCon
 ## Contributions
 
 ### Accessibility features
-// TODO
+The application supports multiple color themes to accommodate user preference, as well as help with visual impairments.
+
+Multiple buttons have icons in addition to the text to make the interface more friendly and easy to understand.
+
+The application is fully usable without a mouse or similar pointing device - the user can navigate using `Tab` key 
+with highlighting of the action. To navigate to the menubar use `Alt`, `Option` or a similar key depending
+on the operating
+system, then use arrow keys to select the choice.
 
 ### Participants
 Jerzy Karremans, Rares Diaconescu, Blago Gunev, Alessandro Neri, Cristian Ţurcan, Ștefan Lupşan.
@@ -164,8 +171,8 @@ These are some of the checkstyle rules that we agreed on and checked throughout 
 - **Whitespace after** - comma, semicolon
 - **camelCase** - variable, method names
 - **PascalCase** - class names
-- **MethodParamPad** - no whitespace between method name and paranthesis
+- **MethodParamPad** - no whitespace between method name and parenthesis
 - **ParenPad** - no whitespace after left parenthesis, or before right parenthesis
 - **Unused imports** - no unused imports allowed
-- **Whitespace around** - parantheses, braces
+- **Whitespace around** - parentheses, braces
 - **Line Length** - 140
