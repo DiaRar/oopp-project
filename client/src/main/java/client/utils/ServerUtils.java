@@ -53,7 +53,7 @@ public class ServerUtils {
 	@Inject
 	public ServerUtils(Config config) throws IOException {
 		this.config = config;
-		this.server = config.getServer();
+		this.server = config.getHttpServer();
 	}
 
 	public void handleConnectionException(Exception ex) {
@@ -78,7 +78,7 @@ public class ServerUtils {
 		try {
 			return ClientBuilder
 					.newClient(new ClientConfig())
-					.target(config.getServer())
+					.target(config.getHttpServer())
 					.path("/api/events/" + eventId)
 					.request(APPLICATION_JSON)
 					.accept(APPLICATION_JSON)
