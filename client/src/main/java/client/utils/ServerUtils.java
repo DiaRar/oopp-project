@@ -47,6 +47,9 @@ public class ServerUtils {
 	private final Config config;
 
 	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+	private static final ExecutorService EXECUTOR1 = Executors.newSingleThreadExecutor();
+	private static final ExecutorService EXECUTOR2 = Executors.newSingleThreadExecutor();
+	private static final ExecutorService EXECUTOR3 = Executors.newSingleThreadExecutor();
 	@Inject
 	public ServerUtils(Config config) throws IOException {
 		this.config = config;
@@ -289,7 +292,7 @@ public class ServerUtils {
 				while (!Thread.interrupted()) {
 					var response = ClientBuilder.newClient(new ClientConfig())
 							.target(server)
-							.path("/api/events/{eventId}/expenses/updates")
+							.path("/api/events/{eventId}/expenses/updates/create")
 							.resolveTemplate("eventId", eventId)
 							.request(APPLICATION_JSON)
 							.accept(APPLICATION_JSON)
@@ -302,8 +305,66 @@ public class ServerUtils {
 				}
 			});
 	}
+	public void registerForEditUpdates(UUID eventId, Consumer<Expense> consumer) {
+		EXECUTOR1.submit(() -> {
+			while (!Thread.interrupted()) {
+				var response = ClientBuilder.newClient(new ClientConfig())
+						.target(server)
+						.path("/api/events/{eventId}/expenses/updates/edit")
+						.resolveTemplate("eventId", eventId)
+						.request(APPLICATION_JSON)
+						.accept(APPLICATION_JSON)
+						.get(Response.class);
+				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+					continue;
+				}
+				var expense = response.readEntity(Expense.class);
+				consumer.accept(expense);
+			}
+		});
+	}
+	public void registerForDeleteUpdates(UUID eventId, Consumer<UUID> consumer) {
+		EXECUTOR2.submit(() -> {
+			while (!Thread.interrupted()) {
+				var response = ClientBuilder.newClient(new ClientConfig())
+						.target(server)
+						.path("/api/events/{eventId}/expenses/updates/delete")
+						.resolveTemplate("eventId", eventId)
+						.request(APPLICATION_JSON)
+						.accept(APPLICATION_JSON)
+						.get(Response.class);
+				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+					continue;
+				}
+				var expense = response.readEntity(UUID.class);
+				consumer.accept(expense);
+			}
+		});
+	}
+
+	public void registerForTagUpdates(UUID eventId, Consumer<Tag> consumer) {
+		EXECUTOR3.submit(() -> {
+			while (!Thread.interrupted()) {
+				var response = ClientBuilder.newClient(new ClientConfig())
+						.target(server)
+						.path("/api/events/{eventId}/tags/updates")
+						.resolveTemplate("eventId", eventId)
+						.request(APPLICATION_JSON)
+						.accept(APPLICATION_JSON)
+						.get(Response.class);
+				if (response.getStatus() == HttpStatus.NO_CONTENT.value()) {
+					continue;
+				}
+				var tag = response.readEntity(Tag.class);
+				consumer.accept(tag);
+			}
+		});
+	}
 	public void stop() {
 		EXECUTOR.shutdownNow();
+		EXECUTOR1.shutdownNow();
+		EXECUTOR2.shutdownNow();
+		EXECUTOR3.shutdownNow();
 	}
 
 	public Expense updateExpense(UUID eventId, UUID expenseId, Expense expense) {
