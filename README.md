@@ -10,7 +10,7 @@
 ### Server
 To configure the server,
 we recommend that you modify these
-two lines in `application.properties`:
+two lines in [application.properties](server/src/main/resources/application.properties):
 ```properties
 server.address=localhost
 server.port=8080
@@ -66,8 +66,10 @@ To run the admin we recommend you to use the gradle wrapper that we provide, alo
 ./gradlew admin:run -a
 ```
 ## Usage
-`Splitty` is meant to be used as an expense managers for different events.
+`Splitty` is meant to be used as an expense managers for different events. Right below you will find out how to
+use the client, if you want to know how to use the admin click [here](#admin)
 
+### Client
 The client is straightforward and easy to use, when you start the client you are on the `starting` page of the app.
 In this page, a user can create, join an event using an invite code, or join a previously joined event:
 
@@ -129,8 +131,24 @@ To invite other users to the event, a user can open the `invite` page from the i
 `overview` page and the can email other people with an invitation code:
 
 ![Invite](docs/images/invite.png)
-
 ---
+### Admin
+To use the `admin` you first have to input the `server` address and password.
+
+The `address` is defined in the server [config](server/src/main/resources/application.properties) and the password is
+received in the `console` when you start the `server`:
+
+![Admin Password](docs/images/adminPassword.png)
+
+After logging in, you will be sent into the `overview` page where you can backup all `events`, import all `events`,
+remove an `event`, backup an `event`, and import an `event`:
+
+![Overview](docs/images/adminOverview.png)
+
+Choosing any of these options (except for removing an event) will use the system file manager, so please make sure to
+have one compatible with JavaFX before trying to download or import `events` (this only applies to `Linux` users).
+
+
 ## Communication
 The app communicates in `real-time` using `WebSockets` (in overview, add/edit participants, add/edit expenses, 
 add/edit tags, settle debts) and `long-polling` (in statistics).
