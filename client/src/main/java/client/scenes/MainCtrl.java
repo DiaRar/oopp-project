@@ -1,6 +1,5 @@
 package client.scenes;
 
-import atlantafx.base.theme.Theme;
 import client.uicomponents.CustomMenuBar;
 import client.utils.Config;
 import client.utils.LanguageUtils;
@@ -11,7 +10,6 @@ import commons.Event;
 import commons.Expense;
 import commons.Participant;
 import commons.Tag;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -184,13 +182,12 @@ public class MainCtrl {
                 .map(participant1 ->
                         participant1.getId().equals(participant.getId()) ? participant : participant1).toList())
         );
+        expenseList.forEach(expense -> expense.setPayer(expense.getPayer().getId()
+                .equals(participant.getId()) ? participant : expense.getPayer()));
         participantList.stream().filter(listParticipant -> participant.getId().equals(listParticipant.getId()))
                 .toList().getFirst().setNickname(participant.getNickname());
         overviewCtrl.refreshParticipant(participant);
         overviewCtrl.refreshExpenseList();
-    }
-    public void switchTheme(Theme theme) {
-        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }
     public void addExpense(Expense expense) {
         int index = binarySearchDate(expenseList, 0, expenseList.size() - 1, expense.getDate());
@@ -211,6 +208,11 @@ public class MainCtrl {
     }
     public void removeTag(Tag tag) {
         tagList.removeIf(oTag -> oTag.getId().equals(tag.getId()));
+        expenseList.forEach(expense -> {
+            if (expense.getTag().getId().equals(tag.getId()))
+                expense.setTag(null);
+        });
+        overviewCtrl.refreshExpenseList();
     }
     public void updateTag(Tag tag) {
         statisticsCtrl.tagUpdates(tag);

@@ -3,6 +3,7 @@ package server.api.rest;
 import com.fasterxml.jackson.annotation.JsonView;
 import commons.Tag;
 import commons.views.View;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,7 @@ public class TagController {
 
     @DeleteMapping("/{tagId}")
     @JsonView(View.CommonsView.class)
+    @Transactional
     public ResponseEntity<Void> deleteTag(@PathVariable UUID eventId, @PathVariable UUID tagId) {
             tagService.delete(tagId);
             updateService.sendRemovedTag(eventId, tagId);

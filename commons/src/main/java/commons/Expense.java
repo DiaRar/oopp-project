@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
+import static jakarta.persistence.ConstraintMode.CONSTRAINT;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
@@ -87,16 +88,29 @@ public class Expense {
     // Relationships
     @ManyToOne
     @JsonView(View.CommonsView.class)
+    @JoinColumn(name = "payer_id", referencedColumnName = "participant_id",
+    foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (payer_id) " +
+            "REFERENCES participant(participant_id) ON DELETE CASCADE"))
     public Participant getPayer() {
         return payer;
     }
     @ManyToMany
     @JsonView(View.CommonsView.class)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id",
+                    foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (debtor_id) " +
+                            "REFERENCES participant(participant_id) ON DELETE CASCADE"))
+
+    )
     public Collection<Participant> getDebtors() {
         return debtors;
     }
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonView(View.CommonsView.class)
+    @JoinColumn(name = "tag_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (tag_id) " +
+                    "REFERENCES tag(id) ON DELETE SET NULL"))
     public Tag getTag() {
         return tag;
     }

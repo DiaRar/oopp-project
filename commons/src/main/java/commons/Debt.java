@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
+import static jakarta.persistence.ConstraintMode.CONSTRAINT;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 
@@ -27,12 +28,17 @@ public class Debt {
     private Double amount;
     @ManyToOne(optional = false)
     @MapsId("payer_id")
-    @JoinColumn(name = "payer_id", referencedColumnName = "participant_id")
+    @JoinColumn(name = "payer_id", referencedColumnName = "participant_id",
+            foreignKey = @ForeignKey(value = CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (payer_id) REFERENCES " +
+                    "participant(participant_id) ON DELETE CASCADE"))
     @JsonView(View.SettleView.class)
     private Participant payer;
     @ManyToOne(optional = false)
     @MapsId("debtor_id")
-    @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id")
+    @JoinColumn(name = "debtor_id", referencedColumnName = "participant_id",
+            foreignKey = @ForeignKey(value = CONSTRAINT,
+                    foreignKeyDefinition = "FOREIGN KEY (debtor_id) " +
+                            "REFERENCES participant(participant_id) ON DELETE CASCADE"))
     @JsonView(View.SettleView.class)
     private Participant debtor;
     @ManyToOne(optional = false)
